@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/category"
+        android:title="Categorias"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_topic"/>
+
+    <item
+        android:id="@+id/service"
+        android:title="Serviços"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_business"/>
+
+    <item
+        android:id="@+id/holder"
+        android:title=""
+        app:showAsAction="ifRoom"
+        android:enabled="false"/>
+
+    <item
+        android:id="@+id/favorite"
+        android:title="Favoritos"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_favorite"/>
+
+    <item android:id="@+id/perfile"
+        android:title="Perfil"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_account"/>
+</menu>
