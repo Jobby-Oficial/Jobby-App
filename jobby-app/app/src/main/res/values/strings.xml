@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Jobby_Oficial</string>
+    <string name="Category_Text">Category</string>
+    <string name="Service_Text">Service</string>
+    <string name="Favorite_Text">Favorite</string>
+    <string name="Profile_Text">Profile</string>
+</resources>
