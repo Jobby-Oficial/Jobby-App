@@ -5,12 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".CategoryFragment">
 
-    <TextView
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/Category_Text"
         android:textSize="30sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"/>-->
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_category"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>
