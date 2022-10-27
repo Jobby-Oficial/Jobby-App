@@ -3,10 +3,14 @@ package com.example.jobby_oficial;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 public class FavoriteFragment extends Fragment {
 
@@ -15,6 +19,8 @@ public class FavoriteFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    RecyclerView rvFavorite;
+    ArrayList<FavoriteClass> arrayList_favorite;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -41,7 +47,26 @@ public class FavoriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+        rvFavorite = view.findViewById(R.id.recyclerView_favorite);
+        rvFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
+        arrayList_favorite = new ArrayList<>();
+        FavoriteClass favorite1 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 1","Categoria 1");
+        FavoriteClass favorite2 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 2","Categoria 2");
+        FavoriteClass favorite3 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 3","Categoria 3");
+        FavoriteClass favorite4 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 4","Categoria 4");
+        FavoriteClass favorite5 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 5","Categoria 5");
+        FavoriteClass favorite6 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 6","Categoria 6");
+        FavoriteClass favorite7 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 7","Categoria 7");
+        arrayList_favorite.add(favorite1);
+        arrayList_favorite.add(favorite2);
+        arrayList_favorite.add(favorite3);
+        arrayList_favorite.add(favorite4);
+        arrayList_favorite.add(favorite5);
+        arrayList_favorite.add(favorite6);
+        arrayList_favorite.add(favorite7);
+
+        rvFavorite.setAdapter(new FavoriteAdapter(arrayList_favorite));
+        return view;
     }
 }
