@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment implements CategoryAdapter.viewholder.OnCategoryListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -66,7 +67,13 @@ public class CategoryFragment extends Fragment {
         arrayList_category.add(category6);
         arrayList_category.add(category7);
 
-        rvCategory.setAdapter(new CategoryAdapter(arrayList_category));
+        rvCategory.setAdapter(new CategoryAdapter(arrayList_category,this));
         return view;
+    }
+
+    @Override
+    public void onCategoryClick(int position) {
+        arrayList_category.get(position);
+        Toast.makeText(getContext(),"Category Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

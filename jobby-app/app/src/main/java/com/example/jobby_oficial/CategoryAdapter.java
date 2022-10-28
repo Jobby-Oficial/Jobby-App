@@ -13,16 +13,18 @@ import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewholder>{
     ArrayList<CategoryClass> arrayList_category;
+    private viewholder.OnCategoryListener onCategoryListener;
 
-    public CategoryAdapter(ArrayList<CategoryClass> arrayList_category) {
+    public CategoryAdapter(ArrayList<CategoryClass> arrayList_category, viewholder.OnCategoryListener onCategoryListener) {
         this.arrayList_category = arrayList_category;
+        this.onCategoryListener = onCategoryListener;
     }
 
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_category, parent, false);
-        return new viewholder(view);
+        return new viewholder(view, onCategoryListener);
     }
 
     @Override
@@ -37,15 +39,28 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
         return arrayList_category.size();
     }
 
-    class viewholder extends RecyclerView.ViewHolder{
+    static class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imgCategory;
         TextView tvNameCategory, tvDescriptionCategory;
+        OnCategoryListener onCategoryListener;
 
-        public viewholder(@NonNull View itemView) {
+        public viewholder(@NonNull View itemView, OnCategoryListener onCategoryListener) {
             super(itemView);
             imgCategory = itemView.findViewById(R.id.image_category);
             tvNameCategory = itemView.findViewById(R.id.tv_name_category);
             tvDescriptionCategory = itemView.findViewById(R.id.tv_description_category);
+            this.onCategoryListener = onCategoryListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onCategoryListener.onCategoryClick(getAdapterPosition());
+        }
+
+        public interface OnCategoryListener{
+            void onCategoryClick(int position);
         }
     }
 }
