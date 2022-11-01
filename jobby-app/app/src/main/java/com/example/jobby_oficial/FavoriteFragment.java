@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class FavoriteFragment extends Fragment {
+public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavoriteListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -66,7 +67,13 @@ public class FavoriteFragment extends Fragment {
         arrayList_favorite.add(favorite6);
         arrayList_favorite.add(favorite7);
 
-        rvFavorite.setAdapter(new FavoriteAdapter(arrayList_favorite));
+        rvFavorite.setAdapter(new FavoriteAdapter(arrayList_favorite, this));
         return view;
+    }
+
+    @Override
+    public void onFavoriteClick(int position) {
+        arrayList_favorite.get(position);
+        Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }
