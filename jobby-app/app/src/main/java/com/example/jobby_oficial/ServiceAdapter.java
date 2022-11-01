@@ -13,16 +13,18 @@ import java.util.ArrayList;
 
 public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewholder>{
     ArrayList<ServiceClass> arrayList_service;
+    private OnServiceListener onServiceListener;
 
-    public ServiceAdapter(ArrayList<ServiceClass> arrayList_service) {
+    public ServiceAdapter(ArrayList<ServiceClass> arrayList_service, OnServiceListener onServiceListener) {
         this.arrayList_service = arrayList_service;
+        this.onServiceListener = onServiceListener;
     }
 
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_service, parent, false);
-        return new ServiceAdapter.viewholder(view);
+        return new ServiceAdapter.viewholder(view, onServiceListener);
     }
 
     @Override
@@ -37,15 +39,28 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
         return arrayList_service.size();
     }
 
-    class viewholder extends RecyclerView.ViewHolder {
+    class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imgService;
         TextView tvNameService, tvCategoryService;
+        OnServiceListener onServiceListener;
 
-        public viewholder(@NonNull View itemView) {
+        public viewholder(@NonNull View itemView, OnServiceListener onServiceListener) {
             super(itemView);
             imgService = itemView.findViewById(R.id.image_service);
             tvNameService = itemView.findViewById(R.id.tv_name_service);
             tvCategoryService = itemView.findViewById(R.id.tv_category_service);
+            this.onServiceListener = onServiceListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onServiceListener.onServiceClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnServiceListener{
+        void onServiceClick(int position);
     }
 }
