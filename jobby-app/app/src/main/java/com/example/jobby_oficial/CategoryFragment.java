@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class CategoryFragment extends Fragment implements CategoryAdapter.viewholder.OnCategoryListener {
+public class CategoryFragment extends Fragment implements CategoryAdapter.OnCategoryListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

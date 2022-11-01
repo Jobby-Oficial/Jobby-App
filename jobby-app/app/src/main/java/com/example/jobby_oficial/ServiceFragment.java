@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ServiceFragment extends Fragment {
+public class ServiceFragment extends Fragment implements ServiceAdapter.OnServiceListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -66,7 +67,13 @@ public class ServiceFragment extends Fragment {
         arrayList_service.add(service6);
         arrayList_service.add(service7);
 
-        rvService.setAdapter(new ServiceAdapter(arrayList_service));
+        rvService.setAdapter(new ServiceAdapter(arrayList_service, this));
         return view;
+    }
+
+    @Override
+    public void onServiceClick(int position) {
+        arrayList_service.get(position);
+        Toast.makeText(getContext(),"Service Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

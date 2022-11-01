@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewholder>{
     ArrayList<CategoryClass> arrayList_category;
-    private viewholder.OnCategoryListener onCategoryListener;
+    private OnCategoryListener onCategoryListener;
 
-    public CategoryAdapter(ArrayList<CategoryClass> arrayList_category, viewholder.OnCategoryListener onCategoryListener) {
+    public CategoryAdapter(ArrayList<CategoryClass> arrayList_category, OnCategoryListener onCategoryListener) {
         this.arrayList_category = arrayList_category;
         this.onCategoryListener = onCategoryListener;
     }
@@ -58,9 +58,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
         public void onClick(View view) {
             onCategoryListener.onCategoryClick(getAdapterPosition());
         }
+    }
 
-        public interface OnCategoryListener{
-            void onCategoryClick(int position);
-        }
+    public interface OnCategoryListener{
+        void onCategoryClick(int position);
     }
 }

@@ -13,16 +13,18 @@ import java.util.ArrayList;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewholder>{
     ArrayList<FavoriteClass> arrayList_favorite;
+    OnFavoriteListener onFavoriteListener;
 
-    public FavoriteAdapter(ArrayList<FavoriteClass> arrayList_favorite) {
+    public FavoriteAdapter(ArrayList<FavoriteClass> arrayList_favorite, OnFavoriteListener onFavoriteListener) {
         this.arrayList_favorite = arrayList_favorite;
+        this.onFavoriteListener = onFavoriteListener;
     }
 
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_favorite, parent, false);
-        return new FavoriteAdapter.viewholder(view);
+        return new FavoriteAdapter.viewholder(view, onFavoriteListener);
     }
 
     @Override
@@ -37,15 +39,28 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
         return arrayList_favorite.size();
     }
 
-    class viewholder extends RecyclerView.ViewHolder {
+    class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imgFavorite;
         TextView tvNameFavorite, tvCategoryFavorite;
+        OnFavoriteListener onFavoriteListener;
 
-        public viewholder(@NonNull View itemView) {
+        public viewholder(@NonNull View itemView, OnFavoriteListener onFavoriteListener) {
             super(itemView);
             imgFavorite = itemView.findViewById(R.id.image_favorite);
             tvNameFavorite = itemView.findViewById(R.id.tv_name_favorite);
             tvCategoryFavorite = itemView.findViewById(R.id.tv_category_favorite);
+            this.onFavoriteListener = onFavoriteListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onFavoriteListener.onFavoriteClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnFavoriteListener{
+        void onFavoriteClick(int position);
     }
 }
