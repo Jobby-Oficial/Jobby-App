@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="teste">#01a3a4</color>#01a3a4
     <color name="splash_screen_background">#21CECC</color>
+    <color name="splash_screen_background_2">#f1c40f</color>
 </resources>
