@@ -11,12 +11,13 @@
         android:id="@+id/lav_ss_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:transitionName="tn_ss_background"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/animation_4"/>
 
     <ImageView
-        android:id="@+id/img_jobby_logotipo"
+        android:id="@+id/img_ss_jobby_logotipo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -24,40 +25,13 @@
         android:layout_marginEnd="50dp"
         android:background="@color/splash_screen_background"
         android:src="@drawable/ic_jobby2_oficial"
+        android:transitionName="tn_jobby_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lav_watch_pc"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_slogan"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/animation_2" />
-
     <TextView
-        android:id="@+id/tv_power_by"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="360dp"
-        android:fontFamily="@font/antic"
-        android:text="Power by: Jobby"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_slogan" />
-
-    <TextView
-        android:id="@+id/tv_slogan"
+        android:id="@+id/tv_ss_slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -67,8 +41,39 @@
         android:textColor="@color/black"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:transitionName="tn_slogan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_jobby_logotipo" />
+        app:layout_constraintTop_toBottomOf="@+id/img_ss_jobby_logotipo" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_ss_watch_pc"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginEnd="40dp"
+        android:transitionName="tn_watch_pc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ss_slogan"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation_2" />
+
+    <TextView
+        android:id="@+id/tv_ss_power_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="360dp"
+        android:fontFamily="@font/antic"
+        android:text="Power by: Jobby"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:transitionName="tn_power_by"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ss_slogan" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
