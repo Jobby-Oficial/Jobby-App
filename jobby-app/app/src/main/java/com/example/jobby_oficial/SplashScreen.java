@@ -53,7 +53,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent= new Intent(SplashScreen.this,MainActivity.class);
+                Intent intent= new Intent(SplashScreen.this,AuthenticationMenu.class);
                 Pair[] pair = new Pair[3];
                 pair[0] = new Pair(imgJobbyLogotipo,"tn_jobby_logo");
                 pair[1] = new Pair(tvPowerBy, "tn_slogan");
