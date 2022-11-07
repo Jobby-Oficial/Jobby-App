@@ -6,6 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".CategoryFragment">
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 <!--    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_category"
         android:layout_width="match_parent"
@@ -39,24 +43,24 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>-->
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <!--<androidx.recyclerview.widget.RecyclerView
+    &lt;!&ndash;<androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="150dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>&ndash;&gt;
 
-    <!--<ImageView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_jobby_oficial" />-->
+        android:src="@drawable/ic_jobby_oficial" />
 
-    <!--<androidx.core.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -69,9 +73,50 @@
 
     </androidx.core.widget.NestedScrollView>-->
 
-    <androidx.recyclerview.widget.RecyclerView
+        <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_category"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_jobby_oficial" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_category"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>
