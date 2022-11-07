@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.service:
                     selectedFragment = new ServiceFragment();
                     Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
+
                     break;
 
                 case R.id.favorite:
