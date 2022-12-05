@@ -28,6 +28,13 @@ public class AuthenticationMenu extends AppCompatActivity {
             }
         });
 
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         ncContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

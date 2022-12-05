@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="-70dp"
-            android:src="@drawable/ic_jobby2_oficial"/>
+            android:src="@drawable/ic_jobby2_oficial"
+            android:transitionName="tn_jobby_logo"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -29,7 +30,8 @@
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="34sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:transitionName="tn_slogan"/>
 
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
@@ -50,7 +52,8 @@
             android:textColor="@color/black"
             android:textSize="50sp"
             android:textStyle="bold"
-            android:textAllCaps="true"/>
+            android:textAllCaps="true"
+            android:transitionName="tn_power_by"/>
 
         <LinearLayout
             android:layout_width="match_parent"

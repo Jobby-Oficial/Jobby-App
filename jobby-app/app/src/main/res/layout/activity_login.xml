@@ -29,6 +29,7 @@
         app:lottie_speed="2"/>
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_back_login"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
