@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jobby_Oficial">
         <activity
+            android:name=".RegisterStepThreeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterStepTwoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterStepOneActivity"
+            android:exported="false" />
+        <activity
             android:name=".AuthenticationMenu"
             android:exported="false" />
         <activity

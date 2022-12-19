@@ -4,4 +4,6 @@
     <string name="Service_Text">Service</string>
     <string name="Favorite_Text">Favorite</string>
     <string name="Profile_Text">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
