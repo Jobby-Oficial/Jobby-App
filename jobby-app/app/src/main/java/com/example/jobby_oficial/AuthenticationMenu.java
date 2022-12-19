@@ -2,9 +2,12 @@ package com.example.jobby_oficial;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import soup.neumorphism.NeumorphCardView;
@@ -18,20 +21,28 @@ public class AuthenticationMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication_menu);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         InitControls();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent= new Intent(AuthenticationMenu.this,LoginActivity.class);
-                startActivity(intent);
+                Pair[] pair = new Pair[1];
+                pair[0] = new Pair(findViewById(R.id.btn_login_authentication),"tn_login");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(AuthenticationMenu.this, pair);
+                startActivity(intent, options.toBundle());
             }
         });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent= new Intent(AuthenticationMenu.this, RegisterStepOneActivity.class);
+                Pair[] pair = new Pair[1];
+                pair[0] = new Pair(findViewById(R.id.btn_regster_authentication),"tn_register");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(AuthenticationMenu.this, pair);
+                startActivity(intent, options.toBundle());
             }
         });
 
