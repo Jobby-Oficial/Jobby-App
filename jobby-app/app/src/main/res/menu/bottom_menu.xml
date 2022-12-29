@@ -25,7 +25,7 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_favorite"/>
 
-    <item android:id="@+id/perfile"
+    <item android:id="@+id/profile"
         android:title="Perfil"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_account"/>
