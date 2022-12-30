@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 04/12/21, 12:32
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -172,9 +179,9 @@
                 android:id="@+id/dp_age_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:datePickerMode="spinner"
                 android:calendarViewShown="false"
-                android:spinnersShown="true"/>
+                android:datePickerMode="spinner"
+                android:spinnersShown="true" />
 
             <LinearLayout
                 android:layout_width="match_parent"

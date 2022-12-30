@@ -1,7 +1,13 @@
+/*
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
+ */
+
 package com.example.jobby_oficial;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,13 +25,18 @@ public class RegisterStepOneActivity extends AppCompatActivity {
     LottieAnimationView lavBack;
     Button btnGoToLogin, btnNext;
     TextInputLayout edName, edUsername, edEmail, edPassword;
+    String sName, sUsername, sEmail, sPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_one);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
+
+        //Get Intent Data
+        GetIntentData();
 
         /*Spannable wordtoSpan = new SpannableString("Already have an account? Login");
         wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 25, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -56,6 +66,7 @@ public class RegisterStepOneActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true){
                     Intent intent= new Intent(RegisterStepOneActivity.this,RegisterStepTwoActivity.class);
+                    intent = IntentData(intent); //Send Intent Data
                     startActivity(intent);
                 }
             }
@@ -64,6 +75,36 @@ public class RegisterStepOneActivity extends AppCompatActivity {
         /*FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.fragment_layout_register, new StepOneFragment());
         fragmentTransaction.commit();*/
+    }
+
+    private void GetIntentData() {
+        sName = getIntent().getStringExtra("Name");
+        sUsername = getIntent().getStringExtra("Username");
+        sEmail = getIntent().getStringExtra("Email");
+        sPassword = getIntent().getStringExtra("Password");
+
+        edName.getEditText().setText(sName);
+        edUsername.getEditText().setText(sUsername);
+        edEmail.getEditText().setText(sEmail);
+        edPassword.getEditText().setText(sPassword);
+
+        System.out.println("Step1: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword);
+    }
+
+    private Intent IntentData(Intent intent) {
+        //Variaveis Locais
+        sName = edName.getEditText().getText().toString();
+        sUsername = edUsername.getEditText().getText().toString();
+        sEmail = edEmail.getEditText().getText().toString();
+        sPassword = edPassword.getEditText().getText().toString();
+
+        //Put Extra
+        intent.putExtra("Name", sName);
+        intent.putExtra("Username", sUsername);
+        intent.putExtra("Email", sEmail);
+        intent.putExtra("Password", sPassword);
+
+        return intent;
     }
 
     private boolean Validation(boolean validation) {

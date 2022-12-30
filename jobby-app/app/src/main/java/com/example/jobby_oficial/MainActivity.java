@@ -1,3 +1,10 @@
+/*
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
+ */
+
 package com.example.jobby_oficial;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +19,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
-import com.example.jobby_oficial.Model.Category;
+import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Model.Users;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;

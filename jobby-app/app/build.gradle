@@ -1,3 +1,10 @@
+/*
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
+ */
+
 plugins {
     id 'com.android.application'
 }
@@ -7,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jobby_oficial"
-        minSdk 21
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"

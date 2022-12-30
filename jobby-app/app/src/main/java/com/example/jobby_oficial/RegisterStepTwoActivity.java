@@ -1,9 +1,17 @@
+/*
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
+ */
+
 package com.example.jobby_oficial;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +27,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Calendar;
+import java.util.Date;
 
 public class RegisterStepTwoActivity extends AppCompatActivity {
 
@@ -27,13 +36,20 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
     RadioGroup rgGender;
     TextView tvGenderError, tvAgeError;
     DatePicker dpAge;
+    String sName, sUsername, sEmail, sPassword, sDate;
+    int iDay, iMonth, iYear;
+    char cGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_two);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
+
+        //Get Intent Data
+        GetIntentData();
 
         btnGoToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +75,7 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true) {
                     Intent intent = new Intent(RegisterStepTwoActivity.this, RegisterStepThreeActivity.class);
+                    intent = IntentData(intent); //Send Intent Data
                     startActivity(intent);
                 }
             }
@@ -68,17 +85,86 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent= new Intent(RegisterStepTwoActivity.this,RegisterStepOneActivity.class);
+                intent = IntentDataBack(intent); //Send Intent Data
                 startActivity(intent);
             }
         });
     }
 
+    private void GetIntentData() {
+        sName = getIntent().getStringExtra("Name");
+        sUsername = getIntent().getStringExtra("Username");
+        sEmail = getIntent().getStringExtra("Email");
+        sPassword = getIntent().getStringExtra("Password");
+        cGender = getIntent().getCharExtra("Gender", cGender);
+        sDate =  getIntent().getStringExtra("Date");
+        iDay = getIntent().getIntExtra("Day", iDay);
+        iMonth = getIntent().getIntExtra("Month", iMonth);
+        iYear = getIntent().getIntExtra("Year", iYear);
+
+        if (cGender == 'm')
+            rgGender.check(R.id.rb_male_register);
+        else if (cGender == 'f')
+            rgGender.check(R.id.rb_female_register);
+        else if (cGender == 'o')
+            rgGender.check(R.id.rb_other_register);
+
+        if (sDate != null)
+            dpAge.updateDate(iYear, iMonth, iDay);
+
+        System.out.println("Step2: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword + " + " + cGender + " + " + sDate);
+    }
+
+    private Intent IntentData(Intent intent) {
+        switch (rgGender.getCheckedRadioButtonId()) {
+
+            case R.id.rb_male_register:
+                cGender = 'm';
+                break;
+
+            case R.id.rb_female_register:
+                cGender = 'f';
+                break;
+
+            default:
+                cGender = 'o';
+        }
+
+        iDay = dpAge.getDayOfMonth();
+        iMonth = dpAge.getMonth();
+        iYear =  dpAge.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(iYear, iMonth, iDay);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sDate = sdf.format(calendar.getTime());
+
+        //Put Extra
+        intent.putExtra("Name", sName);
+        intent.putExtra("Username", sUsername);
+        intent.putExtra("Email", sEmail);
+        intent.putExtra("Password", sPassword);
+        intent.putExtra("Gender", cGender);
+        intent.putExtra("Date", sDate);
+        intent.putExtra("Day", iDay);
+        intent.putExtra("Month", iMonth);
+        intent.putExtra("Year", iYear);
+
+        return intent;
+    }
+
+    private Intent IntentDataBack(Intent intent) {
+        //Put Extra
+        intent.putExtra("Name", sName);
+        intent.putExtra("Username", sUsername);
+        intent.putExtra("Email", sEmail);
+        intent.putExtra("Password", sPassword);
+
+        return intent;
+    }
+
     private boolean Validation(boolean validation){
-
-        /*if(rgGender.getCheckedRadioButtonId()<=0){//Grp is your radio group object
-            //rgGender.setError("Select Item");//Set error to last Radio button
-        }*/
-
         switch (rgGender.getCheckedRadioButtonId()) {
 
             case R.id.rb_male_register:
@@ -122,10 +208,6 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
         }
         else
             tvAgeError.setVisibility(View.INVISIBLE);
-
-        //System.out.println(isYearValid);
-        //System.out.println(isMonthValid);
-        //System.out.println(isDayValid);
 
         return validation;
     }

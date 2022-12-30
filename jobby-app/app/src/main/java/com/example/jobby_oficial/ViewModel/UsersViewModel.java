@@ -1,5 +1,8 @@
 /*
- * Copyright (c) $year. Guilherme Cruz
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
  */
 
 package com.example.jobby_oficial.ViewModel;
