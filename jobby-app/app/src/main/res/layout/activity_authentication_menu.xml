@@ -115,7 +115,8 @@
                 android:textStyle="bold"
                 android:textSize="17dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="7dp"/>
+                android:layout_marginTop="7dp"
+                android:transitionName="tn_jobby"/>
 
         </soup.neumorphism.NeumorphCardView>
 

@@ -31,7 +31,7 @@ public class SplashScreen extends AppCompatActivity {
     Animation topAnim, bottonAnim;
     ImageView imgJobbyLogotipo;
     LottieAnimationView imgWatchPc;
-    TextView tvPowerBy, tvSlogan;
+    TextView tvPowerBy, tvJobby, tvSlogan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,11 @@ public class SplashScreen extends AppCompatActivity {
         imgJobbyLogotipo.setAnimation(topAnim);
         tvSlogan.setAnimation(topAnim);
         imgWatchPc.setAnimation(bottonAnim);
-        tvPowerBy.setAnimation(bottonAnim);
+        //tvPowerBy.setAnimation(bottonAnim);
+        //tvJobby.setAnimation(bottonAnim);
+
+        YoYo.with(Techniques.FadeInUp).duration(4000).repeat(0).playOn(tvPowerBy);
+        YoYo.with(Techniques.FadeInUp).duration(4000).repeat(0).playOn(tvJobby);
 
         //YoYo.with(Techniques.Bounce).duration(2000).repeat(0).playOn(imgJobbyLogotipo);
         //YoYo.with(Techniques.Shake).duration(3000).repeat(0).playOn(tvSlogan);
@@ -69,23 +73,6 @@ public class SplashScreen extends AppCompatActivity {
                 finish();
             }
         }, 7000);
-
-
-        /*final Intent intent= new Intent(SplashScreen.this,LoginActivity.class);
-        Thread timer = new Thread(){
-            public void run (){
-                try{
-                    sleep(7000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    startActivity(intent, options.toBundle());
-                    finish();
-                }
-            }
-        };
-        timer.start();*/
     }
 
     private void InitControls() {
@@ -93,5 +80,6 @@ public class SplashScreen extends AppCompatActivity {
         tvSlogan = findViewById(R.id.tv_ss_slogan);
         imgWatchPc = findViewById(R.id.lav_ss_watch_pc);
         tvPowerBy = findViewById(R.id.tv_ss_power_by);
+        tvJobby = findViewById(R.id.tv_ss_jobby);
     }
 }

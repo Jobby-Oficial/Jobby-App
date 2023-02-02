@@ -19,4 +19,5 @@
     <color name="splash_screen_background">#21CECC</color>
     <color name="splash_screen_background_2">#f1c40f</color>
     <color name="light_background">#ecf0f3</color>
+    <color name="trans">#00000000 </color>
 </resources>
