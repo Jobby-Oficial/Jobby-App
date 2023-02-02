@@ -1,5 +1,6 @@
 package com.example.jobby_oficial;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.daimajia.easing.Glider;
+import com.example.jobby_oficial.Model.Category;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewholder>{
-    ArrayList<CategoryClass> arrayList_category;
+    private Context context;
+    List<Category> list_category;
     private OnCategoryListener onCategoryListener;
 
-    public CategoryAdapter(ArrayList<CategoryClass> arrayList_category, OnCategoryListener onCategoryListener) {
-        this.arrayList_category = arrayList_category;
+    public CategoryAdapter(Context context, List<Category> list_category, OnCategoryListener onCategoryListener) {
+        this.context = context;
+        this.list_category = list_category;
         this.onCategoryListener = onCategoryListener;
     }
 
@@ -29,14 +37,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
 
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
-        holder.imgCategory.setImageResource(arrayList_category.get(position).getImageCategory());
-        holder.tvNameCategory.setText(arrayList_category.get(position).getNameCategory());
-        holder.tvDescriptionCategory.setText(arrayList_category.get(position).getDescriptionCategory());
+        Category category = list_category.get(position);
+        holder.tvNameCategory.setText(list_category.get(position).getName());
+        holder.tvDescriptionCategory.setText(list_category.get(position).getName());
+        Glide.with(context).load(category.getImage()).into(holder.imgCategory);
+    }
+
+    public void getAllCategorys(List<Category> categoryList){
+        this.list_category = categoryList;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return arrayList_category.size();
+        return list_category.size();
     }
 
     static class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {

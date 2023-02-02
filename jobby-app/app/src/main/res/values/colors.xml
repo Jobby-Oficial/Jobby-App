@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 04/12/21, 12:32
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -7,8 +14,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#e74c3c</color>
     <color name="teste">#01a3a4</color>#01a3a4
     <color name="splash_screen_background">#21CECC</color>
     <color name="splash_screen_background_2">#f1c40f</color>
     <color name="light_background">#ecf0f3</color>
+    <color name="trans">#00000000 </color>
 </resources>

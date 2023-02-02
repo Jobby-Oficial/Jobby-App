@@ -1,3 +1,10 @@
+/*
+ * Created by Guilherme Cruz
+ * Last modified: 04/12/21, 12:32
+ * Copyright (c) 2021.
+ * All rights reserved.
+ */
+
 package com.example.jobby_oficial;
 
 import android.os.Bundle;
@@ -9,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 public class StepOneFragment extends Fragment {
 

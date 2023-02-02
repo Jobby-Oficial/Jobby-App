@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 04/12/21, 12:32
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -43,7 +50,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,9 +92,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_login"/>
 
         <LinearLayout
+            android:id="@+id/ll_form_step1_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="45dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -144,23 +152,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--<com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phone_number_register"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Phone Number"
-                android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"/>
-
-            </com.google.android.material.textfield.TextInputLayout>-->
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password_register"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -180,20 +171,29 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_next_step1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="104dp"
                 android:background="@drawable/ripple_effect"
                 android:text="Next Step"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/btn_next_step1">
 
                 <TextView
                     android:layout_width="0dp"
@@ -224,7 +224,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
