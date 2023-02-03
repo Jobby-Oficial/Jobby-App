@@ -51,7 +51,6 @@ public class CategoryViewModel extends AndroidViewModel {
                 System.out.println("resp: " + response);
                 if (response.isSuccessful()){
                     categoryRepository.insert(response.body());
-
                 }
             }
 

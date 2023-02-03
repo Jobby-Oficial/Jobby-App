@@ -14,11 +14,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Model.Users;
@@ -33,8 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UsersViewModel usersViewModel;
     private CategoryViewModel categoryViewModel;
+    MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
-    FloatingActionButton fabAdicionar;
+    FloatingActionButton fabExtended, fabValuations, fabProfile;
+    Animation fabOpen, fabClose, rotateForward, rotateBackward;
+    boolean isCheck = false, isOpen = false;
+    int iNavBarId = 1;
+    Fragment selectedFragment = new CategoryFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
+        AddMenuItems();
+
+        //Animations
+        fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
+        rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
+        rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.getAllUsers().observe(this, new Observer<List<Users>>() {
@@ -72,7 +88,74 @@ public class MainActivity extends AppCompatActivity {
         //insert();
         //getAll();
 
-        bottomNavigationView.setBackground(null);
+        meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
+            @Override
+            public void onShowItem(MeowBottomNavigation.Model item) {
+                getSupportFragmentManager().beginTransaction().remove(selectedFragment).commit();
+                selectedFragment = null;
+
+                switch (item.getId()) {
+                    case 1:
+                        iNavBarId = 1;
+                        selectedFragment = new CategoryFragment();
+                        //Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 2:
+                        iNavBarId = 2;
+                        selectedFragment = new ServiceFragment();
+                        //Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 3:
+                        iNavBarId = 3;
+                        selectedFragment = new FavoriteFragment();
+                        //Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 4:
+                        iNavBarId = 4;
+                        selectedFragment = new ProfileFragment();
+                        //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, selectedFragment).detach(selectedFragment).attach(selectedFragment).commit();
+            }
+        });
+
+        meowBottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+            @Override
+            public void onClickItem(MeowBottomNavigation.Model item) {
+                // your codes
+            }
+        });
+
+        meowBottomNavigationView.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
+            @Override
+            public void onReselectItem(MeowBottomNavigation.Model item) {
+                // your codes
+            }
+        });
+
+        //meowBottomNavigationView.setCount(1,"10");
+        meowBottomNavigationView.show(1, true);
+
+        fabValuations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        fabProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        /*bottomNavigationView.setBackground(null);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
@@ -102,14 +185,15 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,selectedFragment).commit();
 
             return true;
-        });
+        });*/
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
 
-        fabAdicionar.setOnClickListener(new View.OnClickListener() {
+        fabExtended.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
+                fabAnimation();
+                //Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -151,8 +235,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void AddMenuItems() {
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(1, R.drawable.ic_topic));
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(2, R.drawable.ic_business));
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(3, R.drawable.ic_favorite));
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(4, R.drawable.ic_calendar));
+    }
+
+    private void fabAnimation(){
+        if (isOpen) {
+            fabExtended.startAnimation(rotateBackward);
+            fabValuations.startAnimation(fabClose);
+            fabProfile.startAnimation(fabClose);
+            fabValuations.setClickable(false);
+            fabProfile.setClickable(false);
+            isOpen = false;
+        }
+        else {
+            fabExtended.startAnimation(rotateForward);
+            fabValuations.startAnimation(fabOpen);
+            fabProfile.startAnimation(fabOpen);
+            fabValuations.setClickable(true);
+            fabProfile.setClickable(true);
+            isOpen = true;
+        }
+    }
+
     private void InitControls() {
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        fabAdicionar = findViewById(R.id.fabAdicionar);
+        //bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        fabExtended = findViewById(R.id.fab_Extended);
+        meowBottomNavigationView = findViewById(R.id.bottom_navegation);
+        fabValuations = findViewById(R.id.fab_Valuations);
+        fabProfile = findViewById(R.id.fab_Profile);
     }
 }
