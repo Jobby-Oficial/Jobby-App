@@ -19,69 +19,33 @@ import com.example.jobby_oficial.Model.Users;
 import java.util.List;
 
 public class UsersRepository {
-    private UsersDao usersDao;
-    private LiveData<List<Users>> allUsers;
+    public SingletonRoomDatabase database;
+    private LiveData<List<Users>> getAllUsers;
 
     public UsersRepository(Application application){
-        SingletonRoomDatabase database = SingletonRoomDatabase.getInstance(application);
-        usersDao = database.usersDao();
-        allUsers = usersDao.getAllUsers();
+        database = SingletonRoomDatabase.getInstance(application);
+        getAllUsers = database.usersDao().getAllUsers();
     }
 
-    public void insert(Users users){
-        new InsertAsyncTask(usersDao).execute(users);
+    public void insert(List<Users> usersList){
+        new UsersRepository.InsertAsyncTask(database).execute(usersList);
     }
 
-    public void update(Users users){
-        new UpdateAsyncTask(usersDao).execute(users);
+    public LiveData<List<Users>> getAllUsers(){
+        return getAllUsers;
     }
 
-    public void delete(Users users){
-        new DeleteAsyncTask(usersDao).execute(users);
-    }
-
-    public LiveData<List<Users>> getAllUsers() {
-        return allUsers;
-    }
-
-    public static class InsertAsyncTask extends AsyncTask<Users, Void, Void> {
+    public static class InsertAsyncTask extends AsyncTask<List<Users>, Void, Void> {
         private UsersDao usersDao;
 
-        private InsertAsyncTask(UsersDao usersDao){
-            this.usersDao = usersDao;
+        private InsertAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
+            this.usersDao = singletonRoomDatabase.usersDao();
         }
 
         @Override
-        protected Void doInBackground(Users... users) {
-            usersDao.insertUser(users[0]);
-            return null;
-        }
-    }
-
-    public static class UpdateAsyncTask extends AsyncTask<Users, Void, Void> {
-        private UsersDao usersDao;
-
-        private UpdateAsyncTask(UsersDao usersDao){
-            this.usersDao = usersDao;
-        }
-
-        @Override
-        protected Void doInBackground(Users... users) {
-            usersDao.updateUser(users[0]);
-            return null;
-        }
-    }
-
-    public static class DeleteAsyncTask extends AsyncTask<Users, Void, Void> {
-        private UsersDao usersDao;
-
-        private DeleteAsyncTask(UsersDao usersDao){
-            this.usersDao = usersDao;
-        }
-
-        @Override
-        protected Void doInBackground(Users... users) {
-            usersDao.deleteUser(users[0]);
+        protected Void doInBackground(List<Users>... lists) {
+            usersDao.deleteAll();
+            usersDao.insertUsers(lists[0]);
             return null;
         }
     }

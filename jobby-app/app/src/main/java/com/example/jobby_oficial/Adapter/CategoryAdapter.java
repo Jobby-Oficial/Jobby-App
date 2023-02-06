@@ -45,7 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         Category category = list_category.get(position);
         holder.tvNameCategory.setText(list_category.get(position).getName());
-        holder.tvDescriptionCategory.setText(list_category.get(position).getName());
+        //holder.tvDescriptionCategory.setText(list_category.get(position).getName());
         Glide.with(context).load(category.getImage()).into(holder.imgCategory);
     }
 
@@ -61,14 +61,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewho
 
     static class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imgCategory;
-        TextView tvNameCategory, tvDescriptionCategory;
+        TextView tvNameCategory; //,tvDescriptionCategory
         OnCategoryListener onCategoryListener;
 
         public viewholder(@NonNull View itemView, OnCategoryListener onCategoryListener) {
             super(itemView);
             imgCategory = itemView.findViewById(R.id.image_category);
             tvNameCategory = itemView.findViewById(R.id.tv_name_category);
-            tvDescriptionCategory = itemView.findViewById(R.id.tv_description_category);
+            //tvDescriptionCategory = itemView.findViewById(R.id.tv_description_category);
             this.onCategoryListener = onCategoryListener;
 
             itemView.setOnClickListener(this);

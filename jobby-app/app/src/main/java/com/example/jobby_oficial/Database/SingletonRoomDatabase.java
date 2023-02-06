@@ -81,6 +81,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
                     "Feminino",
                     "08-12-2000"));*/
             categoryDao.deleteAll();
+            usersDao.deleteAll();
             return null;
         }
     }

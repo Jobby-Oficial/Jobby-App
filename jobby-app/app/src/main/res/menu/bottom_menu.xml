@@ -21,12 +21,6 @@
         android:icon="@drawable/ic_business"/>
 
     <item
-        android:id="@+id/holder"
-        android:title=""
-        app:showAsAction="ifRoom"
-        android:enabled="false"/>
-
-    <item
         android:id="@+id/favorite"
         android:title="Favoritos"
         app:showAsAction="ifRoom"
@@ -36,4 +30,10 @@
         android:title="Perfil"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_account"/>
+
+    <item
+        android:id="@+id/holder"
+        android:title=""
+        app:showAsAction="ifRoom"
+        android:enabled="false"/>
 </menu>

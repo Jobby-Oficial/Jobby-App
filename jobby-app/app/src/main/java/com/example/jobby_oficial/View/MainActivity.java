@@ -1,20 +1,18 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 04/12/21, 12:32
+ * Last modified: 21/12/21, 20:32
  * Copyright (c) 2021.
  * All rights reserved.
  */
 
-package com.example.jobby_oficial;
+package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,9 +21,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
-import com.example.jobby_oficial.Database.SingletonRoomDatabase;
+import com.example.jobby_oficial.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.ProfileFragment;
+import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.ServiceFragment;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -198,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void insert() {
+    /*private void insert() {
         Users users = new Users(
                 "guilherme",
                 "123",
@@ -210,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 "28-01-2000");
         InsertAsyncTask insertAsyncTask = new InsertAsyncTask();
         insertAsyncTask.execute(users);
-    }
+    }*/
 
     private void getAll() {
         /*Thread thread = new Thread(new Runnable() {
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         thread.start();*/
     }
 
-    class InsertAsyncTask extends AsyncTask<Users, Void, Void>{
+    /*class InsertAsyncTask extends AsyncTask<Users, Void, Void>{
 
         @Override
         protected Void doInBackground(Users... users) {
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
                     .insertUser(users[0]);
             return null;
         }
-    }
+    }*/
 
     private void AddMenuItems() {
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(1, R.drawable.ic_topic));
