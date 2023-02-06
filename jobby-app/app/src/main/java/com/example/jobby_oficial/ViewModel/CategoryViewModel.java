@@ -8,6 +8,7 @@
 package com.example.jobby_oficial.ViewModel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -56,7 +57,8 @@ public class CategoryViewModel extends AndroidViewModel {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-
+                Log.e("Error ", "Category API: " + t);
+                System.out.println("Error Category API: " + t);
             }
         });
     }

@@ -16,16 +16,16 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "users_table")
 public class Users {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(/*autoGenerate = true*/)
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    private int userId;
+    private int id;
 
     @SerializedName("username")
     @ColumnInfo(name = "username")
     private String username;
 
-    @SerializedName("password")
+    @SerializedName("password_hash")
     @ColumnInfo(name = "password")
     private String password;
 
@@ -53,7 +53,8 @@ public class Users {
     @ColumnInfo(name = "birth")
     private String birth;
 
-    public Users(String username, String password, String picture, String name, String email, String phone, String genre, String birth) {
+    public Users(int id, String username, String password, String picture, String name, String email, String phone, String genre, String birth) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.picture = picture;
@@ -64,12 +65,16 @@ public class Users {
         this.birth = birth;
     }
 
-    public int getUserId() {
-        return userId;
+    public Users() {
+
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -139,7 +144,7 @@ public class Users {
     @Override
     public String toString() {
         return "Users{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", picture='" + picture + '\'' +

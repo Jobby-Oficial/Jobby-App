@@ -17,27 +17,28 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Jobby_Oficial">
+        android:theme="@style/Theme.Jobby_Oficial"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".RegisterStepThreeActivity"
+            android:name=".View.RegisterStepThreeActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterStepTwoActivity"
+            android:name=".View.RegisterStepTwoActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterStepOneActivity"
+            android:name=".View.RegisterStepOneActivity"
             android:exported="false" />
         <activity
-            android:name=".AuthenticationMenu"
+            android:name=".View.AuthenticationMenu"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".View.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".View.SplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

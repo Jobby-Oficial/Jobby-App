@@ -15,6 +15,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.Model.Users;
 
 import java.util.List;
@@ -23,14 +24,14 @@ import java.util.List;
 public interface UsersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertUser(Users users);
-
-    @Update
-    void updateUser(Users users);
+    void insertUsers(List<Users> usersList);
 
     @Delete
-    void deleteUser(Users users);
+    void deleteUsers(List<Users> usersList);
 
-    @Query("SELECT * FROM users_table ORDER BY id DESC")
+    @Query("SELECT * FROM users_table ORDER BY id ASC")
     LiveData<List<Users>> getAllUsers();
+
+    @Query("DELETE FROM users_table")
+    void deleteAll();
 }
