@@ -31,6 +31,10 @@ public class UsersRepository {
         new UsersRepository.InsertAsyncTask(database).execute(usersList);
     }
 
+    public void delete(){
+        new UsersRepository.DeleteAsyncTask(database).execute();
+    }
+
     public LiveData<List<Users>> getAllUsers(){
         return getAllUsers;
     }
@@ -46,6 +50,20 @@ public class UsersRepository {
         protected Void doInBackground(List<Users>... lists) {
             usersDao.deleteAll();
             usersDao.insertUsers(lists[0]);
+            return null;
+        }
+    }
+
+    public static class DeleteAsyncTask extends AsyncTask<List<Users>, Void, Void> {
+        private UsersDao usersDao;
+
+        private DeleteAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
+            this.usersDao = singletonRoomDatabase.usersDao();
+        }
+
+        @Override
+        protected Void doInBackground(List<Users>... lists) {
+            usersDao.deleteAll();
             return null;
         }
     }

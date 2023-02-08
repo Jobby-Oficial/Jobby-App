@@ -53,7 +53,15 @@ public class Users {
     @ColumnInfo(name = "birth")
     private String birth;
 
-    public Users(int id, String username, String password, String picture, String name, String email, String phone, String genre, String birth) {
+    @SerializedName("country")
+    @ColumnInfo(name = "country")
+    private String country;
+
+    @SerializedName("city")
+    @ColumnInfo(name = "city")
+    private String city;
+
+    public Users(int id, String username, String password, String picture, String name, String email, String phone, String genre, String birth, String country, String city) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -63,6 +71,8 @@ public class Users {
         this.phone = phone;
         this.genre = genre;
         this.birth = birth;
+        this.country = country;
+        this.city = city;
     }
 
     public Users() {
@@ -141,6 +151,22 @@ public class Users {
         this.birth = birth;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public String toString() {
         return "Users{" +
@@ -153,6 +179,8 @@ public class Users {
                 ", phone='" + phone + '\'' +
                 ", genre='" + genre + '\'' +
                 ", birth='" + birth + '\'' +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }
