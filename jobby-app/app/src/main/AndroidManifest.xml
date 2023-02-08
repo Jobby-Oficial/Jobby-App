@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 04/12/21, 12:32
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jobby_oficial">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -12,9 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jobby_Oficial"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".View.ProfileActivity"
-            android:exported="false" />
         <activity
             android:name=".View.RegisterStepThreeActivity"
             android:exported="false" />

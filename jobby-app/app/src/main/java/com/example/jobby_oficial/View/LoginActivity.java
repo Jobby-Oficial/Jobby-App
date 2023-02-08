@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     static TextView tvInvalidLogin;
     private UsersViewModel usersViewModel;
     private static Context mContext;
-    List<Users> list_users;
+    List<User> list_users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         list_users = new ArrayList<>();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        usersViewModel.getAllUsers().observe(this, new Observer<List<Users>>() {
+        usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
-            public void onChanged(List<Users> usersList) {
+            public void onChanged(List<User> usersList) {
                 list_users = usersList;
                 System.out.println("Lista: " + list_users);
             }

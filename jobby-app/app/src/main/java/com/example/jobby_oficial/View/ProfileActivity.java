@@ -19,22 +19,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.jobby_oficial.Model.Category;
-import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
-import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 
 import java.util.List;
-
-import soup.neumorphism.NeumorphCardView;
 
 public class ProfileActivity extends AppCompatActivity {
 
     LottieAnimationView lavBack, lavEdit;
     TextView tvUsername, tvName, tvEmail, tvPhone, tvGenre, tvCountry, tvCity;
     private UsersViewModel usersViewModel;
-    List<Users> list_user;
+    List<User> list_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +40,9 @@ public class ProfileActivity extends AppCompatActivity {
         InitControls();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        usersViewModel.getAllUsers().observe(this, new Observer<List<Users>>() {
+        usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
-            public void onChanged(List<Users> userList) {
+            public void onChanged(List<User> userList) {
                 list_user = userList;
                 if (list_user.size() != 0) {
                     System.out.println("Username: " + list_user.get(0).getUsername());

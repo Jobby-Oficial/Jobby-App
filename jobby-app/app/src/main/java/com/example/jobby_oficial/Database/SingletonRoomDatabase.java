@@ -17,15 +17,18 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.jobby_oficial.Dao.CategoryDao;
-import com.example.jobby_oficial.Dao.UsersDao;
+import com.example.jobby_oficial.Dao.ServiceDao;
+import com.example.jobby_oficial.Dao.UserDao;
 import com.example.jobby_oficial.Model.Category;
-import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.User;
 
-@Database(entities = {Users.class, Category.class}, version = 1)
+@Database(entities = {Category.class, User.class, Service.class}, version = 1)
 public abstract class SingletonRoomDatabase extends RoomDatabase {
 
-    public abstract UsersDao usersDao();
     public abstract CategoryDao categoryDao();
+    public abstract UserDao usersDao();
+    public abstract ServiceDao serviceDao();
 
     private static volatile SingletonRoomDatabase INSTANCE;
 
@@ -51,17 +54,19 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void>{
-        private UsersDao usersDao;
         private CategoryDao categoryDao;
+        private UserDao usersDao;
+        private ServiceDao serviceDao;
 
         private PopulateDbAsyncTask(SingletonRoomDatabase db){
-            usersDao = db.usersDao();
             categoryDao = db.categoryDao();
+            usersDao = db.usersDao();
+            serviceDao = db.serviceDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            /*usersDao.insertUser(new Users(
+            /*usersDao.insertUser(new User(
                     "guilherme",
                     "123",
                     "img.jpg",
@@ -71,7 +76,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
                     "Masculino",
                     "28-01-2000"));
 
-            usersDao.insertUser(new Users(
+            usersDao.insertUser(new User(
                     "daniela",
                     "123",
                     "img.jpg",
@@ -82,6 +87,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
                     "08-12-2000"));*/
             categoryDao.deleteAll();
             usersDao.deleteAll();
+            serviceDao.deleteAll();
             return null;
         }
     }

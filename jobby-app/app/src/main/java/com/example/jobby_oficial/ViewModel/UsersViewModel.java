@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.View.LoginActivity;
-import com.example.jobby_oficial.Model.Users;
 import com.example.jobby_oficial.Network.UsersRetroInstance;
 import com.example.jobby_oficial.Repository.UsersRepository;
 import com.google.gson.JsonObject;
@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class UsersViewModel extends AndroidViewModel {
     private UsersRepository usersRepository;
-    private LiveData<List<Users>> getAllUsers;
+    private LiveData<List<User>> getAllUsers;
     private LoginActivity loginActivity = new LoginActivity();
 
     public UsersViewModel(@NonNull Application application) {
@@ -37,19 +37,19 @@ public class UsersViewModel extends AndroidViewModel {
         getAllUsers = usersRepository.getAllUsers();
     }
 
-    public void insert(List<Users> list){
+    public void insert(List<User> list){
         usersRepository.insert(list);
     }
 
-    public LiveData<List<Users>> getAllUsers(){
+    public LiveData<List<User>> getAllUsers(){
         return getAllUsers;
     }
 
     public void makeApiCallUsers (JsonObject jsonObject){
-        Call<List<Users>> call = UsersRetroInstance.getUsersService().getUsersList(jsonObject);
-        call.enqueue(new Callback<List<Users>>() {
+        Call<List<User>> call = UsersRetroInstance.getUsersService().getUserList(jsonObject);
+        call.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 System.out.println("resp: " + response);
                 if (response.isSuccessful() && response.code() != 404){
                     usersRepository.insert(response.body());
@@ -60,15 +60,11 @@ public class UsersViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<Users>> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 Log.e("Error ", "User API: " + t);
                 System.out.println("Error User API: " + t);
                 call.cancel();
             }
         });
-    }
-
-    public void makeDeleteUsers (){
-        usersRepository.delete();
     }
 }

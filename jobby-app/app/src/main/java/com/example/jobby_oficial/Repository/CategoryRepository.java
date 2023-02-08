@@ -13,10 +13,8 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.example.jobby_oficial.Dao.CategoryDao;
-import com.example.jobby_oficial.Dao.UsersDao;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Model.Category;
-import com.example.jobby_oficial.Model.Users;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class CategoryRepository {
     }
 
     public void insert(List<Category> categoryList){
-        new InsertAsyncTask(database).execute(categoryList);
+        new CategoryRepository.InsertAsyncTask(database).execute(categoryList);
     }
 
     public LiveData<List<Category>> getAllCategorys(){

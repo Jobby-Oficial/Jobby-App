@@ -35,6 +35,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
 
     private String mParam1;
     private String mParam2;
+
     private CategoryViewModel categoryViewModel;
     RecyclerView rvCategory;
     CategoryAdapter adapter;
@@ -84,7 +85,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
                 adapter.notifyDataSetChanged();
             }
         });
-        categoryViewModel.makeApiCall();
+        categoryViewModel.makeApiCallCategory();
 
         return view;
 
