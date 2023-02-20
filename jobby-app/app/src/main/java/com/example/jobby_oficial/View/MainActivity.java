@@ -22,6 +22,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.jobby_oficial.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment selectedFragment = new CategoryFragment();
     Bundle bundle;
     NestedScrollView scrollview;
+    LottieAnimationView imgSparklesCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(MeowBottomNavigation.Model item) {
-                // your codes
+                YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgSparklesCategory);
             }
         });
 
@@ -140,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigationView.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
             @Override
             public void onReselectItem(MeowBottomNavigation.Model item) {
-                // your codes
+                //Reselect Item Code
             }
         });
 
@@ -282,5 +286,6 @@ public class MainActivity extends AppCompatActivity {
         fabExtended = findViewById(R.id.fab_Extended);
         fabValuations = findViewById(R.id.fab_Valuations);
         fabProfile = findViewById(R.id.fab_Profile);
+        imgSparklesCategory = findViewById(R.id.lav_sparkles);
     }
 }

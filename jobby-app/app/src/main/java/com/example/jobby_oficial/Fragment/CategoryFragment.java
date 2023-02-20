@@ -25,6 +25,9 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.Adapter.CategoryAdapter;
 import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.R;
