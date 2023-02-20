@@ -19,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private UsersViewModel usersViewModel;
     private static Context mContext;
     List<User> list_users;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +78,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Variaveis Locais
                 boolean bValidation = true;
-
-                if (!isConnected(LoginActivity.this)){
-                    showCustomDialog();
-                }
-                else {
-                    bValidation = Validation(bValidation);
-                    if (bValidation == true) {
+                bValidation = Validation(bValidation);
+                if (bValidation == true) {
+                    if (!isConnected(LoginActivity.this)) {
+                        showInternetDialog();
+                    } else {
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("username", edUsername.getEditText().getText().toString());
                         jsonObject.addProperty("password", edPassword.getEditText().getText().toString());
@@ -113,6 +113,30 @@ public class LoginActivity extends AppCompatActivity {
         else {
             return false;
         }
+    }
+
+    private void showInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_layout));
+
+        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 
     private void showCustomDialog() {
