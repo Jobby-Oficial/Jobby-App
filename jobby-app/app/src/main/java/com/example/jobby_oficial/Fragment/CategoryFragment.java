@@ -7,9 +7,13 @@
 
 package com.example.jobby_oficial.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ import android.widget.Toast;
 import com.example.jobby_oficial.Adapter.CategoryAdapter;
 import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 
 import java.util.ArrayList;
@@ -30,7 +35,7 @@ import java.util.List;
 
 public class CategoryFragment extends Fragment implements CategoryAdapter.OnCategoryListener {
 
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "pCategoryName";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
@@ -45,11 +50,10 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
         // Required empty public constructor
     }
 
-    public static CategoryFragment newInstance(String param1, String param2) {
+    public static CategoryFragment newInstance(String sCategoryName) {
         CategoryFragment fragment = new CategoryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, sCategoryName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,7 +111,13 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
 
     @Override
     public void onCategoryClick(int position) {
-        list_category.get(position);
         Toast.makeText(getContext(),"Category Position: " + position,Toast.LENGTH_SHORT).show();
+        Category category = list_category.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString("nameCategory", category.getName());
+        ServiceFragment fragment = new ServiceFragment();
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction().replace(R.id.fragment_layout, fragment).detach(fragment).attach(fragment).commit();
+        ((MainActivity)getActivity()).NavService();
     }
 }

@@ -238,6 +238,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
 
+    public void NavService () {
+        meowBottomNavigationView.show(2, true);
+    }
+
     private void AddMenuItems() {
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(1, R.drawable.ic_topic));
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(2, R.drawable.ic_business));

@@ -40,6 +40,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     RecyclerView rvService;
     ServiceAdapter adapter;
     List<Service> list_service;
+    String nameCategory;
 
     public ServiceFragment() {
         // Required empty public constructor
@@ -58,8 +59,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString("pCategoryName");
         }
     }
 
@@ -67,6 +67,10 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_service, container, false);
+        Bundle bundle = this.getArguments();
+        if (bundle != null)
+            nameCategory = bundle.getString("nameCategory");
+        System.out.println("Service: " + nameCategory);
         rvService = view.findViewById(R.id.recyclerView_service);
         rvService.setLayoutManager(new LinearLayoutManager(getContext()));
         rvService.setHasFixedSize(true);
