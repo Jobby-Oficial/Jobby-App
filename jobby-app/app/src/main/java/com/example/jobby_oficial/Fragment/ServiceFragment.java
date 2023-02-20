@@ -90,7 +90,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
                             list_service.add(serviceList.get(serviceList.indexOf(i)));
                     }
                     if (list_service.size() == 0)
-                        ((MainActivity)getActivity()).LockScrollview(true);
+                        ((MainActivity) getActivity()).LockScrollview(true);
                     else
                         ((MainActivity)getActivity()).LockScrollview(false);
                     adapter.getAllServices(list_service);
