@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 04/12/21, 12:32
+  ~ Last modified: 26/12/21, 04:54
   ~ Copyright (c) 2021.
   ~ All rights reserved.
   -->
@@ -15,6 +15,28 @@
     tools:context=".View.MainActivity"
     android:background="@color/light_background">
     <!--android:background="#f1f2f6"-->
+
+    <!--<com.airbnb.lottie.LottieAnimationView
+        android:layout_width="1000dp"
+        android:layout_height="600dp"
+        android:layout_marginTop="10dp"
+        android:rotation="-90"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation_14" />-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_sparkles"
+        android:layout_width="460dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-20dp"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animation_15"/>
 
     <!--<io.github.florent37.shapeofview.shapes.ArcView
         android:id="@+id/app_bar_category"

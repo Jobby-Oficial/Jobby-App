@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 25/12/21, 21:07
+ * Last modified: 30/12/21, 01:58
  * Copyright (c) 2021.
  * All rights reserved.
  */
@@ -90,7 +90,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
                             list_service.add(serviceList.get(serviceList.indexOf(i)));
                     }
                     if (list_service.size() == 0)
-                        ((MainActivity)getActivity()).LockScrollview(true);
+                        ((MainActivity) getActivity()).LockScrollview(true);
                     else
                         ((MainActivity)getActivity()).LockScrollview(false);
                     adapter.getAllServices(list_service);

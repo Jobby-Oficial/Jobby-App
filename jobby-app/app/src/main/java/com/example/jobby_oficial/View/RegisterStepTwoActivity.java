@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 24/12/21, 03:05
+ * Last modified: 31/12/21, 00:24
  * Copyright (c) 2021.
  * All rights reserved.
  */
@@ -191,14 +191,14 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
         int isMonthValid = MONTH - uMonth;
         int isDayValid = DAY - uDay;
 
-        if (isYearValid < 14){
+        if (isYearValid < 16){
             tvAgeError.setVisibility(View.VISIBLE);
-            tvAgeError.setText("Invalid Age! (Min 14 Years)");
+            tvAgeError.setText("Invalid Age! (Min 16 Years)");
             validation = false;
         }
-        else if (isYearValid == 14 && (isMonthValid > 0 || isDayValid > 0)){
+        else if (isYearValid == 16 && (isMonthValid > 0 || isDayValid > 0)){
             tvAgeError.setVisibility(View.VISIBLE);
-            tvAgeError.setText("Invalid Age! (Min 14 Years)");
+            tvAgeError.setText("Invalid Age! (Min 16 Years)");
             validation = false;
         }
         else
