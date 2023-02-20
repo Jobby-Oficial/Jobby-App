@@ -117,7 +117,8 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
         bundle.putString("nameCategory", category.getName());
         ServiceFragment fragment = new ServiceFragment();
         fragment.setArguments(bundle);
+        System.out.println("Bondleeeeeeeeeee:" + bundle);
+        ((MainActivity)getActivity()).meowBottomNavigationView.show(2, true);
         getFragmentManager().beginTransaction().replace(R.id.fragment_layout, fragment).detach(fragment).attach(fragment).commit();
-        ((MainActivity)getActivity()).NavService();
     }
 }

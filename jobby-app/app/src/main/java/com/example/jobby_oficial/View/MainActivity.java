@@ -8,6 +8,7 @@
 package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -39,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UsersViewModel usersViewModel;
     private CategoryViewModel categoryViewModel;
-    MeowBottomNavigation meowBottomNavigationView;
+    public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fabExtended, fabValuations, fabProfile;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
     boolean isCheck = false, isOpen = false;
     int iNavBarId = 1;
     Fragment selectedFragment = new CategoryFragment();
+    Bundle bundle;
+    NestedScrollView scrollview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +96,16 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(MeowBottomNavigation.Model item) {
+                // your codes
+            }
+        });
+
+        meowBottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+            @Override
+            public void onClickItem(MeowBottomNavigation.Model item) {
                 getSupportFragmentManager().beginTransaction().remove(selectedFragment).commit();
                 selectedFragment = null;
+                LockScrollview(false);
 
                 switch (item.getId()) {
                     case 1:
@@ -123,13 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, selectedFragment).detach(selectedFragment).attach(selectedFragment).commit();
-            }
-        });
-
-        meowBottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-            @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-                // your codes
             }
         });
 
@@ -238,8 +242,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
 
-    public void NavService () {
-        meowBottomNavigationView.show(2, true);
+    public void LockScrollview (boolean bLock) {
+        if (bLock)
+            scrollview.setNestedScrollingEnabled(false);
+        else
+            scrollview.setNestedScrollingEnabled(true);
     }
 
     private void AddMenuItems() {
@@ -270,8 +277,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitControls() {
         //bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        fabExtended = findViewById(R.id.fab_Extended);
+        scrollview = findViewById(R.id.nestedScrollView);
         meowBottomNavigationView = findViewById(R.id.bottom_navegation);
+        fabExtended = findViewById(R.id.fab_Extended);
         fabValuations = findViewById(R.id.fab_Valuations);
         fabProfile = findViewById(R.id.fab_Profile);
     }

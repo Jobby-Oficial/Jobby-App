@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.jobby_oficial.Adapter.ServiceAdapter;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 
 import java.util.ArrayList;
@@ -83,8 +84,22 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
             @Override
             public void onChanged(List<Service> serviceList) {
-                list_service = serviceList;
-                adapter.getAllServices(serviceList);
+                if (nameCategory != null) {
+                    for (Service i : serviceList) {
+                        if (serviceList.get(serviceList.indexOf(i)).getCategory().equals(nameCategory))
+                            list_service.add(serviceList.get(serviceList.indexOf(i)));
+                    }
+                    if (list_service.size() == 0)
+                        ((MainActivity)getActivity()).LockScrollview(true);
+                    else
+                        ((MainActivity)getActivity()).LockScrollview(false);
+                    adapter.getAllServices(list_service);
+                }
+                else{
+                    list_service = serviceList;
+                    adapter.getAllServices(list_service);
+                }
+                System.out.println("Lista: " + list_service);
                 adapter.notifyDataSetChanged();
             }
         });
