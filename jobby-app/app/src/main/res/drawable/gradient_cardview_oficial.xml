@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 05/12/21, 02:58
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#21CECC"
+        android:centerColor="#12CBC4"
+        android:endColor="#01a3a4"
+        android:angle="0"/>
+    <corners
+        android:radius="0dp"/>
+</shape>

@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 21/12/21, 18:55
+ * Last modified: 25/12/21, 04:21
  * Copyright (c) 2021.
  * All rights reserved.
  */
@@ -15,12 +15,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class UsersRetroInstance {
+public class ServiceRetroInstance {
 
     public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
     public static final String API_KEY = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
-    //http://jobbyapp.epizy.com/admin/v1/users?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
-    //http://10.0.2.2:21080/v1/users/login?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
+    //http://10.0.2.2:21080/v1/services?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
 
     public static Retrofit retrofit;
 
@@ -28,7 +27,7 @@ public class UsersRetroInstance {
             .setLenient()
             .create();
 
-    public static Retrofit getRetrofitUsers(){
+    public static Retrofit getRetrofitService(){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -42,10 +41,5 @@ public class UsersRetroInstance {
                     .build();
         }
         return retrofit;
-    }
-
-    public static UserAPI getUsersService(){
-        UserAPI usersService = getRetrofitUsers().create(UserAPI.class);
-        return usersService;
     }
 }

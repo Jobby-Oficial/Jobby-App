@@ -7,20 +7,25 @@
 
 package com.example.jobby_oficial.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     static TextView tvInvalidLogin;
     private UsersViewModel usersViewModel;
     private static Context mContext;
-    List<Users> list_users;
+    List<User> list_users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         list_users = new ArrayList<>();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        usersViewModel.getAllUsers().observe(this, new Observer<List<Users>>() {
+        usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
-            public void onChanged(List<Users> usersList) {
+            public void onChanged(List<User> usersList) {
                 list_users = usersList;
                 System.out.println("Lista: " + list_users);
             }
@@ -71,14 +76,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Variaveis Locais
                 boolean bValidation = true;
-                bValidation = Validation(bValidation);
-                if (bValidation == true){
-                    //boolean bLogin = false;
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("username", edUsername.getEditText().getText().toString());
-                    jsonObject.addProperty("password", edPassword.getEditText().getText().toString());
-                    tvInvalidLogin.setVisibility(View.INVISIBLE);
-                    usersViewModel.makeApiCallUsers(jsonObject);
+
+                if (!isConnected(LoginActivity.this)){
+                    showCustomDialog();
+                }
+                else {
+                    bValidation = Validation(bValidation);
+                    if (bValidation == true) {
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("username", edUsername.getEditText().getText().toString());
+                        jsonObject.addProperty("password", edPassword.getEditText().getText().toString());
+                        tvInvalidLogin.setVisibility(View.INVISIBLE);
+                        usersViewModel.makeApiCallUsers(jsonObject);
+                    }
                 }
             }
         });
@@ -90,6 +100,38 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private boolean isConnected(LoginActivity login) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) login.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void showCustomDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage("Please connect to the internet to proceed further")
+                .setCancelable(false)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        //finish();
+                    }
+                }).show();
     }
 
     public void initSession(boolean bLogin){

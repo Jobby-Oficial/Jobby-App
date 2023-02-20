@@ -20,7 +20,7 @@
         </shape>
     </item>
     <item
-        android:bottom="10dp"
+        android:bottom="5dp"
         android:left="-100dp"
         android:right="-100dp"
         android:top="-80dp">

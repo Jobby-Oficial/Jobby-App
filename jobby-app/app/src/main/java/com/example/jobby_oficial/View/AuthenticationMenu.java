@@ -8,6 +8,7 @@
 package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.ViewModel.UsersViewModel;
 
 import soup.neumorphism.NeumorphCardView;
 
@@ -25,6 +27,7 @@ public class AuthenticationMenu extends AppCompatActivity {
 
     NeumorphCardView ncContinue;
     Button btnLogin, btnRegister;
+    private UsersViewModel usersViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class AuthenticationMenu extends AppCompatActivity {
         setContentView(R.layout.activity_authentication_menu);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         InitControls();
+
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +65,7 @@ public class AuthenticationMenu extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent= new Intent(AuthenticationMenu.this, MainActivity.class);
                 startActivity(intent);
+                usersViewModel.makeDeleteUsers();
             }
         });
     }

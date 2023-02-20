@@ -8,10 +8,12 @@
 package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,10 +25,10 @@ import android.widget.Toast;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.jobby_oficial.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
-import com.example.jobby_oficial.Model.Users;
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.ProfileFragment;
 import com.example.jobby_oficial.R;
-import com.example.jobby_oficial.ServiceFragment;
+import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UsersViewModel usersViewModel;
     private CategoryViewModel categoryViewModel;
-    MeowBottomNavigation meowBottomNavigationView;
+    public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fabExtended, fabValuations, fabProfile;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
     boolean isCheck = false, isOpen = false;
     int iNavBarId = 1;
     Fragment selectedFragment = new CategoryFragment();
+    Bundle bundle;
+    NestedScrollView scrollview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        usersViewModel.getAllUsers().observe(this, new Observer<List<Users>>() {
+        usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
-            public void onChanged(List<Users> users) {
+            public void onChanged(List<User> users) {
                 //update recyclerview
                 Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
                 Thread thread = new Thread(new Runnable() {
@@ -92,8 +96,16 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(MeowBottomNavigation.Model item) {
+                // your codes
+            }
+        });
+
+        meowBottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+            @Override
+            public void onClickItem(MeowBottomNavigation.Model item) {
                 getSupportFragmentManager().beginTransaction().remove(selectedFragment).commit();
                 selectedFragment = null;
+                LockScrollview(false);
 
                 switch (item.getId()) {
                     case 1:
@@ -125,13 +137,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        meowBottomNavigationView.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-            @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-                // your codes
-            }
-        });
-
         meowBottomNavigationView.setOnReselectListener(new MeowBottomNavigation.ReselectListener() {
             @Override
             public void onReselectItem(MeowBottomNavigation.Model item) {
@@ -152,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
         fabProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent= new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -200,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*private void insert() {
-        Users users = new Users(
+        User users = new User(
                 "guilherme",
                 "123",
                 "img.jpg",
@@ -217,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         /*Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Users> usersList = SingletonRoomDatabase.getInstance(getApplicationContext())
+                List<User> usersList = SingletonRoomDatabase.getInstance(getApplicationContext())
                         .usersDao().getAllUsers();
                 Log.d(TAG, "run: " + usersList.toString());
             }
@@ -225,16 +231,23 @@ public class MainActivity extends AppCompatActivity {
         thread.start();*/
     }
 
-    /*class InsertAsyncTask extends AsyncTask<Users, Void, Void>{
+    /*class InsertAsyncTask extends AsyncTask<User, Void, Void>{
 
         @Override
-        protected Void doInBackground(Users... users) {
+        protected Void doInBackground(User... users) {
             SingletonRoomDatabase.getInstance(getApplicationContext())
                     .usersDao()
                     .insertUser(users[0]);
             return null;
         }
     }*/
+
+    public void LockScrollview (boolean bLock) {
+        if (bLock)
+            scrollview.setNestedScrollingEnabled(false);
+        else
+            scrollview.setNestedScrollingEnabled(true);
+    }
 
     private void AddMenuItems() {
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(1, R.drawable.ic_topic));
@@ -264,8 +277,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitControls() {
         //bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        fabExtended = findViewById(R.id.fab_Extended);
+        scrollview = findViewById(R.id.nestedScrollView);
         meowBottomNavigationView = findViewById(R.id.bottom_navegation);
+        fabExtended = findViewById(R.id.fab_Extended);
         fabValuations = findViewById(R.id.fab_Valuations);
         fabProfile = findViewById(R.id.fab_Profile);
     }

@@ -15,7 +15,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.jobby_oficial.Model.Category;
-import com.example.jobby_oficial.Network.APIServiceCategory;
+import com.example.jobby_oficial.Network.CategoryAPI;
 import com.example.jobby_oficial.Network.CategoryRetroInstance;
 import com.example.jobby_oficial.Repository.CategoryRepository;
 
@@ -43,8 +43,8 @@ public class CategoryViewModel extends AndroidViewModel {
         return getAllCategorys;
     }
 
-    public void makeApiCall(){
-        APIServiceCategory apiServiceCategory = CategoryRetroInstance.getRetrofitCategory().create(APIServiceCategory.class);
+    public void makeApiCallCategory(){
+        CategoryAPI apiServiceCategory = CategoryRetroInstance.getRetrofitCategory().create(CategoryAPI.class);
         Call<List<Category>> call = apiServiceCategory.getCategoryList();
         call.enqueue(new Callback<List<Category>>() {
             @Override
