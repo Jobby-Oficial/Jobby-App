@@ -67,4 +67,8 @@ public class UsersViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void makeDeleteUsers (){
+        usersRepository.delete();
+    }
 }

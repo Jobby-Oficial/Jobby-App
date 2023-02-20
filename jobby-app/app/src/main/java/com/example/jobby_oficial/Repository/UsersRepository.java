@@ -32,15 +32,11 @@ public class UsersRepository {
         new UsersRepository.InsertAsyncTask(database).execute(userList);
     }
 
-<<<<<<< HEAD
     public void delete(){
         new UsersRepository.DeleteAsyncTask(database).execute();
     }
 
     public LiveData<List<User>> getAllUsers(){
-=======
-    public LiveData<List<Users>> getAllUsers(){
->>>>>>> parent of cac5e5c... Profile Layout Components e Animations, Profile User Information e Update Users Modal
         return getAllUsers;
     }
 
@@ -58,7 +54,6 @@ public class UsersRepository {
             return null;
         }
     }
-<<<<<<< HEAD
 
     public static class DeleteAsyncTask extends AsyncTask<List<User>, Void, Void> {
         private UserDao usersDao;
@@ -73,6 +68,4 @@ public class UsersRepository {
             return null;
         }
     }
-=======
->>>>>>> parent of cac5e5c... Profile Layout Components e Animations, Profile User Information e Update Users Modal
 }
