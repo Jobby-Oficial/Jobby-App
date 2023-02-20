@@ -7,13 +7,18 @@
 
 package com.example.jobby_oficial.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -71,14 +76,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Variaveis Locais
                 boolean bValidation = true;
-                bValidation = Validation(bValidation);
-                if (bValidation == true){
-                    //boolean bLogin = false;
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("username", edUsername.getEditText().getText().toString());
-                    jsonObject.addProperty("password", edPassword.getEditText().getText().toString());
-                    tvInvalidLogin.setVisibility(View.INVISIBLE);
-                    usersViewModel.makeApiCallUsers(jsonObject);
+
+                if (!isConnected(LoginActivity.this)){
+                    showCustomDialog();
+                }
+                else {
+                    bValidation = Validation(bValidation);
+                    if (bValidation == true) {
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("username", edUsername.getEditText().getText().toString());
+                        jsonObject.addProperty("password", edPassword.getEditText().getText().toString());
+                        tvInvalidLogin.setVisibility(View.INVISIBLE);
+                        usersViewModel.makeApiCallUsers(jsonObject);
+                    }
                 }
             }
         });
@@ -90,6 +100,38 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private boolean isConnected(LoginActivity login) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) login.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void showCustomDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage("Please connect to the internet to proceed further")
+                .setCancelable(false)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        //finish();
+                    }
+                }).show();
     }
 
     public void initSession(boolean bLogin){
