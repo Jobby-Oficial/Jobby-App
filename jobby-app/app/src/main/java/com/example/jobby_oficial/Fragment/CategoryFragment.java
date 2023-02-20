@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 04/12/21, 12:32
+ * Last modified: 31/12/21, 22:14
  * Copyright (c) 2021.
  * All rights reserved.
  */
@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.CategoryAdapter;
@@ -32,6 +33,10 @@ import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 
 public class CategoryFragment extends Fragment implements CategoryAdapter.OnCategoryListener {
 
@@ -77,8 +82,16 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
         list_category = new ArrayList<>();
 
         adapter = new CategoryAdapter(getContext(), list_category,this);
-        rvCategory.setAdapter(adapter);
+        //rvCategory.setAdapter(adapter);
         //rvCategory.setAdapter(new CategoryAdapter(getContext(), list_category,this));
+
+        //Animations
+        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvCategory.setAdapter(alphaInAnimationAdapter);
+
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getAllCategorys().observe(getViewLifecycleOwner(), new Observer<List<Category>>() {
