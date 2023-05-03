@@ -7,7 +7,7 @@
 
 package com.example.jobby_oficial.Network;
 
-import static com.example.jobby_oficial.Network.ServiceRetroInstance.API_KEY;
+import static com.example.jobby_oficial.Network.ServiceRetroInstance.API_KEY_SERVICE;
 
 import com.example.jobby_oficial.Model.Service;
 

@@ -20,6 +20,7 @@ public class SessionManager {
 
     private static final String IS_LOGIN = "IsLoggedIn";
 
+    public static final String KEY_ID = "id";
     public static final String KEY_USERNAME = "username";
 
     public SessionManager(Context _context) {
@@ -28,14 +29,16 @@ public class SessionManager {
         editor = userSession.edit();
     }
 
-    public void createLoginSession(String username) {
+    public void createLoginSession(String id, String username) {
         editor.putBoolean(IS_LOGIN, true);
+        editor.putString(KEY_ID, id);
         editor.putString(KEY_USERNAME, username);
         editor.commit();
     }
 
     public HashMap<String, String> getUserDetailFromSession() {
         HashMap<String, String> userData = new HashMap<String, String>();
+        userData.put(KEY_ID, userSession.getString(KEY_ID, null));
         userData.put(KEY_USERNAME, userSession.getString(KEY_USERNAME, null));
         return userData;
     }

@@ -10,6 +10,8 @@ package com.example.jobby_oficial;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jobby_oficial.Adapter.ServiceAdapter;
+import com.example.jobby_oficial.Database.SessionManager;
+import com.example.jobby_oficial.Fragment.NotFoundFragment;
+import com.example.jobby_oficial.Model.Favorite;
+import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.View.MainActivity;
+import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
+import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavoriteListener {
 
@@ -27,8 +41,14 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
 
     private String mParam1;
     private String mParam2;
+
+    private FavoriteViewModel favoriteViewModel;
+    private ServiceViewModel serviceViewModel;
     RecyclerView rvFavorite;
-    ArrayList<FavoriteClass> arrayList_favorite;
+    FavoriteAdapter adapter;
+    List<Favorite> list_favorite;
+    List<Service> list_service;
+    String id_User;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -58,7 +78,59 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         rvFavorite = view.findViewById(R.id.recyclerView_favorite);
         rvFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
-        arrayList_favorite = new ArrayList<>();
+        rvFavorite.setHasFixedSize(true);
+        list_favorite = new ArrayList<>();
+        list_service = new ArrayList<>();
+
+        adapter = new FavoriteAdapter(getContext(), list_service,this);
+        rvFavorite.setAdapter(adapter);
+
+        /*SessionManager sessionManager = new SessionManager(getContext());
+        HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
+        id_User = userDetails.get(sessionManager.KEY_ID);*/
+
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        favoriteViewModel.getAllFavorites().observe(getViewLifecycleOwner(), new Observer<List<Favorite>>() {
+            @Override
+            public void onChanged(List<Favorite> favoriteList) {
+                list_favorite = favoriteList;
+                System.out.println("Lista Favoriros: " + list_favorite);
+                if (list_favorite.size() == 0) {
+                    ((MainActivity) getActivity()).LockScrollview(true);
+                    NotFoundFragment fragment = new NotFoundFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_layout, fragment).detach(fragment).attach(fragment).commit();
+
+                } else
+                    ((MainActivity) getActivity()).LockScrollview(false);
+            }
+        });
+        /*JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("user_id", id_User);
+        favoriteViewModel.makeApiCallFavorites(jsonObject);*/
+
+        serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
+        serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
+            @Override
+            public void onChanged(List<Service> serviceList) {
+                list_service.clear();
+                for (Service iService : serviceList) {
+                    for (Favorite iFavorite : list_favorite) {
+                        int iSev = serviceList.get(serviceList.indexOf(iService)).getId();
+                        int iFav = list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id();
+                        if (iSev == iFav)
+                            list_service.add(serviceList.get(serviceList.indexOf(iService)));
+                    }
+                }
+                adapter.getAllFavorites(list_service);
+                adapter.notifyDataSetChanged();
+                System.out.println("Lista Service/Favorite: " + list_service);
+            }
+        });
+        serviceViewModel.makeApiCallServices();
+
+        return view;
+
+        /*arrayList_favorite = new ArrayList<>();
         FavoriteClass favorite1 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 1","Categoria 1");
         FavoriteClass favorite2 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 2","Categoria 2");
         FavoriteClass favorite3 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 3","Categoria 3");
@@ -72,15 +144,12 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         arrayList_favorite.add(favorite4);
         arrayList_favorite.add(favorite5);
         arrayList_favorite.add(favorite6);
-        arrayList_favorite.add(favorite7);
-
-        rvFavorite.setAdapter(new FavoriteAdapter(arrayList_favorite, this));
-        return view;
+        arrayList_favorite.add(favorite7);*/
     }
 
     @Override
     public void onFavoriteClick(int position) {
-        arrayList_favorite.get(position);
+        list_favorite.get(position);
         Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

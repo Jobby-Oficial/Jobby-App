@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 25/12/21, 04:36
- * Copyright (c) 2021.
+ * Last modified: 14/01/22, 08:51
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -15,11 +15,10 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ServiceRetroInstance {
+public class FavoriteRetroInstance {
 
     public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
-    public static final String API_KEY_SERVICE = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
-    //http://10.0.2.2:21080/v1/services?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
+    public static final String API_KEY_FAVORITE = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
 
     public static Retrofit retrofit;
 
@@ -27,7 +26,7 @@ public class ServiceRetroInstance {
             .setLenient()
             .create();
 
-    public static Retrofit getRetrofitService(){
+    public static Retrofit getRetrofitFavorites(){
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -41,5 +40,11 @@ public class ServiceRetroInstance {
                     .build();
         }
         return retrofit;
+    }
+
+    //VER MELHOR
+    public static FavoriteAPI getFavorites(){
+        FavoriteAPI favorites = getRetrofitFavorites().create(FavoriteAPI.class);
+        return favorites;
     }
 }

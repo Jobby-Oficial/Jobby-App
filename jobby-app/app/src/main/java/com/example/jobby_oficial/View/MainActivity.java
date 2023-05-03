@@ -34,14 +34,17 @@ import com.example.jobby_oficial.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Fragment.NotFoundFragment;
 import com.example.jobby_oficial.Fragment.Page404Fragment;
+import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.ProfileFragment;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
+import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +52,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UsersViewModel usersViewModel;
+    private FavoriteViewModel favoriteViewModel;
     private CategoryViewModel categoryViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
@@ -61,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
     LottieAnimationView imgSparklesCategory;
     AlertDialog alertDialog;
     List<User> list_user;
-    String user;
+    List<Favorite> list_favorite;
+    String user, id_User;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         //user = userDetails.get(sessionManager.KEY_USERNAME);
 
-
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
@@ -90,12 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 list_user = users;
                 Log.d(TAG, "run: " + list_user.toString());
 
-                String username, name, email, phone, genre, birth, country, city;
+                String id, username, name, email, phone, genre, birth, country, city;
 
                 SessionManager sessionManager = new SessionManager(MainActivity.this);
 
                 if (list_user.size() != 0) {
                     //System.out.println("Username: " + list_users.get(0).getUsername());
+                    id = String.valueOf(list_user.get(0).getId());
                     username = list_user.get(0).getUsername();
                     name = list_user.get(0).getName();
                     email = list_user.get(0).getEmail();
@@ -104,16 +110,20 @@ public class MainActivity extends AppCompatActivity {
                     birth = list_user.get(0).getBirth();
                     country = list_user.get(0).getCountry();
                     city = list_user.get(0).getCity();
-                    sessionManager.createLoginSession(username);
+                    sessionManager.createLoginSession(id, username);
                     HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
+                    id_User = userDetails.get(sessionManager.KEY_ID);
                     user = userDetails.get(sessionManager.KEY_USERNAME);
                     System.out.println("RUNNNNNN True: " + user);
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("user_id", id_User);
+                    favoriteViewModel.makeApiCallFavorites(jsonObject);
                 }
                 else
-                    sessionManager.createLoginSession(null);
+                    sessionManager.createLoginSession(null, null);
 
                 //update recyclerview
-                Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
                 /*Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -124,6 +134,16 @@ public class MainActivity extends AppCompatActivity {
                 thread.start();*/
             }
         });
+
+
+        favoriteViewModel.getAllFavorites().observe(this, new Observer<List<Favorite>>() {
+            @Override
+            public void onChanged(List<Favorite> favoriteList) {
+                list_favorite = favoriteList;
+                System.out.println("Lista Favoriros/Main: " + list_favorite);
+            }
+        });
+
 
         /*categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getAllCategorys().observe(this, new Observer<List<Category>>() {

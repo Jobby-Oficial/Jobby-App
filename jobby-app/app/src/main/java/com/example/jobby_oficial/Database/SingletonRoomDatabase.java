@@ -17,18 +17,21 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.jobby_oficial.Dao.CategoryDao;
+import com.example.jobby_oficial.Dao.FavoriteDao;
 import com.example.jobby_oficial.Dao.ServiceDao;
 import com.example.jobby_oficial.Dao.UserDao;
 import com.example.jobby_oficial.Model.Category;
+import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.User;
 
-@Database(entities = {Category.class, User.class, Service.class}, version = 1)
+@Database(entities = {Category.class, User.class, Service.class, Favorite.class}, version = 1)
 public abstract class SingletonRoomDatabase extends RoomDatabase {
 
     public abstract CategoryDao categoryDao();
     public abstract UserDao usersDao();
     public abstract ServiceDao serviceDao();
+    public abstract FavoriteDao favoriteDao();
 
     private static volatile SingletonRoomDatabase INSTANCE;
 
@@ -57,11 +60,13 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
         private CategoryDao categoryDao;
         private UserDao usersDao;
         private ServiceDao serviceDao;
+        private FavoriteDao favoriteDao;
 
         private PopulateDbAsyncTask(SingletonRoomDatabase db){
             categoryDao = db.categoryDao();
             usersDao = db.usersDao();
             serviceDao = db.serviceDao();
+            favoriteDao = db.favoriteDao();
         }
 
         @Override
@@ -88,6 +93,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
             categoryDao.deleteAll();
             usersDao.deleteAll();
             serviceDao.deleteAll();
+            favoriteDao.deleteAll();
             return null;
         }
     }

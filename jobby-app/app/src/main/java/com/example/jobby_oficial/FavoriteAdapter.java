@@ -7,6 +7,7 @@
 
 package com.example.jobby_oficial;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jobby_oficial.Model.Favorite;
+import com.example.jobby_oficial.Model.Service;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewholder>{
-    ArrayList<FavoriteClass> arrayList_favorite;
+    private Context context;
+    List<Service> list_favorite;
     OnFavoriteListener onFavoriteListener;
 
-    public FavoriteAdapter(ArrayList<FavoriteClass> arrayList_favorite, OnFavoriteListener onFavoriteListener) {
-        this.arrayList_favorite = arrayList_favorite;
+    public FavoriteAdapter(Context context, List<Service> list_favorite, OnFavoriteListener onFavoriteListener) {
+        this.context = context;
+        this.list_favorite = list_favorite;
         this.onFavoriteListener = onFavoriteListener;
     }
 
@@ -36,14 +43,20 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
 
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
-        holder.imgFavorite.setImageResource(arrayList_favorite.get(position).getImageFavorite());
-        holder.tvNameFavorite.setText(arrayList_favorite.get(position).getNameFavorite());
-        holder.tvCategoryFavorite.setText(arrayList_favorite.get(position).getCategoryFavorite());
+        Service favorite = list_favorite.get(position);
+        //holder.imgFavorite.setImageResource(list_favorite.get(position).getImageFavorite());
+        holder.tvNameFavorite.setText("Service: " + list_favorite.get(position).getName());
+        holder.tvCategoryFavorite.setText("Category: " + list_favorite.get(position).getCategory());
+    }
+
+    public void getAllFavorites(List<Service> favoriteList){
+        this.list_favorite = favoriteList;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return arrayList_favorite.size();
+        return list_favorite.size();
     }
 
     class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {

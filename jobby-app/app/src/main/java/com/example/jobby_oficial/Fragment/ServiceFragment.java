@@ -104,8 +104,8 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
                     list_service = serviceList;
                     adapter.getAllServices(list_service);
                 }
-                System.out.println("Lista: " + list_service);
                 adapter.notifyDataSetChanged();
+                System.out.println("Lista: " + list_service);
             }
         });
         serviceViewModel.makeApiCallServices();

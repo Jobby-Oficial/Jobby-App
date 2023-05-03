@@ -7,7 +7,7 @@
 
 package com.example.jobby_oficial.Network;
 
-import static com.example.jobby_oficial.Network.UsersRetroInstance.API_KEY;
+import static com.example.jobby_oficial.Network.UsersRetroInstance.API_KEY_USER;
 
 import com.example.jobby_oficial.Model.User;
 import com.google.gson.JsonObject;

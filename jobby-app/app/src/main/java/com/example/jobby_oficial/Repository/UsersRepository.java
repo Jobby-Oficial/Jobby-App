@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.jobby_oficial.Dao.FavoriteDao;
 import com.example.jobby_oficial.Dao.UserDao;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Model.User;
