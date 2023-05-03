@@ -89,8 +89,12 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
                         if (serviceList.get(serviceList.indexOf(i)).getCategory().equals(nameCategory))
                             list_service.add(serviceList.get(serviceList.indexOf(i)));
                     }
-                    if (list_service.size() == 0)
+                    if (list_service.size() == 0) {
                         ((MainActivity) getActivity()).LockScrollview(true);
+                        NotFoundFragment fragment = new NotFoundFragment();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_layout, fragment).detach(fragment).attach(fragment).commit();
+
+                    }
                     else
                         ((MainActivity)getActivity()).LockScrollview(false);
                     adapter.getAllServices(list_service);
