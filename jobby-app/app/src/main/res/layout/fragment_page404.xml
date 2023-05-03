@@ -32,7 +32,7 @@
             app:lottie_rawRes="@raw/animation_18" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_page_not_found"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -46,6 +46,7 @@
             tools:layout_editor_absoluteX="123dp" />
 
         <TextView
+            android:id="@+id/tv_content_page_404"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -57,7 +58,7 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_page_not_found" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

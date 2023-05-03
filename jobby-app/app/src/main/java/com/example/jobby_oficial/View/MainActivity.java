@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     boolean isCheck = false, isOpen = false;
     int iNavBarId = 1;
     Fragment selectedFragment = new CategoryFragment();
-    Bundle bundle;
     NestedScrollView scrollview;
     LottieAnimationView imgSparklesCategory;
 

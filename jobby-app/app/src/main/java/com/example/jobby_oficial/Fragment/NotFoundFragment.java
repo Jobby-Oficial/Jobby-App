@@ -14,8 +14,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.R;
+
+import java.util.concurrent.TimeUnit;
 
 public class NotFoundFragment extends Fragment {
 
@@ -24,6 +30,9 @@ public class NotFoundFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    LottieAnimationView imgPageNotFound, imgWaiting;
+    TextView tvNoResultFound, tvContentPageFound;
 
     public NotFoundFragment() {
         // Required empty public constructor
@@ -51,6 +60,22 @@ public class NotFoundFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_not_found, container, false);
+        View view = inflater.inflate(R.layout.fragment_not_found, container, false);
+        InitControls(view);
+        YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgPageNotFound);
+        YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(tvNoResultFound);
+        YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(tvContentPageFound);
+        YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgWaiting);
+
+        //Landing
+
+        return view;
+    }
+
+    private void InitControls(View view) {
+        imgPageNotFound = view.findViewById(R.id.lav_page_not_found);
+        imgWaiting = view.findViewById(R.id.lav_Waiting_page_found);
+        tvNoResultFound = view.findViewById(R.id.tv_no_result_found);
+        tvContentPageFound = view.findViewById(R.id.tv_content_page_found);
     }
 }

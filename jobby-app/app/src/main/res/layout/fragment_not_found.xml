@@ -17,6 +17,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--<com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_page_not_fnd"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="210dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_20" />-->
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lav_page_not_found"
             android:layout_width="match_parent"
@@ -32,7 +44,7 @@
             app:lottie_rawRes="@raw/animation_19" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_no_result_found"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -46,6 +58,7 @@
             tools:layout_editor_absoluteX="123dp" />
 
         <TextView
+            android:id="@+id/tv_content_page_found"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -57,7 +70,21 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_no_result_found" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_Waiting_page_found"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_content_page_found"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_23" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

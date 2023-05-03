@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.jobby_oficial.R;
 
 public class Page404Fragment extends Fragment {
@@ -24,6 +25,8 @@ public class Page404Fragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    LottieAnimationView imgSparklesCategory;
 
     public Page404Fragment() {
         // Required empty public constructor
