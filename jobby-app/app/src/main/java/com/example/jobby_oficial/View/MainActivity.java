@@ -16,23 +16,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.jobby_oficial.Database.SessionManager;
-import com.example.jobby_oficial.FavoriteFragment;
+import com.example.jobby_oficial.Fragment.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
-import com.example.jobby_oficial.Fragment.NotFoundFragment;
 import com.example.jobby_oficial.Fragment.Page404Fragment;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.User;
@@ -45,6 +42,8 @@ import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment selectedFragment = new CategoryFragment();
     NestedScrollView scrollview;
     LottieAnimationView imgSparklesCategory;
+    LikeButton lb_Service;
     AlertDialog alertDialog;
     List<User> list_user;
     List<Favorite> list_favorite;
@@ -246,6 +246,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fabExtended.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabAnimation();
+                //Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*lb_Service = findViewById(R.id.heart_button_service);
+        lb_Service.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                System.out.println("liked");
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                System.out.println("unLiked");
+            }
+        });*/
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
+
+
         /*bottomNavigationView.setBackground(null);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
@@ -277,16 +301,6 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });*/
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
-
-        fabExtended.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fabAnimation();
-                //Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /*private void insert() {

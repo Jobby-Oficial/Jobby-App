@@ -21,10 +21,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.ServiceAdapter;
+import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
+import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +42,11 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     private String mParam2;
 
     private ServiceViewModel serviceViewModel;
+    private FavoriteViewModel favoriteViewModel;
     RecyclerView rvService;
     ServiceAdapter adapter;
     List<Service> list_service;
+    List<Favorite> list_favorite;
     String nameCategory;
 
     public ServiceFragment() {
@@ -76,8 +82,9 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         rvService.setLayoutManager(new LinearLayoutManager(getContext()));
         rvService.setHasFixedSize(true);
         list_service = new ArrayList<>();
+        list_favorite = new ArrayList<>();
 
-        adapter = new ServiceAdapter(getContext(), list_service,this);
+        adapter = new ServiceAdapter(getContext(), list_service, list_favorite,this);
         rvService.setAdapter(adapter);
 
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
@@ -109,6 +116,15 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
             }
         });
         serviceViewModel.makeApiCallServices();
+
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        favoriteViewModel.getAllFavorites().observe(getViewLifecycleOwner(), new Observer<List<Favorite>>() {
+            @Override
+            public void onChanged(List<Favorite> favoriteList) {
+                list_favorite = favoriteList;
+                adapter.getAllFavorites(list_favorite);
+            }
+        });
 
         return view;
 
