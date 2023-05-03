@@ -11,6 +11,7 @@ import static com.example.jobby_oficial.View.MainActivity.favoriteViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,8 @@ import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.View.AuthenticationMenu;
+import com.example.jobby_oficial.View.MainActivity;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -36,6 +40,8 @@ import com.like.OnLikeListener;
 import java.util.List;
 
 public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewholder>{
+    AlertDialog alertDialog;
+    ViewGroup parentView;
     private Context context;
     List<Service> list_service;
     List<Favorite> list_favorite;
@@ -52,6 +58,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_service, parent, false);
+        parentView = parent;
         return new ServiceAdapter.viewholder(view, onServiceListener);
     }
 
@@ -63,11 +70,13 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
         holder.tvNameService.setText("Service: " + list_service.get(position).getName());
         holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
 
-        for (Favorite iFavorite : list_favorite) {
-            int iFav = list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id();
-            int iSev = list_service.get(position).getId();
-            if (iSev == iFav)
-                holder.lb_Service.setLiked(true);
+        if (id_User != null) {
+            for (Favorite iFavorite : list_favorite) {
+                int iFav = list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id();
+                int iSev = list_service.get(position).getId();
+                if (iSev == iFav)
+                    holder.lb_Service.setLiked(true);
+            }
         }
     }
 
@@ -106,12 +115,18 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
                 @Override
                 public void liked(LikeButton likeButton) {
                     System.out.println("liked");
-                    System.out.println("Teste liked: " + getAdapterPosition());
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("service_id", list_service.get(getAdapterPosition()).getId());
-                    jsonObject.addProperty("user_id", id_User);
-                    favoriteViewModel.makeApiCallCreateFavorites(jsonObject);
-                    notifyDataSetChanged();
+                    if (id_User != null) {
+                        System.out.println("Teste liked: " + getAdapterPosition());
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("service_id", list_service.get(getAdapterPosition()).getId());
+                        jsonObject.addProperty("user_id", id_User);
+                        favoriteViewModel.makeApiCallCreateFavorites(jsonObject);
+                        notifyDataSetChanged();
+                    }
+                    else {
+                        lb_Service.setLiked(false);
+                        showSessionDialog();
+                    }
                 }
 
                 @Override
@@ -145,5 +160,30 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
 
     public interface OnServiceListener{
         void onServiceClick(int position);
+    }
+
+    private void showSessionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(parentView.getContext()).inflate(R.layout.dialog_session, parentView.findViewById(R.id.session_dialog));
+
+        view.findViewById(R.id.btn_sign_in_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, AuthenticationMenu.class);
+                context.startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.tv_cancel_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 }

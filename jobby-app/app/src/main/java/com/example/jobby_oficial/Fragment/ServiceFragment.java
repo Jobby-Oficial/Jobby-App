@@ -189,27 +189,27 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
 
         Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
 
-        int id = list_service.get(position).getId();
+        int service_id = list_service.get(position).getId();
         String category = list_service.get(position).getCategory();
         String name = list_service.get(position).getName();
         String description = list_service.get(position).getDescription();
         String price = list_service.get(position).getPrice();
-        int user_id = list_service.get(position).getUser_id();
+        int profissional_id = list_service.get(position).getUser_id();
         String profissional = "";
 
         for (Username iUsername : list_username) {
             int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
-            if (iUser == user_id)
+            if (iUser == profissional_id)
                 profissional = list_username.get(list_username.indexOf(iUsername)).getUsername();
         }
 
         //Put Extra
-        intent.putExtra("Id", id);
+        intent.putExtra("Service_id", service_id);
         intent.putExtra("Category", category);
         intent.putExtra("Name", name);
         intent.putExtra("Description", description);
         intent.putExtra("Price", price);
-        intent.putExtra("User_id", user_id);
+        intent.putExtra("Profissional_id", profissional_id);
         intent.putExtra("Profissional", profissional);
 
         startActivity(intent);

@@ -22,4 +22,7 @@ public interface ScheduleAPI {
 
     @POST("schedules/client?access-token=" + API_KEY_SCHEDULE)
     Call<List<Schedule>> getSchedulesList(@Body JsonObject schedules);
+
+    @POST("schedules?access-token=" + API_KEY_SCHEDULE)
+    Call<Schedule> createSchedule(@Body JsonObject favorites);
 }

@@ -191,12 +191,19 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
         int isMonthValid = MONTH - uMonth;
         int isDayValid = DAY - uDay;
 
+        System.out.println("Date Valid: " + isYearValid + " | " + isMonthValid + " | " + isDayValid);
+
         if (isYearValid < 16){
             tvAgeError.setVisibility(View.VISIBLE);
             tvAgeError.setText("Invalid Age! (Min 16 Years)");
             validation = false;
         }
-        else if (isYearValid == 16 && (isMonthValid > 0 || isDayValid > 0)){
+        else if (isYearValid == 16 && isMonthValid > 0){
+            tvAgeError.setVisibility(View.VISIBLE);
+            tvAgeError.setText("Invalid Age! (Min 16 Years)");
+            validation = false;
+        }
+        else if (isYearValid == 16 && isMonthValid == 0 && isDayValid > 0){
             tvAgeError.setVisibility(View.VISIBLE);
             tvAgeError.setText("Invalid Age! (Min 16 Years)");
             validation = false;

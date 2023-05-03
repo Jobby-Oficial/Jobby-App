@@ -31,12 +31,12 @@ import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewholder>{
     AlertDialog alertDialog;
-    View viewDialog;
+    //View viewDialog;
+    ViewGroup parentView;
     private Context context;
     List<Service> list_service;
     List<Favorite> list_favorite;
     OnFavoriteListener onFavoriteListener;
-    ViewGroup parentView;
 
     public FavoriteAdapter(Context context, List<Service> list_service, List<Favorite> list_favorite, OnFavoriteListener onFavoriteListener) {
         this.context = context;
@@ -126,7 +126,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
     public void showFavoriteDialog(int iAdapterPosition, LikeButton lb_Favorite) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false);
-        viewDialog = LayoutInflater.from(parentView.getContext()).inflate(R.layout.dialog_favorite, parentView.findViewById(R.id.favorite_dialog), false);
+        View viewDialog = LayoutInflater.from(parentView.getContext()).inflate(R.layout.dialog_favorite, parentView.findViewById(R.id.favorite_dialog), false);
 
         viewDialog.findViewById(R.id.btn_remove_favorite).setOnClickListener(new View.OnClickListener() {
             @Override
