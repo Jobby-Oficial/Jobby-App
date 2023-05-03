@@ -18,20 +18,26 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.jobby_oficial.Dao.CategoryDao;
 import com.example.jobby_oficial.Dao.FavoriteDao;
+import com.example.jobby_oficial.Dao.ScheduleDao;
 import com.example.jobby_oficial.Dao.ServiceDao;
 import com.example.jobby_oficial.Dao.UserDao;
+import com.example.jobby_oficial.Dao.UsernameDao;
 import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.Model.Favorite;
+import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.User;
+import com.example.jobby_oficial.Model.Username;
 
-@Database(entities = {Category.class, User.class, Service.class, Favorite.class}, version = 1)
+@Database(entities = {Category.class, User.class, Service.class, Favorite.class, Schedule.class, Username.class}, version = 1)
 public abstract class SingletonRoomDatabase extends RoomDatabase {
 
     public abstract CategoryDao categoryDao();
     public abstract UserDao usersDao();
     public abstract ServiceDao serviceDao();
     public abstract FavoriteDao favoriteDao();
+    public abstract ScheduleDao scheduleDao();
+    public abstract UsernameDao usernameDao();
 
     private static volatile SingletonRoomDatabase INSTANCE;
 
@@ -61,12 +67,16 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
         private UserDao usersDao;
         private ServiceDao serviceDao;
         private FavoriteDao favoriteDao;
+        private ScheduleDao scheduleDao;
+        private UsernameDao usernameDao;
 
         private PopulateDbAsyncTask(SingletonRoomDatabase db){
             categoryDao = db.categoryDao();
             usersDao = db.usersDao();
             serviceDao = db.serviceDao();
             favoriteDao = db.favoriteDao();
+            scheduleDao = db.scheduleDao();
+            usernameDao = db.usernameDao();
         }
 
         @Override
@@ -94,6 +104,8 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
             usersDao.deleteAll();
             serviceDao.deleteAll();
             favoriteDao.deleteAll();
+            scheduleDao.deleteAll();
+            usernameDao.deleteAll();
             return null;
         }
     }

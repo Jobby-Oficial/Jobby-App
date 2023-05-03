@@ -12,10 +12,11 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.jobby_oficial.Dao.FavoriteDao;
 import com.example.jobby_oficial.Dao.UserDao;
+import com.example.jobby_oficial.Dao.UsernameDao;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Model.User;
+import com.example.jobby_oficial.Model.Username;
 
 import java.util.List;
 
@@ -23,14 +24,20 @@ public class UsersRepository {
 
     public SingletonRoomDatabase database;
     private LiveData<List<User>> getAllUsers;
+    private LiveData<List<Username>> getAllUsernames;
 
     public UsersRepository(Application application){
         database = SingletonRoomDatabase.getInstance(application);
         getAllUsers = database.usersDao().getAllUsers();
+        getAllUsernames = database.usernameDao().getAllUsernames();
     }
 
     public void insert(User user){
         new UsersRepository.InsertAsyncTask(database).execute(user);
+    }
+
+    public void insertUsername(List<Username> username){
+        new UsersRepository.InsertUsernameAsyncTask(database).execute(username);
     }
 
     public void delete(){
@@ -39,6 +46,10 @@ public class UsersRepository {
 
     public LiveData<List<User>> getAllUsers(){
         return getAllUsers;
+    }
+
+    public LiveData<List<Username>> getAllUsernames(){
+        return getAllUsernames;
     }
 
     public static class InsertAsyncTask extends AsyncTask<User, Void, Void> {
@@ -66,6 +77,21 @@ public class UsersRepository {
         @Override
         protected Void doInBackground(User... lists) {
             usersDao.deleteAll();
+            return null;
+        }
+    }
+
+    public static class InsertUsernameAsyncTask extends AsyncTask<List<Username>, Void, Void> {
+        private UsernameDao usernamesDao;
+
+        private InsertUsernameAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
+            this.usernamesDao = singletonRoomDatabase.usernameDao();
+        }
+
+        @Override
+        protected Void doInBackground(List<Username>... usernames) {
+            usernamesDao.deleteAll();
+            usernamesDao.insertUsername(usernames[0]);
             return null;
         }
     }

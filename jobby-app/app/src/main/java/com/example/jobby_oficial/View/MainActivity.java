@@ -32,18 +32,22 @@ import com.example.jobby_oficial.Fragment.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Fragment.Page404Fragment;
 import com.example.jobby_oficial.Model.Favorite;
+import com.example.jobby_oficial.Model.Schedule;
+import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.User;
-import com.example.jobby_oficial.ProfileFragment;
+import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.Fragment.ServiceFragment;
+import com.example.jobby_oficial.Fragment.ScheduleFragment;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
+import com.example.jobby_oficial.ViewModel.ScheduleViewModel;
+import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static String user, id_User;
     private UsersViewModel usersViewModel;
+    private ServiceViewModel serviceViewModel;
     public static FavoriteViewModel favoriteViewModel;
+    private ScheduleViewModel scheduleViewModel;
     private CategoryViewModel categoryViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
@@ -66,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
     LikeButton lb_Service;
     AlertDialog alertDialog;
     List<User> list_user;
+    List<Service> list_service;
     List<Favorite> list_favorite;
+    List<Schedule> list_schedule;
+    List<Username> list_username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +92,14 @@ public class MainActivity extends AppCompatActivity {
         rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
-        SessionManager sessionManager = new SessionManager(this);
+        //SessionManager sessionManager = new SessionManager(this);
 
         //user = userDetails.get(sessionManager.KEY_USERNAME);
 
-        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
+        favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+        scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
@@ -107,10 +118,14 @@ public class MainActivity extends AppCompatActivity {
                     HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
                     id_User = userDetails.get(sessionManager.KEY_ID);
                     user = userDetails.get(sessionManager.KEY_USERNAME);
-                    System.out.println("RUNNNNNN True: " + user);
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("user_id", id_User);
                     favoriteViewModel.makeApiCallFavorites(jsonObject);
+                    JsonObject jsonObject2 = new JsonObject();
+                    jsonObject2.addProperty("client_id", id_User);
+                    scheduleViewModel.makeApiCallSchedules(jsonObject2);
+                    serviceViewModel.makeApiCallServices();
+                    usersViewModel.makeApiCallUsernames();
                 }
                 else
                     sessionManager.createLoginSession(null, null);
@@ -128,6 +143,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        serviceViewModel.getAllServices().observe(this, new Observer<List<Service>>() {
+            @Override
+            public void onChanged(List<Service> serviceList) {
+                list_service = serviceList;
+                System.out.println("Lista Username/Main: " + list_username);
+            }
+        });
+
         favoriteViewModel.getAllFavorites().observe(this, new Observer<List<Favorite>>() {
             @Override
             public void onChanged(List<Favorite> favoriteList) {
@@ -136,6 +159,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        scheduleViewModel.getAllSchedules().observe(this, new Observer<List<Schedule>>() {
+            @Override
+            public void onChanged(List<Schedule> scheduleList) {
+                list_schedule = scheduleList;
+                System.out.println("Lista Schedules/Main: " + list_schedule);
+            }
+        });
+
+        usersViewModel.getAllUsernames().observe(this, new Observer<List<Username>>() {
+            @Override
+            public void onChanged(List<Username> usernameList) {
+                list_username = usernameList;
+                System.out.println("Lista Username/Main: " + list_username);
+            }
+        });
 
         /*categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getAllCategorys().observe(this, new Observer<List<Category>>() {
@@ -189,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     case 4:
                         iNavBarId = 4;
                         if (user != null)
-                            selectedFragment = new ProfileFragment();
+                            selectedFragment = new ScheduleFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             //showInternetDialog();
@@ -271,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.profile:
-                    selectedFragment = new ProfileFragment();
+                    selectedFragment = new ScheduleFragment();
                     Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                     break;
             }
