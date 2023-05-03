@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
     public static String user, id_User;
     private UsersViewModel usersViewModel;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 list_user = users;
                 Log.d(TAG, "run: " + list_user.toString());
 
-                String id, username, name, email, phone, genre, birth, country, city;
+                String id, username;
 
                 SessionManager sessionManager = new SessionManager(MainActivity.this);
 

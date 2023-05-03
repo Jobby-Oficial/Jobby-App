@@ -9,6 +9,7 @@ package com.example.jobby_oficial.Fragment;
 
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,10 +27,14 @@ import android.widget.Toast;
 import com.example.jobby_oficial.Adapter.ServiceAdapter;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
+import com.example.jobby_oficial.View.ProfileActivity;
+import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -49,10 +54,12 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
 
     private ServiceViewModel serviceViewModel;
     private FavoriteViewModel favoriteViewModel;
+    private UsersViewModel usersViewModel;
     RecyclerView rvService;
     ServiceAdapter adapter;
     List<Service> list_service;
     List<Favorite> list_favorite;
+    List<Username> list_username;
     String nameCategory;
 
     public ServiceFragment() {
@@ -146,6 +153,16 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         jsonObject2.addProperty("user_id", id_User);
         favoriteViewModel.makeApiCallFavorites(jsonObject2);*/
 
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        usersViewModel.getAllUsernames().observe(getViewLifecycleOwner(), new Observer<List<Username>>() {
+            @Override
+            public void onChanged(List<Username> usernameList) {
+                list_username = usernameList;
+                System.out.println("Lista Username/Service: " + list_username);
+            }
+        });
+        usersViewModel.makeApiCallUsernames();
+
         return view;
 
         /*arrayList_service = new ArrayList<>();
@@ -169,5 +186,32 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     public void onServiceClick(int position) {
         list_service.get(position);
         Toast.makeText(getContext(),"Service Position: " + position,Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
+
+        int id = list_service.get(position).getId();
+        String category = list_service.get(position).getCategory();
+        String name = list_service.get(position).getName();
+        String description = list_service.get(position).getDescription();
+        String price = list_service.get(position).getPrice();
+        int user_id = list_service.get(position).getUser_id();
+        String profissional = "";
+
+        for (Username iUsername : list_username) {
+            int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
+            if (iUser == user_id)
+                profissional = list_username.get(list_username.indexOf(iUsername)).getUsername();
+        }
+
+        //Put Extra
+        intent.putExtra("Id", id);
+        intent.putExtra("Category", category);
+        intent.putExtra("Name", name);
+        intent.putExtra("Description", description);
+        intent.putExtra("Price", price);
+        intent.putExtra("User_id", user_id);
+        intent.putExtra("Profissional", profissional);
+
+        startActivity(intent);
     }
 }

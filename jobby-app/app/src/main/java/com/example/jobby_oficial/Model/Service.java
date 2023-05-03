@@ -35,13 +35,13 @@ public class Service {
 
     @SerializedName("price")
     @ColumnInfo(name = "price")
-    private double price;
+    private String price;
 
     @SerializedName("user_id")
     @ColumnInfo(name = "user_id")
     private int user_id;
 
-    public Service(int id, String category, String name, String description, double price, int user_id) {
+    public Service(int id, String category, String name, String description, String price, int user_id) {
         this.id = id;
         this.category = category;
         this.name = name;
@@ -82,11 +82,11 @@ public class Service {
         this.description = description;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

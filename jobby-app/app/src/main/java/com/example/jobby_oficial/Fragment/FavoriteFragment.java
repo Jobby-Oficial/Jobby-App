@@ -7,6 +7,7 @@
 
 package com.example.jobby_oficial.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,10 +26,13 @@ import android.widget.Toast;
 import com.example.jobby_oficial.Adapter.FavoriteAdapter;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
+import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -47,10 +51,12 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
 
     private FavoriteViewModel favoriteViewModel;
     private ServiceViewModel serviceViewModel;
+    private UsersViewModel usersViewModel;
     RecyclerView rvFavorite;
     FavoriteAdapter adapter;
     List<Favorite> list_favorite;
     List<Service> list_service;
+    List<Username> list_username;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -83,6 +89,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         rvFavorite.setHasFixedSize(true);
         list_favorite = new ArrayList<>();
         list_service = new ArrayList<>();
+        list_username = new ArrayList<>();
 
         adapter = new FavoriteAdapter(getContext(), list_service,this);
         //rvFavorite.setAdapter(adapter);
@@ -137,6 +144,16 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         });
         serviceViewModel.makeApiCallServices();
 
+        usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
+        usersViewModel.getAllUsernames().observe(getViewLifecycleOwner(), new Observer<List<Username>>() {
+            @Override
+            public void onChanged(List<Username> usernameList) {
+                list_username = usernameList;
+                System.out.println("Lista Username/Favorite: " + list_username);
+            }
+        });
+        usersViewModel.makeApiCallUsernames();
+
         /*lb_Service = viewF.findViewById(R.id.heart_button_favorite);
         lb_Service.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -173,5 +190,32 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
     public void onFavoriteClick(int position) {
         list_favorite.get(position);
         Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
+
+        int id = list_service.get(position).getId();
+        String category = list_service.get(position).getCategory();
+        String name = list_service.get(position).getName();
+        String description = list_service.get(position).getDescription();
+        String price = list_service.get(position).getPrice();
+        int user_id = list_service.get(position).getUser_id();
+        String profissional = "";
+
+        for (Username iUsername : list_username) {
+            int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
+            if (iUser == user_id)
+                profissional = list_username.get(list_username.indexOf(iUsername)).getUsername();
+        }
+
+        //Put Extra
+        intent.putExtra("Id", id);
+        intent.putExtra("Category", category);
+        intent.putExtra("Name", name);
+        intent.putExtra("Description", description);
+        intent.putExtra("Price", price);
+        intent.putExtra("User_id", user_id);
+        intent.putExtra("Profissional", profissional);
+
+        startActivity(intent);
     }
 }

@@ -67,8 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         lavBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(ProfileActivity.this, MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
