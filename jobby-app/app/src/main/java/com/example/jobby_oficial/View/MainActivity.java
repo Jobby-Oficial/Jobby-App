@@ -50,8 +50,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    public static String user, id_User;
     private UsersViewModel usersViewModel;
-    private FavoriteViewModel favoriteViewModel;
+    public static FavoriteViewModel favoriteViewModel;
     private CategoryViewModel categoryViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     AlertDialog alertDialog;
     List<User> list_user;
     List<Favorite> list_favorite;
-    String user, id_User;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     //System.out.println("Username: " + list_users.get(0).getUsername());
                     id = String.valueOf(list_user.get(0).getId());
                     username = list_user.get(0).getUsername();
-                    name = list_user.get(0).getName();
-                    email = list_user.get(0).getEmail();
-                    phone = list_user.get(0).getPhone();
-                    genre = list_user.get(0).getGenre();
-                    birth = list_user.get(0).getBirth();
-                    country = list_user.get(0).getCountry();
-                    city = list_user.get(0).getCity();
                     sessionManager.createLoginSession(id, username);
                     HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
                     id_User = userDetails.get(sessionManager.KEY_ID);
@@ -134,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 thread.start();*/
             }
         });
-
 
         favoriteViewModel.getAllFavorites().observe(this, new Observer<List<Favorite>>() {
             @Override
@@ -254,19 +246,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*lb_Service = findViewById(R.id.heart_button_service);
-        lb_Service.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-                System.out.println("liked");
-            }
-
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                System.out.println("unLiked");
-            }
-        });*/
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
 
 
@@ -303,18 +282,20 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
-    /*private void insert() {
-        User users = new User(
-                "guilherme",
-                "123",
-                "img.jpg",
-                "Guilherme Cruz",
-                "guilhermecruz@gmail.com",
-                "912345678",
-                "Masculino",
-                "28-01-2000");
-        InsertAsyncTask insertAsyncTask = new InsertAsyncTask();
-        insertAsyncTask.execute(users);
+    /*public void testeUser(){
+        User user = new User(7,"guilhermecruz","teste1234","/assets/img/user-profile.svg","Guilherme Cruz","guilhermecruz@gmail.com","933310757","m","2000-01-28","Armenia","Ashtarak");
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("username", "guilhermecruz");
+        jsonObject.addProperty("password_hash", "teste1234");
+        jsonObject.addProperty("image", "/assets/img/user-profile.svg");
+        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
+        jsonObject.addProperty("name", "Guilherme Cruz");
+        jsonObject.addProperty("phone", "933310757");
+        jsonObject.addProperty("genre", "guilhermecruz@gmail.com");
+        jsonObject.addProperty("", "guilhermecruz@gmail.com");
+        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
+        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
+        usersViewModel.makeApiCallCreateUsers(user);
     }*/
 
     private void getAll() {

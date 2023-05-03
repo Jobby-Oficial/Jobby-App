@@ -7,6 +7,9 @@
 
 package com.example.jobby_oficial.Adapter;
 
+import static com.example.jobby_oficial.View.MainActivity.favoriteViewModel;
+import static com.example.jobby_oficial.View.MainActivity.id_User;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jobby_oficial.Database.SingletonRoomDatabase;
+import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
+import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -95,11 +104,33 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
                 @Override
                 public void liked(LikeButton likeButton) {
                     System.out.println("liked");
+                    System.out.println("Teste liked: " + getAdapterPosition());
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("service_id", list_service.get(getAdapterPosition()).getId());
+                    jsonObject.addProperty("user_id", id_User);
+                    favoriteViewModel.makeApiCallCreateFavorites(jsonObject);
+                    notifyDataSetChanged();
                 }
 
                 @Override
                 public void unLiked(LikeButton likeButton) {
                     System.out.println("unLiked");
+                    int iSev = list_service.get(getAdapterPosition()).getId();
+                    int iUser = Integer.parseInt(id_User);
+                    System.out.println("Teste unLiked: " + iSev + " | " + iUser);
+                    for (Favorite iFavorite : list_favorite) {
+                        if (iUser == list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id()){
+                            System.out.println(iUser + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id());
+                            System.out.println(iSev + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id());
+                            if (iSev == list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id()) {
+                                System.out.println(iSev + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id());
+                                int id = list_favorite.get(list_favorite.indexOf(iFavorite)).getId();
+                                System.out.println("Delete: " + id);
+                                favoriteViewModel.makeApiCallDeleteFavorites(id);
+                                notifyDataSetChanged();
+                            }
+                        }
+                    }
                 }
             });
         }

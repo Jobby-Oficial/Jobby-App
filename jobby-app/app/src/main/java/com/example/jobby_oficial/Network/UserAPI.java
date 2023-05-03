@@ -16,6 +16,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface UserAPI {
@@ -23,7 +24,10 @@ public interface UserAPI {
     @POST("guests/login")
     Call<User> getUserList(@Body JsonObject users);
 
+    /*@POST("guests/register")
+    Call<User> postUserList(@Body JsonObject user);*/
 
+    //@Headers({"Accept:application/json", "Content-Type:application/json"})
     /*@POST("users/login?access-token=" + API_KEY)
     Call<List<User>> getUserList(@Body JsonObject users);*/
 }

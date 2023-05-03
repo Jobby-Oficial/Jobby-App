@@ -7,6 +7,8 @@
 
 package com.example.jobby_oficial.Fragment;
 
+import static com.example.jobby_oficial.View.MainActivity.id_User;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,7 @@ import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
@@ -88,14 +91,15 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         list_favorite = new ArrayList<>();
 
         adapter = new ServiceAdapter(getContext(), list_service, list_favorite,this);
-        //rvService.setAdapter(adapter);
+        rvService.setAdapter(adapter);
 
         //Animations
-        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        /*AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
         alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
         alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
         alphaInAnimationAdapter.setFirstOnly(false);
         rvService.setAdapter(alphaInAnimationAdapter);
+        System.out.println("Servieeeeeeeeeeee Atividadeeeeeeeeeeeeeee");*/
 
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
@@ -133,8 +137,14 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
             public void onChanged(List<Favorite> favoriteList) {
                 list_favorite = favoriteList;
                 adapter.getAllFavorites(list_favorite);
+                rvService.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
+                System.out.println("Lista NOVAAAAAAAAAAA: " + list_favorite);
             }
         });
+        /*JsonObject jsonObject2 = new JsonObject();
+        jsonObject2.addProperty("user_id", id_User);
+        favoriteViewModel.makeApiCallFavorites(jsonObject2);*/
 
         return view;
 
