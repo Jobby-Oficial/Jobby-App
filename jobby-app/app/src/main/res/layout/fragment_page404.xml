@@ -18,7 +18,7 @@
         android:layout_height="match_parent">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lav_page_not_found"
+            android:id="@+id/lav_page_404_not_found"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginStart="40dp"
@@ -32,7 +32,7 @@
             app:lottie_rawRes="@raw/animation_18" />
 
         <TextView
-            android:id="@+id/tv_page_not_found"
+            android:id="@+id/tv_page_404_not_found"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -42,7 +42,7 @@
             android:textColor="@color/black"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/lav_page_not_found"
+            app:layout_constraintTop_toBottomOf="@+id/lav_page_404_not_found"
             tools:layout_editor_absoluteX="123dp" />
 
         <TextView
@@ -58,7 +58,7 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/tv_page_not_found" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_page_404_not_found" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
