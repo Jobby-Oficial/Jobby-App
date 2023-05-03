@@ -27,10 +27,13 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
+import com.example.jobby_oficial.AvaliationActivity;
+import com.example.jobby_oficial.AvaliationFragment;
 import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.Fragment.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
 import com.example.jobby_oficial.Fragment.Page404Fragment;
+import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
@@ -39,6 +42,7 @@ import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Fragment.ScheduleFragment;
+import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.CategoryViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ScheduleViewModel;
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceViewModel serviceViewModel;
     public static FavoriteViewModel favoriteViewModel;
     private ScheduleViewModel scheduleViewModel;
-    private CategoryViewModel categoryViewModel;
+    private AvaliationViewModel avaliationViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fabExtended, fabValuations, fabProfile;
@@ -76,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     List<Service> list_service;
     List<Favorite> list_favorite;
     List<Schedule> list_schedule;
+    List<Avaliation> list_avaliation;
     List<Username> list_username;
 
     @Override
@@ -101,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
+        avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
+
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
@@ -119,12 +126,15 @@ public class MainActivity extends AppCompatActivity {
                     HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
                     id_User = userDetails.get(sessionManager.KEY_ID);
                     user = userDetails.get(sessionManager.KEY_USERNAME);
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("user_id", id_User);
-                    favoriteViewModel.makeApiCallFavorites(jsonObject);
-                    JsonObject jsonObject2 = new JsonObject();
-                    jsonObject2.addProperty("client_id", id_User);
-                    scheduleViewModel.makeApiCallSchedules(jsonObject2);
+                    JsonObject joFavorite = new JsonObject();
+                    joFavorite.addProperty("user_id", id_User);
+                    favoriteViewModel.makeApiCallFavorites(joFavorite);
+                    JsonObject joSchedule = new JsonObject();
+                    joSchedule.addProperty("client_id", id_User);
+                    scheduleViewModel.makeApiCallSchedules(joSchedule);
+                    JsonObject joAvaliation = new JsonObject();
+                    joAvaliation.addProperty("user_id", id_User);
+                    avaliationViewModel.makeApiCallAvaliations(joAvaliation);
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
                 }
@@ -165,6 +175,14 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Schedule> scheduleList) {
                 list_schedule = scheduleList;
                 System.out.println("Lista Schedules/Main: " + list_schedule);
+            }
+        });
+
+        avaliationViewModel.getAllAvaliations().observe(this, new Observer<List<Avaliation>>() {
+            @Override
+            public void onChanged(List<Avaliation> avaliationList) {
+                list_avaliation = avaliationList;
+                System.out.println("Lista Avaliations/Main: " + list_avaliation);
             }
         });
 
@@ -228,6 +246,17 @@ public class MainActivity extends AppCompatActivity {
                     case 4:
                         iNavBarId = 4;
                         if (user != null)
+                            selectedFragment = new AvaliationFragment();
+                        else {
+                            selectedFragment = new Page404Fragment();
+                            //showInternetDialog();
+                        }
+                        //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 5:
+                        iNavBarId = 5;
+                        if (user != null)
                             selectedFragment = new ScheduleFragment();
                         else {
                             selectedFragment = new Page404Fragment();
@@ -255,11 +284,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    /*Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(intent);*/
+                    Intent intent = new Intent(MainActivity.this, AvaliationActivity.class);
+                    startActivity(intent);
                 }
                 else {
-                    showInternetDialog();
+                    showSessionDialog();
                 }
             }
         });
@@ -272,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    showInternetDialog();
+                    showSessionDialog();
                 }
             }
         });
@@ -360,10 +389,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
 
-    private void showInternetDialog() {
+    public void showFavoriteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_session, findViewById(R.id.session_layout));
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_favorite, findViewById(R.id.favorite_dialog));
+
+        view.findViewById(R.id.btn_remove_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.tv_cancel_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
+
+    private void showSessionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_session, findViewById(R.id.session_dialog));
 
         view.findViewById(R.id.btn_sign_in_session).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -396,7 +450,8 @@ public class MainActivity extends AppCompatActivity {
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(1, R.drawable.ic_topic));
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(2, R.drawable.ic_business));
         meowBottomNavigationView.add(new MeowBottomNavigation.Model(3, R.drawable.ic_favorite));
-        meowBottomNavigationView.add(new MeowBottomNavigation.Model(4, R.drawable.ic_calendar));
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(4, R.drawable.ic_star));
+        meowBottomNavigationView.add(new MeowBottomNavigation.Model(5, R.drawable.ic_calendar));
     }
 
     private void fabAnimation(){

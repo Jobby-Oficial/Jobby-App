@@ -100,7 +100,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
                 }
                 else
                     ((MainActivity)getActivity()).LockScrollview(false);
-                adapter.getAllSchedule(list_schedule);
+                adapter.getAllSchedules(list_schedule);
                 adapter.notifyDataSetChanged();
                 System.out.println("Lista Schedules: " + list_schedule);
             }
@@ -114,7 +114,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
             @Override
             public void onChanged(List<Service> serviceList) {
                 list_service = serviceList;
-                adapter.getAllService(list_service);
+                adapter.getAllServices(list_service);
                 adapter.notifyDataSetChanged();
                 System.out.println("Lista Service: " + list_service);
             }
@@ -126,7 +126,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
             @Override
             public void onChanged(List<Username> usernameList) {
                 list_username = usernameList;
-                adapter.getAllUsername(list_username);
+                adapter.getAllUsernames(list_username);
                 adapter.notifyDataSetChanged();
                 System.out.println("Lista Username: " + list_username);
             }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 21/01/22, 19:26
+  ~ Copyright (c) 2022.
+  ~ All rights reserved.
+  -->
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="20dp"
+    app:cardMaxElevation="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_cardview_oficial"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_rating_avaliation"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/bungee"
+            android:textAlignment="center"
+            android:textColor="#000"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lav_star_avaliation"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="-10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_28" />
+
+        <LinearLayout
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_service_avaliation"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:fontFamily="@font/bungee"
+                android:gravity="center"
+                android:text="description"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_service_avaliationn"
+            android:layout_width="210dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/bungee"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

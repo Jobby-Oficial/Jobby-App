@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Model.Favorite;
@@ -58,6 +59,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         Service service = list_service.get(position);
         //holder.imgService.setImageResource(arrayList_service.get(position).getImageService());
+        //Glide.with(context).load(service.getImage()).into(holder.imgService);
         holder.tvNameService.setText("Service: " + list_service.get(position).getName());
         holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
 

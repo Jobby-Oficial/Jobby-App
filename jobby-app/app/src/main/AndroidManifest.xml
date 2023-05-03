@@ -14,6 +14,9 @@
         android:theme="@style/Theme.Jobby_Oficial"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".AvaliationActivity"
+            android:exported="false" />
+        <activity
             android:name=".View.ServiceDetailActivity"
             android:exported="false" />
         <activity

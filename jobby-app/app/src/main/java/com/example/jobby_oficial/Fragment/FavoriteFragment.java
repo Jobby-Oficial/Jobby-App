@@ -91,7 +91,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         list_service = new ArrayList<>();
         list_username = new ArrayList<>();
 
-        adapter = new FavoriteAdapter(getContext(), list_service,this);
+        adapter = new FavoriteAdapter(getContext(), list_service, list_favorite,this);
         //rvFavorite.setAdapter(adapter);
 
         //Animations
@@ -109,6 +109,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         favoriteViewModel.getAllFavorites().observe(getViewLifecycleOwner(), new Observer<List<Favorite>>() {
             @Override
             public void onChanged(List<Favorite> favoriteList) {
+                list_favorite.clear();
                 list_favorite = favoriteList;
                 System.out.println("Lista Favoriros: " + list_favorite);
                 if (list_favorite.size() == 0) {
@@ -118,6 +119,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
 
                 } else
                     ((MainActivity) getActivity()).LockScrollview(false);
+                adapter.getAllFavorites(list_favorite);
             }
         });
         /*JsonObject jsonObject = new JsonObject();
@@ -137,7 +139,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
                             list_service.add(serviceList.get(serviceList.indexOf(iService)));
                     }
                 }
-                adapter.getAllFavorites(list_service);
+                adapter.getAllServices(list_service);
                 adapter.notifyDataSetChanged();
                 System.out.println("Lista Service/Favorite: " + list_service);
             }

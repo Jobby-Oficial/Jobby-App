@@ -90,17 +90,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
         holder.tvPriceSchedule.setText(String.valueOf(list_schedule.get(position).getPrice()) + "€");
     }
 
-    public void getAllSchedule(List<Schedule> scheduleList){
+    public void getAllSchedules(List<Schedule> scheduleList){
         this.list_schedule = scheduleList;
         notifyDataSetChanged();
     }
 
-    public void getAllUsername(List<Username> usernameList){
+    public void getAllUsernames(List<Username> usernameList){
         this.list_username = usernameList;
         notifyDataSetChanged();
     }
 
-    public void getAllService(List<Service> serviceList){
+    public void getAllServices(List<Service> serviceList){
         this.list_service = serviceList;
         notifyDataSetChanged();
     }

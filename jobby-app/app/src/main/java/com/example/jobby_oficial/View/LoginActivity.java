@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_layout));
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_dialog));
 
         view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
             @Override

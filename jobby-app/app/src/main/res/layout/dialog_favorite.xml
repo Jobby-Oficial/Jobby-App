@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 31/12/21, 16:46
-  ~ Copyright (c) 2021.
+  ~ Last modified: 21/01/22, 00:54
+  ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/session_dialog"
+    android:id="@+id/favorite_dialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -34,20 +34,20 @@
             android:layout_marginRight="2dp">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lav_session"
+                android:id="@+id/lav_favorite"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/animation_16" />
+                app:lottie_rawRes="@raw/animation_27" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Not Logged In"
+                android:layout_marginTop="10dp"
+                android:text="Remove Favorite? "
                 android:textColor="@color/white"
                 android:textSize="25dp"
                 android:textStyle="bold"
@@ -62,13 +62,13 @@
                 android:gravity="center"
                 android:paddingLeft="60dp"
                 android:paddingRight="60dp"
-                android:text="To enjoy all Jobby benefits, you need to login."
+                android:text="Please confirm if you want to delete the favorite"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_sign_in_session"
+                android:id="@+id/btn_remove_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginTop="35dp"
@@ -76,13 +76,13 @@
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
                 android:elevation="8dp"
-                android:text="Sign In or Sign Up"
+                android:text="Remove"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:transitionName="tn_login"/>
 
             <TextView
-                android:id="@+id/tv_cancel_session"
+                android:id="@+id/tv_cancel_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
