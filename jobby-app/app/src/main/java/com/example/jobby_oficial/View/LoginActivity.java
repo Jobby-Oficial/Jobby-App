@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {

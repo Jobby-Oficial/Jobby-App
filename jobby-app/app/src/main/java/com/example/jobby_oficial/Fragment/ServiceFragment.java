@@ -84,6 +84,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
             @Override
             public void onChanged(List<Service> serviceList) {
+                list_service.clear();
                 if (nameCategory != null) {
                     for (Service i : serviceList) {
                         if (serviceList.get(serviceList.indexOf(i)).getCategory().equals(nameCategory))

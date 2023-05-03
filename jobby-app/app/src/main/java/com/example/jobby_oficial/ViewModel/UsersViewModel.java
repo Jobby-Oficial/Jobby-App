@@ -54,7 +54,6 @@ public class UsersViewModel extends AndroidViewModel {
                 System.out.println("resp: " + response);
                 if (response.isSuccessful() && response.code() != 404){
                     usersRepository.insert(response.body());
-
                     loginActivity.initSession(true);
                 }
                 else

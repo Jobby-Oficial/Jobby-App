@@ -7,6 +7,7 @@
 
 package com.example.jobby_oficial.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -15,7 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -26,8 +29,11 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
+import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
+import com.example.jobby_oficial.Fragment.NotFoundFragment;
+import com.example.jobby_oficial.Fragment.Page404Fragment;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.ProfileFragment;
 import com.example.jobby_oficial.R;
@@ -37,6 +43,7 @@ import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment selectedFragment = new CategoryFragment();
     NestedScrollView scrollview;
     LottieAnimationView imgSparklesCategory;
+    AlertDialog alertDialog;
+    List<User> list_user;
+    String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +78,50 @@ public class MainActivity extends AppCompatActivity {
         rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
+        SessionManager sessionManager = new SessionManager(this);
+
+        //user = userDetails.get(sessionManager.KEY_USERNAME);
+
+
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
+                list_user = users;
+                Log.d(TAG, "run: " + list_user.toString());
+
+                String username, name, email, phone, genre, birth, country, city;
+
+                SessionManager sessionManager = new SessionManager(MainActivity.this);
+
+                if (list_user.size() != 0) {
+                    //System.out.println("Username: " + list_users.get(0).getUsername());
+                    username = list_user.get(0).getUsername();
+                    name = list_user.get(0).getName();
+                    email = list_user.get(0).getEmail();
+                    phone = list_user.get(0).getPhone();
+                    genre = list_user.get(0).getGenre();
+                    birth = list_user.get(0).getBirth();
+                    country = list_user.get(0).getCountry();
+                    city = list_user.get(0).getCity();
+                    sessionManager.createLoginSession(username);
+                    HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
+                    user = userDetails.get(sessionManager.KEY_USERNAME);
+                    System.out.println("RUNNNNNN True: " + user);
+                }
+                else
+                    sessionManager.createLoginSession(null);
+
                 //update recyclerview
                 Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
-                Thread thread = new Thread(new Runnable() {
+                /*Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
 
                         Log.d(TAG, "run: " + users.toString());
                     }
                 });
-                thread.start();
+                thread.start();*/
             }
         });
 
@@ -125,13 +165,23 @@ public class MainActivity extends AppCompatActivity {
 
                     case 3:
                         iNavBarId = 3;
-                        selectedFragment = new FavoriteFragment();
+                        if (user != null)
+                            selectedFragment = new FavoriteFragment();
+                        else {
+                            selectedFragment = new Page404Fragment();
+                            //showInternetDialog();
+                        }
                         //Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 4:
                         iNavBarId = 4;
-                        selectedFragment = new ProfileFragment();
+                        if (user != null)
+                            selectedFragment = new ProfileFragment();
+                        else {
+                            selectedFragment = new Page404Fragment();
+                            //showInternetDialog();
+                        }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -153,15 +203,26 @@ public class MainActivity extends AppCompatActivity {
         fabValuations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (user != null) {
+                    /*Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);*/
+                }
+                else {
+                    showInternetDialog();
+                }
             }
         });
 
         fabProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                if (user != null) {
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    showInternetDialog();
+                }
             }
         });
 
@@ -244,6 +305,31 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }*/
+
+    private void showInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_session, findViewById(R.id.session_layout));
+
+        view.findViewById(R.id.btn_sign_in_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.tv_cancel_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
 
     public void LockScrollview (boolean bLock) {
         if (bLock)

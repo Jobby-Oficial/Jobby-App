@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 
@@ -63,9 +64,11 @@ public class AuthenticationMenu extends AppCompatActivity {
         ncContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(AuthenticationMenu.this, MainActivity.class);
-                startActivity(intent);
+                SessionManager sessionManager = new SessionManager(AuthenticationMenu.this);
+                sessionManager.logoutUserFromSession();
                 usersViewModel.makeDeleteUsers();
+                Intent intent = new Intent(AuthenticationMenu.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
