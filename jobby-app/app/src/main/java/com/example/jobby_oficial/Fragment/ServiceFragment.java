@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.ServiceAdapter;
@@ -32,6 +33,8 @@ import com.like.OnLikeListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 public class ServiceFragment extends Fragment implements ServiceAdapter.OnServiceListener {
 
@@ -85,7 +88,14 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         list_favorite = new ArrayList<>();
 
         adapter = new ServiceAdapter(getContext(), list_service, list_favorite,this);
-        rvService.setAdapter(adapter);
+        //rvService.setAdapter(adapter);
+
+        //Animations
+        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvService.setAdapter(alphaInAnimationAdapter);
 
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {

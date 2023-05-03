@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.FavoriteAdapter;
@@ -32,6 +33,8 @@ import com.like.OnLikeListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavoriteListener {
 
@@ -81,7 +84,14 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         list_service = new ArrayList<>();
 
         adapter = new FavoriteAdapter(getContext(), list_service,this);
-        rvFavorite.setAdapter(adapter);
+        //rvFavorite.setAdapter(adapter);
+
+        //Animations
+        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvFavorite.setAdapter(alphaInAnimationAdapter);
 
         /*SessionManager sessionManager = new SessionManager(getContext());
         HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
