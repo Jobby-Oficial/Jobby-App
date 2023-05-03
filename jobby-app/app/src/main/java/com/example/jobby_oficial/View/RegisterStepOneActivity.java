@@ -46,16 +46,16 @@ public class RegisterStepOneActivity extends AppCompatActivity {
         btnGoToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(RegisterStepOneActivity.this, LoginActivity.class);
+                Intent intent = new Intent(RegisterStepOneActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
         lavBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(RegisterStepOneActivity.this, AuthenticationMenu.class);
-                startActivity(intent);
+                finish();
             }
         });
 

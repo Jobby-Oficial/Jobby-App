@@ -32,6 +32,7 @@ import com.example.jobby_oficial.AvaliationFragment;
 import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.Fragment.FavoriteFragment;
 import com.example.jobby_oficial.Fragment.CategoryFragment;
+import com.example.jobby_oficial.Fragment.NotFoundFragment;
 import com.example.jobby_oficial.Fragment.Page404Fragment;
 import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
@@ -59,6 +60,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    SessionManager sessionManager;
     public static String user, id_User;
     private UsersViewModel usersViewModel;
     private ServiceViewModel serviceViewModel;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private AvaliationViewModel avaliationViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
-    FloatingActionButton fabExtended, fabValuations, fabProfile;
+    FloatingActionButton fabExtended, fabLogout, fabProfile;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
     boolean isCheck = false, isOpen = false;
     int iNavBarId = 1;
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         //user = userDetails.get(sessionManager.KEY_USERNAME);
 
+        sessionManager = new SessionManager(MainActivity.this);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
@@ -114,14 +117,13 @@ public class MainActivity extends AppCompatActivity {
                 list_user = users;
                 Log.d(TAG, "run: " + list_user.toString());
 
-                String id, username;
-
-                SessionManager sessionManager = new SessionManager(MainActivity.this);
+                //String id, username;
+                //SessionManager sessionManager = new SessionManager(MainActivity.this);
 
                 if (list_user.size() != 0) {
                     //System.out.println("Username: " + list_users.get(0).getUsername());
-                    id = String.valueOf(list_user.get(0).getId());
-                    username = list_user.get(0).getUsername();
+                    String id = String.valueOf(list_user.get(0).getId());
+                    String username = list_user.get(0).getUsername();
                     sessionManager.createLoginSession(id, username);
                     HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
                     id_User = userDetails.get(sessionManager.KEY_ID);
@@ -137,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
                     avaliationViewModel.makeApiCallAvaliations(joAvaliation);
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
+
+                    if (user != null)
+                        fabLogout.setVisibility(View.INVISIBLE);
+                    else
+                        fabLogout.setVisibility(View.GONE);
                 }
                 else
                     sessionManager.createLoginSession(null, null);
@@ -194,17 +201,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        categoryViewModel.getAllCategorys().observe(this, new Observer<List<Category>>() {
-            @Override
-            public void onChanged(List<Category> categories) {
-
-            }
-        });*/
-
-        //insert();
-        //getAll();
-
         meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(MeowBottomNavigation.Model item) {
@@ -238,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new FavoriteFragment();
                         else {
                             selectedFragment = new Page404Fragment();
+                            LockScrollview(true);
                             //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
@@ -249,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new AvaliationFragment();
                         else {
                             selectedFragment = new Page404Fragment();
+                            LockScrollview(true);
                             //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
@@ -260,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new ScheduleFragment();
                         else {
                             selectedFragment = new Page404Fragment();
+                            LockScrollview(true);
                             //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
@@ -280,16 +279,15 @@ public class MainActivity extends AppCompatActivity {
         //meowBottomNavigationView.setCount(1,"10");
         meowBottomNavigationView.show(1, true);
 
-        fabValuations.setOnClickListener(new View.OnClickListener() {
+        fabLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user != null) {
-                    Intent intent = new Intent(MainActivity.this, AvaliationActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    showSessionDialog();
-                }
+                id_User = null;
+                user = null;
+                sessionManager.logoutUserFromSession();
+                Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -300,9 +298,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(intent);
                 }
-                else {
+                else
                     showSessionDialog();
-                }
             }
         });
 
@@ -366,8 +363,8 @@ public class MainActivity extends AppCompatActivity {
         usersViewModel.makeApiCallCreateUsers(user);
     }*/
 
-    private void getAll() {
-        /*Thread thread = new Thread(new Runnable() {
+    /*private void getAll() {
+        *//*Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 List<User> usersList = SingletonRoomDatabase.getInstance(getApplicationContext())
@@ -375,8 +372,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "run: " + usersList.toString());
             }
         });
-        thread.start();*/
-    }
+        thread.start();*//*
+    }*/
 
     /*class InsertAsyncTask extends AsyncTask<User, Void, Void>{
 
@@ -389,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }*/
 
-    public void showFavoriteDialog() {
+    /*public void showFavoriteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(false);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_favorite, findViewById(R.id.favorite_dialog));
@@ -412,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
-    }
+    }*/
 
     private void showSessionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -457,18 +454,22 @@ public class MainActivity extends AppCompatActivity {
     private void fabAnimation(){
         if (isOpen) {
             fabExtended.startAnimation(rotateBackward);
-            fabValuations.startAnimation(fabClose);
             fabProfile.startAnimation(fabClose);
-            fabValuations.setClickable(false);
             fabProfile.setClickable(false);
+            if (user != null) {
+                fabLogout.startAnimation(fabClose);
+                fabLogout.setClickable(false);
+            }
             isOpen = false;
         }
         else {
             fabExtended.startAnimation(rotateForward);
-            fabValuations.startAnimation(fabOpen);
             fabProfile.startAnimation(fabOpen);
-            fabValuations.setClickable(true);
             fabProfile.setClickable(true);
+            if (user != null) {
+                fabLogout.startAnimation(fabOpen);
+                fabLogout.setClickable(true);
+            }
             isOpen = true;
         }
     }
@@ -478,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
         scrollview = findViewById(R.id.nestedScrollView);
         meowBottomNavigationView = findViewById(R.id.bottom_navegation);
         fabExtended = findViewById(R.id.fab_Extended);
-        fabValuations = findViewById(R.id.fab_Valuations);
+        fabLogout = findViewById(R.id.fab_Avaliation);
         fabProfile = findViewById(R.id.fab_Profile);
         imgSparklesCategory = findViewById(R.id.lav_sparkles);
     }

@@ -67,8 +67,6 @@ public class NotFoundFragment extends Fragment {
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(tvContentPageFound);
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgWaiting);
 
-        //Landing
-
         return view;
     }
 
