@@ -44,8 +44,8 @@ public class UsersRetroInstance {
         return retrofit;
     }
 
-    public static UserAPI getUsersService(){
-        UserAPI usersService = getRetrofitUsers().create(UserAPI.class);
-        return usersService;
+    public static UserAPI getUsers(){
+        UserAPI users = getRetrofitUsers().create(UserAPI.class);
+        return users;
     }
 }

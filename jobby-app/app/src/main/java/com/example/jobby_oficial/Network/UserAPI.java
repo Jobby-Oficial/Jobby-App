@@ -20,6 +20,10 @@ import retrofit2.http.POST;
 
 public interface UserAPI {
 
-    @POST("users/login?access-token=" + API_KEY)
-    Call<List<User>> getUserList(@Body JsonObject users);
+    @POST("guests/login")
+    Call<User> getUserList(@Body JsonObject users);
+
+
+    /*@POST("users/login?access-token=" + API_KEY)
+    Call<List<User>> getUserList(@Body JsonObject users);*/
 }

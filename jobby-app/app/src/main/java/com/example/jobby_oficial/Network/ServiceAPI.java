@@ -18,6 +18,10 @@ import retrofit2.http.GET;
 
 public interface ServiceAPI {
 
-    @GET("services?access-token=" + API_KEY)
+    @GET("guests/get-services")
     Call<List<Service>> getServiceList();
+
+
+    /*@GET("services?access-token=" + API_KEY)
+    Call<List<Service>> getServiceList();*/
 }

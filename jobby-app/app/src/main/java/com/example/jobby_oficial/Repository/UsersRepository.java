@@ -28,8 +28,8 @@ public class UsersRepository {
         getAllUsers = database.usersDao().getAllUsers();
     }
 
-    public void insert(List<User> userList){
-        new UsersRepository.InsertAsyncTask(database).execute(userList);
+    public void insert(User user){
+        new UsersRepository.InsertAsyncTask(database).execute(user);
     }
 
     public void delete(){
@@ -40,7 +40,7 @@ public class UsersRepository {
         return getAllUsers;
     }
 
-    public static class InsertAsyncTask extends AsyncTask<List<User>, Void, Void> {
+    public static class InsertAsyncTask extends AsyncTask<User, Void, Void> {
         private UserDao usersDao;
 
         private InsertAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
@@ -48,14 +48,14 @@ public class UsersRepository {
         }
 
         @Override
-        protected Void doInBackground(List<User>... lists) {
+        protected Void doInBackground(User... users) {
             usersDao.deleteAll();
-            usersDao.insertUser(lists[0]);
+            usersDao.insertUser(users[0]);
             return null;
         }
     }
 
-    public static class DeleteAsyncTask extends AsyncTask<List<User>, Void, Void> {
+    public static class DeleteAsyncTask extends AsyncTask<User, Void, Void> {
         private UserDao usersDao;
 
         private DeleteAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
@@ -63,7 +63,7 @@ public class UsersRepository {
         }
 
         @Override
-        protected Void doInBackground(List<User>... lists) {
+        protected Void doInBackground(User... lists) {
             usersDao.deleteAll();
             return null;
         }

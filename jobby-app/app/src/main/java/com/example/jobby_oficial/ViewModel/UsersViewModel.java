@@ -20,6 +20,7 @@ import com.example.jobby_oficial.Network.UsersRetroInstance;
 import com.example.jobby_oficial.Repository.UsersRepository;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,8 +38,8 @@ public class UsersViewModel extends AndroidViewModel {
         getAllUsers = usersRepository.getAllUsers();
     }
 
-    public void insert(List<User> list){
-        usersRepository.insert(list);
+    public void insert(User user){
+        usersRepository.insert(user);
     }
 
     public LiveData<List<User>> getAllUsers(){
@@ -46,13 +47,14 @@ public class UsersViewModel extends AndroidViewModel {
     }
 
     public void makeApiCallUsers (JsonObject jsonObject){
-        Call<List<User>> call = UsersRetroInstance.getUsersService().getUserList(jsonObject);
-        call.enqueue(new Callback<List<User>>() {
+        Call<User> call = UsersRetroInstance.getUsers().getUserList(jsonObject);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 System.out.println("resp: " + response);
                 if (response.isSuccessful() && response.code() != 404){
                     usersRepository.insert(response.body());
+
                     loginActivity.initSession(true);
                 }
                 else
@@ -60,7 +62,7 @@ public class UsersViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 Log.e("Error ", "User API: " + t);
                 System.out.println("Error User API: " + t);
                 call.cancel();

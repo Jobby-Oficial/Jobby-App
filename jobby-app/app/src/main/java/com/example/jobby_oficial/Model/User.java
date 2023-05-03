@@ -29,9 +29,9 @@ public class User {
     @ColumnInfo(name = "password")
     private String password;
 
-    @SerializedName("picture")
-    @ColumnInfo(name = "picture")
-    private String picture;
+    @SerializedName("image")
+    @ColumnInfo(name = "image")
+    private String image;
 
     @SerializedName("name")
     @ColumnInfo(name = "name")
@@ -61,11 +61,11 @@ public class User {
     @ColumnInfo(name = "city")
     private String city;
 
-    public User(int id, String username, String password, String picture, String name, String email, String phone, String genre, String birth, String country, String city) {
+    public User(int id, String username, String password, String image, String name, String email, String phone, String genre, String birth, String country, String city) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.picture = picture;
+        this.image = image;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -103,12 +103,12 @@ public class User {
         this.password = password;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getImage() {
+        return image;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getName() {
@@ -173,7 +173,7 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", picture='" + picture + '\'' +
+                ", image='" + image + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
