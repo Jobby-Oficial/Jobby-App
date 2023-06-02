@@ -33,7 +33,6 @@ public class Service {
     @ColumnInfo(name = "description")
     private String description;
 
-    //String or int ?????
     @SerializedName("price")
     @ColumnInfo(name = "price")
     private String price;

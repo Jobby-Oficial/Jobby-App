@@ -13,8 +13,10 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import com.example.jobby_oficial.Dao.UserDao;
+import com.example.jobby_oficial.Dao.UsernameDao;
 import com.example.jobby_oficial.Database.SingletonRoomDatabase;
 import com.example.jobby_oficial.Model.User;
+import com.example.jobby_oficial.Model.Username;
 
 import java.util.List;
 
@@ -22,14 +24,20 @@ public class UsersRepository {
 
     public SingletonRoomDatabase database;
     private LiveData<List<User>> getAllUsers;
+    private LiveData<List<Username>> getAllUsernames;
 
     public UsersRepository(Application application){
         database = SingletonRoomDatabase.getInstance(application);
         getAllUsers = database.usersDao().getAllUsers();
+        getAllUsernames = database.usernameDao().getAllUsernames();
     }
 
-    public void insert(List<User> userList){
-        new UsersRepository.InsertAsyncTask(database).execute(userList);
+    public void insert(User user){
+        new UsersRepository.InsertAsyncTask(database).execute(user);
+    }
+
+    public void insertUsername(List<Username> username){
+        new UsersRepository.InsertUsernameAsyncTask(database).execute(username);
     }
 
     public void delete(){
@@ -40,7 +48,11 @@ public class UsersRepository {
         return getAllUsers;
     }
 
-    public static class InsertAsyncTask extends AsyncTask<List<User>, Void, Void> {
+    public LiveData<List<Username>> getAllUsernames(){
+        return getAllUsernames;
+    }
+
+    public static class InsertAsyncTask extends AsyncTask<User, Void, Void> {
         private UserDao usersDao;
 
         private InsertAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
@@ -48,14 +60,14 @@ public class UsersRepository {
         }
 
         @Override
-        protected Void doInBackground(List<User>... lists) {
+        protected Void doInBackground(User... users) {
             usersDao.deleteAll();
-            usersDao.insertUser(lists[0]);
+            usersDao.insertUser(users[0]);
             return null;
         }
     }
 
-    public static class DeleteAsyncTask extends AsyncTask<List<User>, Void, Void> {
+    public static class DeleteAsyncTask extends AsyncTask<User, Void, Void> {
         private UserDao usersDao;
 
         private DeleteAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
@@ -63,8 +75,23 @@ public class UsersRepository {
         }
 
         @Override
-        protected Void doInBackground(List<User>... lists) {
+        protected Void doInBackground(User... lists) {
             usersDao.deleteAll();
+            return null;
+        }
+    }
+
+    public static class InsertUsernameAsyncTask extends AsyncTask<List<Username>, Void, Void> {
+        private UsernameDao usernamesDao;
+
+        private InsertUsernameAsyncTask(SingletonRoomDatabase singletonRoomDatabase){
+            this.usernamesDao = singletonRoomDatabase.usernameDao();
+        }
+
+        @Override
+        protected Void doInBackground(List<Username>... usernames) {
+            usernamesDao.deleteAll();
+            usernamesDao.insertUsername(usernames[0]);
             return null;
         }
     }

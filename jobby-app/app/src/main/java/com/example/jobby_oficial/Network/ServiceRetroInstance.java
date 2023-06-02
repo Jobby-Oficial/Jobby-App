@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceRetroInstance {
 
     public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
-    public static final String API_KEY = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
+    public static final String API_KEY_SERVICE = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
     //http://10.0.2.2:21080/v1/services?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
 
     public static Retrofit retrofit;

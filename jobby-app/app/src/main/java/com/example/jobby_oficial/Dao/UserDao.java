@@ -22,10 +22,10 @@ import java.util.List;
 public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertUser(List<User> userList);
+    void insertUser(User user);
 
     @Delete
-    void deleteUser(List<User> userList);
+    void deleteUser(User userList);
 
     @Query("SELECT * FROM user_table ORDER BY id ASC")
     LiveData<List<User>> getAllUsers();

@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Created by Guilherme Cruz
-  ~ Last modified: 30/12/21, 22:06
-  ~ Copyright (c) 2021.
-  ~ All rights reserved.
-  -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jobby_oficial">
 
@@ -20,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jobby_Oficial"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".AvaliationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".View.ServiceDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".View.ProfileActivity"
             android:exported="false" />

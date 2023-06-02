@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
@@ -68,8 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         lavBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(LoginActivity.this, AuthenticationMenu.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -98,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent= new Intent(LoginActivity.this, RegisterStepOneActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -118,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_layout));
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_dialog));
 
         view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
             @Override

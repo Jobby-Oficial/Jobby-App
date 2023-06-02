@@ -135,7 +135,7 @@
                 app:ccp_showFlag="true"
                 app:ccp_showNameCode="true"
                 app:ccp_showFullName="true"
-                android:background="@drawable/back_border"/>
+                android:background="@drawable/back_border_slider"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phone_number_register"
