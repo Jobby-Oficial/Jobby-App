@@ -7,13 +7,9 @@
 
 package com.example.jobby_oficial.Fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,11 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.Adapter.CategoryAdapter;
 import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.R;
@@ -38,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.SlideInRightAnimationAdapter;
 
 public class CategoryFragment extends Fragment implements CategoryAdapter.OnCategoryListener {
 
@@ -86,7 +76,6 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
 
         adapter = new CategoryAdapter(getContext(), list_category,this);
         //rvCategory.setAdapter(adapter);
-        //rvCategory.setAdapter(new CategoryAdapter(getContext(), list_category,this));
 
         //Animations
         AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
@@ -108,26 +97,11 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnCate
         categoryViewModel.makeApiCallCategory();
 
         return view;
-
-        /*CategoryClass category1 = new CategoryClass(R.drawable.ic_topic,"Categoria 1"," Descrisão 1");
-        CategoryClass category2 = new CategoryClass(R.drawable.ic_topic,"Categoria 2"," Descrisão 2");
-        CategoryClass category3 = new CategoryClass(R.drawable.ic_topic,"Categoria 3"," Descrisão 3");
-        CategoryClass category4 = new CategoryClass(R.drawable.ic_topic,"Categoria 4"," Descrisão 4");
-        CategoryClass category5 = new CategoryClass(R.drawable.ic_topic,"Categoria 5"," Descrisão 5");
-        CategoryClass category6 = new CategoryClass(R.drawable.ic_topic,"Categoria 6"," Descrisão 6");
-        CategoryClass category7 = new CategoryClass(R.drawable.ic_topic,"Categoria 7"," Descrisão 7");
-        arrayList_category.add(category1);
-        arrayList_category.add(category2);
-        arrayList_category.add(category3);
-        arrayList_category.add(category4);
-        arrayList_category.add(category5);
-        arrayList_category.add(category6);
-        arrayList_category.add(category7);*/
     }
 
     @Override
     public void onCategoryClick(int position) {
-        Toast.makeText(getContext(),"Category Position: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),"Category Position: " + position,Toast.LENGTH_SHORT).show();
         Category category = list_category.get(position);
         Bundle bundle = new Bundle();
         bundle.putString("nameCategory", category.getName());

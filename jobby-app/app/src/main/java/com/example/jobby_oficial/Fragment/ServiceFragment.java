@@ -28,18 +28,17 @@ import com.example.jobby_oficial.Adapter.ServiceAdapter;
 import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
-import com.example.jobby_oficial.View.ProfileActivity;
 import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.gson.JsonObject;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,16 +53,19 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     private String mParam1;
     private String mParam2;
 
+    AlphaInAnimationAdapter alphaInAnimationAdapter;
     private ServiceViewModel serviceViewModel;
     private FavoriteViewModel favoriteViewModel;
     private UsersViewModel usersViewModel;
     private AvaliationViewModel avaliationViewModel;
+    private ServicesGalleryViewModel servicesGalleryViewModel;
     RecyclerView rvService;
     ServiceAdapter adapter;
     List<Service> list_service;
     List<Favorite> list_favorite;
     List<Username> list_username;
     List<Avaliation> list_avaliation;
+    List<ServicesGallery> list_gallery;
     String nameCategory;
 
     public ServiceFragment() {
@@ -101,17 +103,6 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         list_service = new ArrayList<>();
         list_favorite = new ArrayList<>();
 
-        adapter = new ServiceAdapter(getContext(), list_service, list_favorite,this);
-        rvService.setAdapter(adapter);
-
-        //Animations
-        /*AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
-        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
-        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaInAnimationAdapter.setFirstOnly(false);
-        rvService.setAdapter(alphaInAnimationAdapter);
-        System.out.println("Servieeeeeeeeeeee Atividadeeeeeeeeeeeeeee");*/
-
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
             @Override
@@ -148,14 +139,17 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
             public void onChanged(List<Favorite> favoriteList) {
                 list_favorite = favoriteList;
                 adapter.getAllFavorites(list_favorite);
-                rvService.setAdapter(adapter);
+                //Animations
+                alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+                alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+                alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+                alphaInAnimationAdapter.setFirstOnly(false);
+                rvService.setAdapter(alphaInAnimationAdapter);
+                //rvService.setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
                 System.out.println("Lista NOVAAAAAAAAAAA: " + list_favorite);
             }
         });
-        /*JsonObject jsonObject2 = new JsonObject();
-        jsonObject2.addProperty("user_id", id_User);
-        favoriteViewModel.makeApiCallFavorites(jsonObject2);*/
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         usersViewModel.getAllUsernames().observe(getViewLifecycleOwner(), new Observer<List<Username>>() {
@@ -179,23 +173,28 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         joAvaliation.addProperty("user_id", id_User);
         avaliationViewModel.makeApiCallAvaliations(joAvaliation);
 
-        return view;
+        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
+        servicesGalleryViewModel.getAllServicesGallerys().observe(getViewLifecycleOwner(), new Observer<List<ServicesGallery>>() {
+            @Override
+            public void onChanged(List<ServicesGallery> galleryList) {
+                list_gallery = galleryList;
+                adapter.getAllServicesGallery(list_gallery);
+                System.out.println("Lista Services Gallery/Service: " + list_gallery);
+            }
+        });
+        servicesGalleryViewModel.makeApiCallServicesGallerys();
 
-        /*arrayList_service = new ArrayList<>();
-        ServiceClass service1 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 1","Categoria 1");
-        ServiceClass service2 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 2","Categoria 2");
-        ServiceClass service3 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 3","Categoria 3");
-        ServiceClass service4 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 4","Categoria 4");
-        ServiceClass service5 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 5","Categoria 5");
-        ServiceClass service6 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 6","Categoria 6");
-        ServiceClass service7 = new ServiceClass(R.drawable.ic_topic,"Nome do serviço 7","Categoria 7");
-        arrayList_service.add(service1);
-        arrayList_service.add(service2);
-        arrayList_service.add(service3);
-        arrayList_service.add(service4);
-        arrayList_service.add(service5);
-        arrayList_service.add(service6);
-        arrayList_service.add(service7);*/
+        adapter = new ServiceAdapter(getContext(), list_service, list_favorite, list_gallery,this);
+        //rvService.setAdapter(adapter);
+
+        //Animations
+        alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvService.setAdapter(alphaInAnimationAdapter);
+
+        return view;
     }
 
     @Override

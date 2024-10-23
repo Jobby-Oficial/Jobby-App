@@ -36,7 +36,7 @@ public class RegisterStepOneActivity extends AppCompatActivity {
         //Inicializa Controlos
         InitControls();
 
-        //Get Intent Data
+        //Get Intent CountryData
         GetIntentData();
 
         /*Spannable wordtoSpan = new SpannableString("Already have an account? Login");
@@ -67,7 +67,7 @@ public class RegisterStepOneActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true){
                     Intent intent= new Intent(RegisterStepOneActivity.this, RegisterStepTwoActivity.class);
-                    intent = IntentData(intent); //Send Intent Data
+                    intent = IntentData(intent); //Send Intent
                     startActivity(intent);
                 }
             }

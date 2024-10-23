@@ -7,9 +7,12 @@
 
 package com.example.jobby_oficial.View;
 
+import static com.example.jobby_oficial.View.AuthenticationMenu.switchOnOff_DayNight;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,19 +21,30 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.jobby_oficial.Model.CountryData;
+import com.example.jobby_oficial.Network.RegionRetroInstance;
 import com.example.jobby_oficial.R;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import pl.droidsonroids.gif.GifImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterStepThreeActivity extends AppCompatActivity {
 
+    GifImageView gifPhone;
     LottieAnimationView lavBack;
     Button btnGoToLogin, btnNext, btnBack;
     TextInputLayout edPhone;
@@ -38,6 +52,7 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
     int iDay, iMonth, iYear;
     char cGender;
     AlertDialog alertDialog;
+    public static List<String> list_country;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +62,16 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
         //Inicializa Controlos
         InitControls();
 
-        //Get Intent Data
+        //Get Intent CountryData
         GetIntentData();
+
+        if (switchOnOff_DayNight)
+            gifPhone.setImageResource(R.drawable.animation_phone_run_dark);
+        else
+            gifPhone.setImageResource(R.drawable.animation_phone_run);
+
+        list_country = new ArrayList<>();
+        makeApiCallCountrys();
 
         btnGoToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +97,7 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true) {
                     Intent intent = new Intent(RegisterStepThreeActivity.this, RegisterStepFourActivity.class);
-                    intent = IntentData(intent); //Send Intent Data
+                    intent = IntentData(intent); //Send Intent CountryData
                     startActivity(intent);
                     /*if (!isConnected(RegisterStepThreeActivity.this)) {
                         showInternetDialog();
@@ -93,6 +116,38 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
                 Intent intent= new Intent(RegisterStepThreeActivity.this, RegisterStepTwoActivity.class);
                 intent = IntentDataBack(intent);
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void makeApiCallCountrys(){
+        Call<CountryData> call = RegionRetroInstance.getRegions().getCountrysList();
+        call.enqueue(new Callback<CountryData>() {
+            @Override
+            public void onResponse(Call<CountryData> call, Response<CountryData> response) {
+                System.out.println("resp: " + response);
+                if (response.isSuccessful()){
+                    for (int iPos = 0; iPos < response.body().getCountryList().size(); iPos++) {
+                        list_country.add(response.body().getCountryList().get(iPos).getCountry());
+                        //System.out.println("Country List: " + response.body().getCountryList().get(iPos).getCountry());
+                    }
+                    /*ArrayAdapter<Country> adapter = new ArrayAdapter<Country>(getApplicationContext(), R.layout.list_item_dropdown, list_country){
+                        @NonNull
+                        @Override
+                        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                            parent.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                            return super.getView(position, convertView, parent);
+                        }
+                    };
+                    ((AutoCompleteTextView)findViewById(R.id.country_register)).setAdapter(adapter);*/
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CountryData> call, Throwable t) {
+                Log.e("Error ", "Country API: " + t);
+                System.out.println("Error Country API: " + t);
+                call.cancel();
             }
         });
     }
@@ -232,6 +287,7 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
     }
 
     private void InitControls() {
+        gifPhone = findViewById(R.id.lav_phone_run);
         lavBack = findViewById(R.id.lav_back_register);
         btnGoToLogin = findViewById(R.id.btn_go_to_login);
         btnNext = findViewById(R.id.btn_next_step3);

@@ -43,7 +43,7 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
         //Inicializa Controlos
         InitControls();
 
-        //Get Intent Data
+        //Get Intent CountryData
         GetIntentData();
 
         btnGoToLogin.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +70,7 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true) {
                     Intent intent = new Intent(RegisterStepTwoActivity.this, RegisterStepThreeActivity.class);
-                    intent = IntentData(intent); //Send Intent Data
+                    intent = IntentData(intent); //Send Intent CountryData
                     startActivity(intent);
                 }
             }
@@ -80,7 +80,7 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent= new Intent(RegisterStepTwoActivity.this, RegisterStepOneActivity.class);
-                intent = IntentDataBack(intent); //Send Intent Data
+                intent = IntentDataBack(intent); //Send Intent CountryData
                 startActivity(intent);
             }
         });

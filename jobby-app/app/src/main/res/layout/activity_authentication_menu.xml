@@ -32,6 +32,7 @@
         android:padding="30dp">
 
         <ImageView
+            android:id="@+id/img_logotipo"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="-50dp"
@@ -46,7 +47,7 @@
             android:fontFamily="@font/antic"
             android:text="The best service for you"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="34sp"
             android:textStyle="bold"
             android:transitionName="tn_slogan"/>
@@ -67,7 +68,7 @@
             android:fontFamily="@font/muli_black"
             android:text="Grow Your Business"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="50sp"
             android:textStyle="bold"
             android:textAllCaps="true"
@@ -122,7 +123,7 @@
                 android:fontFamily="@font/muli_bold"
                 android:text="Continue without registration"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textStyle="bold"
                 android:textSize="17dp"
                 android:layout_gravity="center"

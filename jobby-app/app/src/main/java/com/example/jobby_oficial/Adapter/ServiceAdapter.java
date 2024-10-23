@@ -20,19 +20,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jobby_oficial.Database.SingletonRoomDatabase;
-import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
-import com.example.jobby_oficial.Model.User;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.AuthenticationMenu;
-import com.example.jobby_oficial.View.MainActivity;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -45,12 +40,14 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     private Context context;
     List<Service> list_service;
     List<Favorite> list_favorite;
+    List<ServicesGallery> list_gallery;
     private OnServiceListener onServiceListener;
 
-    public ServiceAdapter(Context context, List<Service> list_service, List<Favorite> list_favorite, OnServiceListener onServiceListener) {
+    public ServiceAdapter(Context context, List<Service> list_service, List<Favorite> list_favorite, List<ServicesGallery> list_gallery, OnServiceListener onServiceListener) {
         this.context = context;
         this.list_service = list_service;
         this.list_favorite = list_favorite;
+        this.list_gallery = list_gallery;
         this.onServiceListener = onServiceListener;
     }
 
@@ -65,8 +62,9 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         Service service = list_service.get(position);
-        //holder.imgService.setImageResource(arrayList_service.get(position).getImageService());
-        //Glide.with(context).load(service.getImage()).into(holder.imgService);
+        //int iGal = list_gallery.get(position).getService_id();
+        //ServicesGallery gallery = list_gallery.get(iGal);
+        //Glide.with(context).load(gallery.getImage()).into(holder.imgService);
         holder.tvNameService.setText("Service: " + list_service.get(position).getName());
         holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
 
@@ -78,6 +76,20 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
                     holder.lb_Service.setLiked(true);
             }
         }
+
+        if (list_service.isEmpty() == false) {
+            for (ServicesGallery iGallery : list_gallery) {
+                int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
+                int iSev = list_service.get(position).getId();
+                System.out.println("LPG: " + iGal + " | " + iSev);
+                if (iSev == iGal) {
+                    String img = iGallery.getImage();
+                    String newIMG = img.replace("localhost", "10.0.2.2");
+                    System.out.println("Imagemmmmm: " + newIMG);
+                    Glide.with(context).load(newIMG).into(holder.imgService);
+                }
+            }
+        }
     }
 
     public void getAllServices(List<Service> serviceList){
@@ -87,6 +99,11 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
 
     public void getAllFavorites(List<Favorite> favoriteList){
         this.list_favorite = favoriteList;
+        notifyDataSetChanged();
+    }
+
+    public void getAllServicesGallery(List<ServicesGallery> galleryList){
+        this.list_gallery = galleryList;
         notifyDataSetChanged();
     }
 

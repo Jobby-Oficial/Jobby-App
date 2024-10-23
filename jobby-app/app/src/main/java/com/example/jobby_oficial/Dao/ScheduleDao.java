@@ -14,7 +14,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 
 import java.util.List;

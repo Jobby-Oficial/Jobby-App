@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Guilherme Cruz
+  ~ Last modified: 20/12/21, 19:23
+  ~ Copyright (c) 2021.
+  ~ All rights reserved.
+  -->
+
+<resources>
+    <style name="FabShape">
+        <item name="cornerSize">50%</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">cut</item>
+    </style>
+    <style name="FabShapeTeste1">
+        <item name="cornerSize">50%</item>
+        <item name="cornerFamilyTopLeft">cut</item>
+        <item name="cornerFamilyTopRight">cut</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+    </style>
+    <style name="FabShapeTeste2">
+        <item name="cornerSize">0dp</item>
+        <item name="cornerSizeTopLeft">80%</item>
+        <item name="cornerFamily">cut</item>
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+    </style>
+</resources>

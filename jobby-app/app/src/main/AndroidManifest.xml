@@ -14,10 +14,10 @@
         android:theme="@style/Theme.Jobby_Oficial"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".View.RegisterStepFourActivity"
+            android:name=".View.ProfileEditActivity"
             android:exported="false" />
         <activity
-            android:name=".AvaliationActivity"
+            android:name=".View.RegisterStepFourActivity"
             android:exported="false" />
         <activity
             android:name=".View.ServiceDetailActivity"

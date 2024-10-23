@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.example.jobby_oficial.Adapter.ScheduleAdapter;
 import com.example.jobby_oficial.Model.Schedule;
@@ -36,6 +36,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnScheduleListener {
 
     private static final String ARG_PARAM1 = "param1";
@@ -44,6 +46,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
     private String mParam1;
     private String mParam2;
 
+    AlphaInAnimationAdapter alphaInAnimationAdapter;
     private ScheduleViewModel scheduleViewModel;
     private UsersViewModel usersViewModel;
     private ServiceViewModel serviceViewModel;
@@ -83,9 +86,6 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSchedule.setHasFixedSize(true);
         list_schedule = new ArrayList<>();
-
-        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, this);
-        rvSchedule.setAdapter(adapter);
 
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         scheduleViewModel.getAllSchedules().observe(getViewLifecycleOwner(), new Observer<List<Schedule>>() {
@@ -133,12 +133,22 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
         });
         usersViewModel.makeApiCallUsernames();
 
+        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, this);
+        //rvSchedule.setAdapter(adapter);
+
+        //Animations
+        alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvSchedule.setAdapter(alphaInAnimationAdapter);
+
         return view;
     }
 
     @Override
     public void onScheduleClick(int position) {
         list_schedule.get(position);
-        Toast.makeText(getContext(),"Schedule Position: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),"Schedule Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

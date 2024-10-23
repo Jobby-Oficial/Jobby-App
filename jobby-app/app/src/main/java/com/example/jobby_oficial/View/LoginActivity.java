@@ -39,12 +39,12 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private UsersViewModel usersViewModel;
+    private static Context mContextLogin;
     LottieAnimationView lavBack;
     Button btnGoToRegister, btnSignin;
     TextInputLayout edUsername, edPassword;
     static TextView tvInvalidLogin;
-    private UsersViewModel usersViewModel;
-    private static Context mContext;
     List<User> list_users;
     AlertDialog alertDialog;
 
@@ -53,9 +53,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mContextLogin = this;
+
+        //Inicializa Controlos
         InitControls();
 
-        mContext = this;
         list_users = new ArrayList<>();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
@@ -160,10 +162,10 @@ public class LoginActivity extends AppCompatActivity {
                 }).show();
     }
 
-    public void initSession(boolean bLogin){
+    public void initSessionLogin(boolean bLogin){
         if (bLogin == true){
-            Intent intent = new Intent(mContext, MainActivity.class);
-            mContext.startActivity(intent);
+            Intent intent = new Intent(mContextLogin, MainActivity.class);
+            mContextLogin.startActivity(intent);
         }
         else {
             tvInvalidLogin.setVisibility(View.VISIBLE);
@@ -207,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
         /*else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[A-Z]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 upper case letter!");
-        }
+        }*/
         else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[a-z]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 lower case letter!");
@@ -215,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
         else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[0-9]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 digit!");
-        }*/
+        }
         else edPassword.setErrorEnabled(false);
 
         return validation;

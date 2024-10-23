@@ -29,7 +29,8 @@
             android:background="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/tv_name_service"

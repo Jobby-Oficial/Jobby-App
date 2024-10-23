@@ -21,8 +21,6 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.R;
 
-import java.util.concurrent.TimeUnit;
-
 public class NotFoundFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
