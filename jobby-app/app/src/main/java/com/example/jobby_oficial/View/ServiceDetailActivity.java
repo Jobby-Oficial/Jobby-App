@@ -7,12 +7,14 @@
 
 package com.example.jobby_oficial.View;
 
+import static com.example.jobby_oficial.View.MainActivity.avaliationViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 import static com.example.jobby_oficial.View.MainActivity.scheduleViewModel;
 import static com.example.jobby_oficial.View.MainActivity.user;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -32,6 +34,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.Repository.ScheduleRepository;
 import com.google.android.material.textfield.TextInputLayout;
@@ -47,11 +50,15 @@ public class ServiceDetailActivity extends AppCompatActivity {
     LottieAnimationView lavBack, lavSchedule;
     ImageSlider imageSlider;
     TextView tvNameDetail, tvCategoryDetail, tvProfissionalDetail, tvPriceDetail, tvDescriptionDetail, tvDateError, tvTimeError;
-    RatingBar ratingBar;
-    String service_id, category, name, description, price, profissional_id, profissional;
     TextInputLayout edNote;
     DatePicker dpDate;
     NumberPicker npHour, npMinute;
+    RatingBar ratingBar;
+    String category, name, description, price, profissional;
+    int service_id, profissional_id, avaliation_id;
+    double dRating;
+    boolean bCancel = false;
+    List<Avaliation> list_avaliation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +70,37 @@ public class ServiceDetailActivity extends AppCompatActivity {
 
         GetIntentData();
 
+        avaliationViewModel.getAllAvaliations().observe(this, new Observer<List<Avaliation>>() {
+            @Override
+            public void onChanged(List<Avaliation> avaliationList) {
+                list_avaliation = avaliationList;
+                if (id_User != null) {
+                    for (Avaliation iAvaliation : list_avaliation) {
+                        int iUser = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getUser_id();
+                        if (iUser == Integer.parseInt(id_User)) {
+                            int iServ = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getService_id();
+                            if (iServ == service_id)
+                                avaliation_id = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getId();
+                        }
+                    }
+                }
+                System.out.println("Lista Avaliation/Service Detail: " + list_avaliation);
+            }
+        });
+        JsonObject joAvaliation = new JsonObject();
+        joAvaliation.addProperty("user_id", id_User);
+        avaliationViewModel.makeApiCallAvaliations(joAvaliation);
+
         List<SlideModel> slideModels = new ArrayList<>();
         slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.jobby_v2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels);
+
+        /*if (dRating == 0)
+            bCancel = true;
+        else
+            bCancel = false;*/
 
         tvNameDetail.setText(name);
         tvCategoryDetail.setText(category);
@@ -75,6 +108,8 @@ public class ServiceDetailActivity extends AppCompatActivity {
         tvPriceDetail.setText(price + "€");
         String sourceString = "<b>" + "Description: " + "</b> " + description;
         tvDescriptionDetail.setText(Html.fromHtml(sourceString));
+        ratingBar.setRating((float) dRating);
+
         //tvDescriptionDetail.setText("Description: " + description + "dhsududsaccdsyucdscdbudcbcdybydcsbdycydybdussdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsfhhewdaniela");
 
         lavBack.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +132,89 @@ public class ServiceDetailActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean b) {
-                Toast.makeText(getApplicationContext(),"Rating: " + rating,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Rating: " + rating, Toast.LENGTH_SHORT).show();
+
+                if (bCancel == false) {
+                    if (id_User != null) {
+                        if (rating == 0)
+                            showAvaliationRemoveDialog(rating);
+                        else
+                            showAvaliationInsertDialog(rating);
+                    } else
+                        showSessionDialog();
+                }
+                else
+                    bCancel = false;
             }
         });
+    }
+
+    private void showAvaliationInsertDialog(float rating) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceDetailActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_avaliation_insert, findViewById(R.id.avaliation_insert_dialog));
+        bCancel = false;
+        TextView tvTitle = view.findViewById(R.id.tv_title_avaliation_insert);
+        tvTitle.setText("Service Avaliation: " + rating);
+
+        view.findViewById(R.id.btn_insert_avaliation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Rating: " + dRating + " | " + rating);
+                JsonObject joAvaliation = new JsonObject();
+                joAvaliation.addProperty("avaliation", rating);
+                joAvaliation.addProperty("service_id", service_id);
+                joAvaliation.addProperty("user_id", id_User);
+                if (dRating != 0)
+                    avaliationViewModel.makeApiCallUpdateAvaliations(avaliation_id, joAvaliation);
+                else
+                    avaliationViewModel.makeApiCallCreateAvaliations(joAvaliation);
+                dRating = rating;
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_avaliation_insert).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bCancel = true;
+                alertDialog.dismiss();
+                ratingBar.setRating((float) dRating);
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
+
+    private void showAvaliationRemoveDialog(float rating) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceDetailActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_avaliation_remove, findViewById(R.id.avaliation_remove_dialog));
+        bCancel = false;
+
+        view.findViewById(R.id.btn_remove_avaliation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dRating = rating;
+                avaliationViewModel.makeApiCallDeleteAvaliations(avaliation_id);
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_avaliation_remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bCancel = true;
+                alertDialog.dismiss();
+                ratingBar.setRating((float) dRating);
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 
     private void showScheduleDialog() {
@@ -142,7 +257,6 @@ public class ServiceDetailActivity extends AppCompatActivity {
                     SendDataToAPI();
                     alertDialog.dismiss();
                 }
-
             }
         });
         view.findViewById(R.id.tv_cancel_schedule).setOnClickListener(new View.OnClickListener() {
@@ -158,14 +272,42 @@ public class ServiceDetailActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void showSessionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceDetailActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_session, findViewById(R.id.session_dialog));
+        bCancel = false;
+
+        view.findViewById(R.id.btn_sign_in_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ServiceDetailActivity.this, AuthenticationMenu.class);
+                startActivity(intent);
+            }
+        });
+        view.findViewById(R.id.tv_cancel_session).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bCancel = true;
+                alertDialog.dismiss();
+                ratingBar.setRating(0.0F);
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
+
     private boolean Validation(boolean validation) {
 
-            if(edNote.getEditText().getText().toString().trim().isEmpty()){
-                validation = false;
-                edNote.setError("Enter Name, field can not be empty!");
-            }
-            else
-                edNote.setErrorEnabled(false);
+        if(edNote.getEditText().getText().toString().trim().isEmpty()){
+            validation = false;
+            edNote.setError("Enter Name, field can not be empty!");
+        }
+        else
+            edNote.setErrorEnabled(false);
 
         int YEAR = Calendar.getInstance().get(Calendar.YEAR);
         int MONTH = Calendar.getInstance().get(Calendar.MONTH)+1;
@@ -256,41 +398,17 @@ public class ServiceDetailActivity extends AppCompatActivity {
         scheduleViewModel.makeApiCallCreateSchedule(joSchedule);
     }
 
-    private void showSessionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ServiceDetailActivity.this);
-        builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_session, findViewById(R.id.session_dialog));
-
-        view.findViewById(R.id.btn_sign_in_session).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ServiceDetailActivity.this, AuthenticationMenu.class);
-                startActivity(intent);
-            }
-        });
-        view.findViewById(R.id.tv_cancel_session).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        builder.setView(view);
-
-        alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.show();
-    }
-
     private void GetIntentData() {
-        service_id = String.valueOf(getIntent().getIntExtra("Service_id",0));
+        service_id = getIntent().getIntExtra("Service_id",0);
         category = getIntent().getStringExtra("Category");
         name = getIntent().getStringExtra("Name");
         description = getIntent().getStringExtra("Description");
         price = getIntent().getStringExtra("Price");
-        profissional_id = String.valueOf(getIntent().getIntExtra("Profissional_id",0));
+        profissional_id = getIntent().getIntExtra("Profissional_id",0);
         profissional = getIntent().getStringExtra("Profissional");
+        dRating = getIntent().getDoubleExtra("Rating", 0.0);
 
-        System.out.println("Service Detail: " + service_id + " + " + category + " + " + name + " + " + description + " + " + price + " + " + " + " + profissional_id + " + " + profissional);
+        System.out.println("Service Detail: " + service_id + " + " + category + " + " + name + " + " + description + " + " + price + " + " + " + " + profissional_id + " + " + profissional + " + " + dRating);
     }
 
     private void InitControls() {

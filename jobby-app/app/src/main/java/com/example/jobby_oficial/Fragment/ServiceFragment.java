@@ -25,6 +25,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.ServiceAdapter;
+import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.Username;
@@ -32,6 +33,7 @@ import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.View.ProfileActivity;
 import com.example.jobby_oficial.View.ServiceDetailActivity;
+import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
@@ -55,11 +57,13 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     private ServiceViewModel serviceViewModel;
     private FavoriteViewModel favoriteViewModel;
     private UsersViewModel usersViewModel;
+    private AvaliationViewModel avaliationViewModel;
     RecyclerView rvService;
     ServiceAdapter adapter;
     List<Service> list_service;
     List<Favorite> list_favorite;
     List<Username> list_username;
+    List<Avaliation> list_avaliation;
     String nameCategory;
 
     public ServiceFragment() {
@@ -163,6 +167,18 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         });
         usersViewModel.makeApiCallUsernames();
 
+        avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
+        avaliationViewModel.getAllAvaliations().observe(getViewLifecycleOwner(), new Observer<List<Avaliation>>() {
+            @Override
+            public void onChanged(List<Avaliation> avaliationList) {
+                list_avaliation = avaliationList;
+                System.out.println("Lista Avaliation/Service: " + list_avaliation);
+            }
+        });
+        JsonObject joAvaliation = new JsonObject();
+        joAvaliation.addProperty("user_id", id_User);
+        avaliationViewModel.makeApiCallAvaliations(joAvaliation);
+
         return view;
 
         /*arrayList_service = new ArrayList<>();
@@ -185,7 +201,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
     @Override
     public void onServiceClick(int position) {
         list_service.get(position);
-        Toast.makeText(getContext(),"Service Position: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),"Service Position: " + position,Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
 
@@ -196,11 +212,23 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         String price = list_service.get(position).getPrice();
         int profissional_id = list_service.get(position).getUser_id();
         String profissional = "";
+        double rating = 0.0;
 
         for (Username iUsername : list_username) {
             int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
             if (iUser == profissional_id)
                 profissional = list_username.get(list_username.indexOf(iUsername)).getUsername();
+        }
+
+        if (id_User != null) {
+            for (Avaliation iAvaliation : list_avaliation) {
+                int iUser = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getUser_id();
+                if (iUser == Integer.parseInt(id_User)) {
+                    int iServ = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getService_id();
+                    if (iServ == service_id)
+                        rating = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getAvaliation();
+                }
+            }
         }
 
         //Put Extra
@@ -211,6 +239,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         intent.putExtra("Price", price);
         intent.putExtra("Profissional_id", profissional_id);
         intent.putExtra("Profissional", profissional);
+        intent.putExtra("Rating", rating);
 
         startActivity(intent);
     }

@@ -7,13 +7,18 @@
 
 package com.example.jobby_oficial.Fragment;
 
+import static com.example.jobby_oficial.View.MainActivity.avaliationViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +32,7 @@ import com.example.jobby_oficial.Adapter.AvaliationAdapter;
 import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.google.gson.JsonObject;
@@ -46,6 +52,7 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
 
     private ServiceViewModel serviceViewModel;
     private AvaliationViewModel avaliationViewModel;
+    AlertDialog alertDialog;
     RecyclerView rvAvaliation;
     AvaliationAdapter adapter;
     List<Service> list_service;
@@ -83,7 +90,7 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
         list_service = new ArrayList<>();
         list_avaliation = new ArrayList<>();
 
-        adapter = new AvaliationAdapter(getContext(), list_avaliation, list_service,this);
+        adapter = new AvaliationAdapter(getContext(), list_avaliation, list_service, this);
         //rvAvaliation.setAdapter(adapter);
 
         //Animations
@@ -92,6 +99,19 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
         alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
         alphaInAnimationAdapter.setFirstOnly(false);
         rvAvaliation.setAdapter(alphaInAnimationAdapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, final int i) {
+                int iPosition = viewHolder.getAdapterPosition();
+                showAvaliationRemoveDialog(iPosition);
+            }
+        }).attachToRecyclerView(rvAvaliation);
 
         avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
         avaliationViewModel.getAllAvaliations().observe(getViewLifecycleOwner(), new Observer<List<Avaliation>>() {
@@ -130,5 +150,32 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
     public void onAvaliationClick(int position) {
         list_avaliation.get(position);
         Toast.makeText(getContext(),"Avaliation Position: " + position,Toast.LENGTH_SHORT).show();
+    }
+
+    private void showAvaliationRemoveDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_avaliation_remove, getActivity().findViewById(R.id.avaliation_remove_dialog));
+
+        view.findViewById(R.id.btn_remove_avaliation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                avaliationViewModel.makeApiCallDeleteAvaliations(list_avaliation.get(position).getId());
+                adapter.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_avaliation_remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 }

@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceViewModel serviceViewModel;
     public static FavoriteViewModel favoriteViewModel;
     public static ScheduleViewModel scheduleViewModel;
-    private AvaliationViewModel avaliationViewModel;
+    public static AvaliationViewModel avaliationViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fabExtended, fabLogout, fabProfile;
