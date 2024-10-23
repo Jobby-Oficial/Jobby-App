@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 20/01/22, 15:07
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -8,39 +8,32 @@
 package com.example.jobby_oficial.View;
 
 import static com.example.jobby_oficial.View.MainActivity.avaliationViewModel;
-import static com.example.jobby_oficial.View.MainActivity.id_User;
 import static com.example.jobby_oficial.View.MainActivity.scheduleViewModel;
+import static com.example.jobby_oficial.View.MainActivity.id_User;
 import static com.example.jobby_oficial.View.MainActivity.user;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.R;
-import com.example.jobby_oficial.Repository.ScheduleRepository;
-import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
@@ -50,7 +43,6 @@ import java.util.List;
 
 public class ServiceDetailActivity extends AppCompatActivity {
 
-    private ServicesGalleryViewModel servicesGalleryViewModel;
     AlertDialog alertDialog;
     LottieAnimationView lavBack, lavSchedule;
     ImageSlider imageSlider;
@@ -62,7 +54,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
     String category, name, description, price, profissional;
     int service_id, profissional_id, avaliation_id;
     double dRating;
-    boolean bCancel = false;
+    boolean bCancel = false, bSchedule = false;
     List<Avaliation> list_avaliation;
     List<ServicesGallery> list_gallery;
 
@@ -70,7 +62,6 @@ public class ServiceDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_detail);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
 
@@ -98,36 +89,17 @@ public class ServiceDetailActivity extends AppCompatActivity {
         avaliationViewModel.makeApiCallAvaliations(joAvaliation);
 
         List<SlideModel> slideModels = new ArrayList<>();
-        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
-        servicesGalleryViewModel.getAllServicesGallerys().observe(ServiceDetailActivity.this, new Observer<List<ServicesGallery>>() {
-            @Override
-            public void onChanged(List<ServicesGallery> galleryList) {
-                list_gallery = galleryList;
-                for (ServicesGallery iGallery : list_gallery) {
-                    int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
+        for (ServicesGallery iGallery : list_gallery) {
+            int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
 
-                    if (service_id == iGal){
-                        String img = iGallery.getImage();
-                        String newIMG = img.replace("localhost", "10.0.2.2");
-                        System.out.println("Imagemmmmm: " + newIMG);
-                        slideModels.add(new SlideModel(newIMG, ScaleTypes.FIT));
-                    }
-                }
-                imageSlider.setImageList(slideModels);
-                System.out.println("Lista Services Gallery/Service: " + list_gallery);
+            if (service_id == iGal){
+                String img = iGallery.getImage();
+                String newIMG = img.replace("localhost", "10.0.2.2");
+                System.out.println("Imagemmmmm: " + newIMG);
+                slideModels.add(new SlideModel(newIMG, ScaleTypes.FIT));
             }
-        });
-        servicesGalleryViewModel.makeApiCallServicesGallerys();
-
-        /*slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.jobby_v2, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
-        imageSlider.setImageList(slideModels);*/
-
-        /*if (dRating == 0)
-            bCancel = true;
-        else
-            bCancel = false;*/
+        }
+        imageSlider.setImageList(slideModels);
 
         tvNameDetail.setText(name);
         tvCategoryDetail.setText(category);
@@ -151,8 +123,10 @@ public class ServiceDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (user != null)
                     showScheduleDialog();
-                else
+                else {
                     showSessionDialog();
+                    bSchedule = true;
+                }
             }
         });
 
@@ -161,6 +135,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean b) {
                 //Toast.makeText(getApplicationContext(), "Rating: " + rating, Toast.LENGTH_SHORT).show();
 
+                System.out.println("BUGGGGGGGGG: " + bCancel);
                 if (bCancel == false) {
                     if (id_User != null) {
                         if (rating == 0)
@@ -315,9 +290,11 @@ public class ServiceDetailActivity extends AppCompatActivity {
         view.findViewById(R.id.tv_cancel_session).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bCancel = true;
+                if (bSchedule != true)
+                    bCancel = true;
                 alertDialog.dismiss();
                 ratingBar.setRating(0.0F);
+                bSchedule = false;
             }
         });
         builder.setView(view);
@@ -434,6 +411,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
         profissional_id = getIntent().getIntExtra("Profissional_id",0);
         profissional = getIntent().getStringExtra("Profissional");
         dRating = getIntent().getDoubleExtra("Rating", 0.0);
+        list_gallery = (List<ServicesGallery>) getIntent().getSerializableExtra("Gallery");
 
         System.out.println("Service Detail: " + service_id + " + " + category + " + " + name + " + " + description + " + " + price + " + " + " + " + profissional_id + " + " + profissional + " + " + dRating);
     }

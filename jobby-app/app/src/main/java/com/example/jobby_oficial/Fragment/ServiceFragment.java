@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 30/12/21, 01:58
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -40,6 +40,7 @@ import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         rvService.setHasFixedSize(true);
         list_service = new ArrayList<>();
         list_favorite = new ArrayList<>();
+        list_gallery = new ArrayList<>();
 
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
@@ -203,7 +205,6 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         //Toast.makeText(getContext(),"Service Position: " + position,Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
-
         int service_id = list_service.get(position).getId();
         String category = list_service.get(position).getCategory();
         String name = list_service.get(position).getName();
@@ -239,6 +240,7 @@ public class ServiceFragment extends Fragment implements ServiceAdapter.OnServic
         intent.putExtra("Profissional_id", profissional_id);
         intent.putExtra("Profissional", profissional);
         intent.putExtra("Rating", rating);
+        intent.putExtra("Gallery", (Serializable) list_gallery);
 
         startActivity(intent);
     }

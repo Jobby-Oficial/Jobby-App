@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 24/12/21, 03:05
-  ~ Copyright (c) 2021.
+  ~ Last modified: 27/01/22, 20:20
+  ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
 
@@ -17,6 +17,7 @@
     android:transitionName="tn_login">
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_top_login"
         android:layout_width="match_parent"
         android:layout_height="231dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +28,7 @@
         app:lottie_speed="2"/>
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_bottom_login"
         android:layout_width="match_parent"
         android:layout_height="231dp"
         android:layout_marginTop="590dp"

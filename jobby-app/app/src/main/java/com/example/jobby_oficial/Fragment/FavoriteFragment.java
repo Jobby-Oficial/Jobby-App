@@ -1,11 +1,13 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 16/01/22, 18:25
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.Fragment;
+
+import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.example.jobby_oficial.Adapter.FavoriteAdapter;
+import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.ServicesGallery;
@@ -29,11 +32,14 @@ import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.View.ServiceDetailActivity;
+import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
+import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,12 +57,14 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
     private FavoriteViewModel favoriteViewModel;
     private ServiceViewModel serviceViewModel;
     private UsersViewModel usersViewModel;
+    private AvaliationViewModel avaliationViewModel;
     private ServicesGalleryViewModel servicesGalleryViewModel;
     RecyclerView rvFavorite;
     FavoriteAdapter adapter;
     List<Favorite> list_favorite;
     List<Service> list_service;
     List<Username> list_username;
+    List<Avaliation> list_avaliation;
     List<ServicesGallery> list_gallery;
 
     public FavoriteFragment() {
@@ -140,6 +148,18 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         });
         usersViewModel.makeApiCallUsernames();
 
+        avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
+        avaliationViewModel.getAllAvaliations().observe(getViewLifecycleOwner(), new Observer<List<Avaliation>>() {
+            @Override
+            public void onChanged(List<Avaliation> avaliationList) {
+                list_avaliation = avaliationList;
+                System.out.println("Lista Avaliation/Service: " + list_avaliation);
+            }
+        });
+        JsonObject joAvaliation = new JsonObject();
+        joAvaliation.addProperty("user_id", id_User);
+        avaliationViewModel.makeApiCallAvaliations(joAvaliation);
+
         servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
         servicesGalleryViewModel.getAllServicesGallerys().observe(getViewLifecycleOwner(), new Observer<List<ServicesGallery>>() {
             @Override
@@ -170,28 +190,42 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         //Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
-        int id = list_service.get(position).getId();
+        int service_id = list_service.get(position).getId();
         String category = list_service.get(position).getCategory();
         String name = list_service.get(position).getName();
         String description = list_service.get(position).getDescription();
         String price = list_service.get(position).getPrice();
-        int user_id = list_service.get(position).getUser_id();
+        int profissional_id = list_service.get(position).getUser_id();
         String profissional = "";
+        double rating = 0.0;
 
         for (Username iUsername : list_username) {
             int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
-            if (iUser == user_id)
+            if (iUser == profissional_id)
                 profissional = list_username.get(list_username.indexOf(iUsername)).getUsername();
         }
 
+        if (id_User != null) {
+            for (Avaliation iAvaliation : list_avaliation) {
+                int iUser = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getUser_id();
+                if (iUser == Integer.parseInt(id_User)) {
+                    int iServ = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getService_id();
+                    if (iServ == service_id)
+                        rating = list_avaliation.get(list_avaliation.indexOf(iAvaliation)).getAvaliation();
+                }
+            }
+        }
+
         //Put Extra
-        intent.putExtra("Id", id);
+        intent.putExtra("Service_id", service_id);
         intent.putExtra("Category", category);
         intent.putExtra("Name", name);
         intent.putExtra("Description", description);
         intent.putExtra("Price", price);
-        intent.putExtra("User_id", user_id);
+        intent.putExtra("Profissional_id", profissional_id);
         intent.putExtra("Profissional", profissional);
+        intent.putExtra("Rating", rating);
+        intent.putExtra("Gallery", (Serializable) list_gallery);
 
         startActivity(intent);
     }

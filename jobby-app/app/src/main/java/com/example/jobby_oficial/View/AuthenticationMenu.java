@@ -1,11 +1,13 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 24/12/21, 17:33
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.View;
+
+import static com.example.jobby_oficial.View.SplashScreen.sDayNight;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -25,36 +27,32 @@ import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
 import soup.neumorphism.NeumorphCardView;
 
 public class AuthenticationMenu extends AppCompatActivity {
-
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String DAYNIGHT = "day_night";
-    public static boolean switchOnOff_DayNight;
+    private UsersViewModel usersViewModel;
     ImageView imgLogo;
     NeumorphCardView ncContinue;
     Button btnLogin, btnRegister;
-    private UsersViewModel usersViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication_menu);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
 
-        LoadSettings();
-
-        if (switchOnOff_DayNight) {
+        if (sDayNight.equals("night"))
             imgLogo.setImageResource(R.drawable.jobby_v3);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        else {
+        else
             imgLogo.setImageResource(R.drawable.ic_jobby2_oficial);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
@@ -90,11 +88,6 @@ public class AuthenticationMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void LoadSettings() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        switchOnOff_DayNight = sharedPreferences.getBoolean(DAYNIGHT, false);
     }
 
     @Override

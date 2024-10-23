@@ -1,13 +1,14 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 24/12/21, 03:08
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -26,19 +27,31 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.R;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 public class SplashScreen extends AppCompatActivity {
+
     //Variables
+    public static final String FILE_SETTINGS = "settings.txt";
     Animation topAnim, bottonAnim;
     ImageView imgJobbyLogotipo;
     LottieAnimationView imgWatchPc;
     TextView tvPowerBy, tvJobby, tvSlogan;
+    public static String sDayNight = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
+
+        LoadSettings();
 
         final MediaPlayer introSound = MediaPlayer.create(this, R.raw.sound);
         introSound.start();
@@ -70,9 +83,41 @@ public class SplashScreen extends AppCompatActivity {
                 pair[2] = new Pair(tvPowerBy, "tn_power_by");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SplashScreen.this, pair);
                 startActivity(intent, options.toBundle());
-                finish();
+                //finish();
             }
         }, 7000);
+    }
+
+    private void LoadSettings(){
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_SETTINGS);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String settings;
+            while ((settings = br.readLine()) != null) {
+                sb.append(settings);
+            }
+            sDayNight = sb.toString();
+            if (sDayNight.equals("night"))
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            else
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void InitControls() {

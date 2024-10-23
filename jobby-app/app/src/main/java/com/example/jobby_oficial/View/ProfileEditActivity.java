@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 24/01/22, 21:54
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -40,7 +40,6 @@ public class ProfileEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mContextProfile = this;
 
         //Inicializa Controlos

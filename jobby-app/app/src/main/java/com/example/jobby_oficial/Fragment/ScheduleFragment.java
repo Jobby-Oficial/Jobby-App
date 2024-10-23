@@ -1,12 +1,13 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 19/01/22, 19:44
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.Fragment;
 
+import static com.example.jobby_oficial.View.MainActivity.jobStatusViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.example.jobby_oficial.Adapter.ScheduleAdapter;
+import com.example.jobby_oficial.Model.JobStatus;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.Username;
@@ -55,6 +57,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
     List<Schedule> list_schedule;
     List<Username> list_username;
     List<Service> list_service;
+    List<JobStatus> list_jobSstatus;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -133,7 +136,19 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
         });
         usersViewModel.makeApiCallUsernames();
 
-        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, this);
+
+        jobStatusViewModel.getAllJobStatus().observe(getViewLifecycleOwner(), new Observer<List<JobStatus>>() {
+            @Override
+            public void onChanged(List<JobStatus> jobStatusList) {
+                list_jobSstatus = jobStatusList;
+                adapter.getAllJobStatus(list_jobSstatus);
+                adapter.notifyDataSetChanged();
+                System.out.println("Lista Job Status: " + list_jobSstatus);
+            }
+        });
+        jobStatusViewModel.makeApiCalJobStatus();
+
+        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, list_jobSstatus, this);
         //rvSchedule.setAdapter(adapter);
 
         //Animations

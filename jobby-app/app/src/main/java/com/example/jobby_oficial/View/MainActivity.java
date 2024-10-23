@@ -1,15 +1,14 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 30/12/21, 02:24
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:45
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.View;
 
-import static com.example.jobby_oficial.View.AuthenticationMenu.DAYNIGHT;
-import static com.example.jobby_oficial.View.AuthenticationMenu.SHARED_PREFS;
-import static com.example.jobby_oficial.View.AuthenticationMenu.switchOnOff_DayNight;
+import static com.example.jobby_oficial.View.SplashScreen.FILE_SETTINGS;
+import static com.example.jobby_oficial.View.SplashScreen.sDayNight;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +54,7 @@ import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Fragment.ScheduleFragment;
 import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
+import com.example.jobby_oficial.ViewModel.JobStatusViewModel;
 import com.example.jobby_oficial.ViewModel.ScheduleViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
@@ -62,6 +66,12 @@ import com.like.LikeButton;
 import com.mahfa.dnswitch.DayNightSwitch;
 import com.mahfa.dnswitch.DayNightSwitchListener;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,22 +80,21 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     SessionManager sessionManager;
     public static String user, id_User;
+    public static int iNotFound = 0;
     private UsersViewModel usersViewModel;
     private ServiceViewModel serviceViewModel;
     public static FavoriteViewModel favoriteViewModel;
     public static ScheduleViewModel scheduleViewModel;
     public static AvaliationViewModel avaliationViewModel;
     private ServicesGalleryViewModel servicesGalleryViewModel;
+    public static JobStatusViewModel jobStatusViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
-    BottomNavigationView bottomNavigationView;
     FloatingActionButton fabExtended, fabLogout, fabProfile, fabSettings;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    boolean isCheck = false, isOpen = false, checkSwitch;
-    int iNavBarId = 1;
+    boolean isOpen = false, bWarnning = false;
     Fragment selectedFragment = new CategoryFragment();
     NestedScrollView scrollview;
     LottieAnimationView imgSparklesCategory;
-    LikeButton lb_Service;
     AlertDialog alertDialog;
     List<User> list_user;
     List<Service> list_service;
@@ -99,11 +108,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
         AddMenuItems();
-        //LoadSettings();
+        Warnning();
 
         //Animations
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
@@ -118,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
         servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
+        jobStatusViewModel = new ViewModelProvider(this).get(JobStatusViewModel.class);
+
 
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
@@ -126,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "run: " + list_user.toString());
 
                 if (list_user.size() != 0) {
-                    //System.out.println("Username: " + list_users.get(0).getUsername());
                     String id = String.valueOf(list_user.get(0).getId());
                     String username = list_user.get(0).getUsername();
                     sessionManager.createLoginSession(id, username);
@@ -145,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
                     servicesGalleryViewModel.makeApiCallServicesGallerys();
+                    jobStatusViewModel.makeApiCalJobStatus();
                 }
                 else
                     sessionManager.createLoginSession(null, null);
@@ -220,55 +230,52 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getId()) {
                     case 1:
-                        iNavBarId = 1;
                         selectedFragment = new CategoryFragment();
                         //Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 2:
-                        iNavBarId = 2;
+                        iNotFound = 1;
                         selectedFragment = new ServiceFragment();
                         //Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 3:
-                        iNavBarId = 3;
+                        iNotFound = 2;
                         if (user != null)
                             selectedFragment = new FavoriteFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 4:
-                        iNavBarId = 4;
+                        iNotFound = 3;
                         if (user != null)
                             selectedFragment = new AvaliationFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 5:
-                        iNavBarId = 5;
+                        iNotFound = 4;
                         if (user != null)
                             selectedFragment = new ScheduleFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                         break;
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, selectedFragment).detach(selectedFragment).attach(selectedFragment).commit();
+                Warnning();
             }
         });
 
@@ -300,8 +307,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(intent);
+                    if (!isConnected(MainActivity.this)) {
+                        showInternetDialog();
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 else
                     showSessionDialog();
@@ -319,60 +330,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 fabAnimation();
-                //Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
             }
         });
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
-
-
-        /*bottomNavigationView.setBackground(null);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-
-            switch (item.getItemId()) {
-                case R.id.category:
-                    selectedFragment = new CategoryFragment();
-                    Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
-                    break;
-
-                case R.id.service:
-                    selectedFragment = new ServiceFragment();
-                    Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
-
-                    break;
-
-                case R.id.favorite:
-                    selectedFragment = new FavoriteFragment();
-                    Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
-                    break;
-
-                case R.id.profile:
-                    selectedFragment = new ScheduleFragment();
-                    Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,selectedFragment).commit();
-
-            return true;
-        });*/
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
-    /*public void showFavoriteDialog() {
+    private boolean isConnected(MainActivity connected) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) connected.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void Warnning(){
+        if (!isConnected(MainActivity.this)) {
+            if (bWarnning == false)
+                showWarnningDialog();
+        } else
+            bWarnning = false;
+    }
+
+    private void showInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_favorite, findViewById(R.id.favorite_dialog));
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_dialog));
 
-        view.findViewById(R.id.btn_remove_favorite).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
-                startActivity(intent);
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
             }
         });
-        view.findViewById(R.id.tv_cancel_favorite).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
@@ -383,11 +385,32 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
-    }*/
+    }
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
+    private void showWarnningDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_warnning, findViewById(R.id.warnning_dialog));
+        bWarnning = true;
+
+        view.findViewById(R.id.btn_connect_warnning).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_warnning).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 
     private void showSessionDialog() {
@@ -420,40 +443,25 @@ public class MainActivity extends AppCompatActivity {
         builder.setCancelable(false);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, findViewById(R.id.settings_dialog));
 
-        //SwitchCompat switchCompat = view.findViewById(R.id.switch_day_night_settings);
         DayNightSwitch dayNightSwitch = view.findViewById(R.id.switch_day_night_settings);
 
-        /*dayNightSwitch.setListener(new DayNightSwitchListener() {
-            @Override
-            public void onSwitch(boolean is_night) {
-                if (is_night)
-                    checkSwitch = true;
-                else
-                    checkSwitch = false;
-            }
-        });*/
-
-        if (switchOnOff_DayNight) {
+        if (sDayNight.equals("night"))
             dayNightSwitch.setIsNight(true, false);
-            //checkSwitch = false;
-        }
-        else {
+        else
             dayNightSwitch.setIsNight(false, false);
-            //checkSwitch = true;
-        }
 
         view.findViewById(R.id.btn_save_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(DAYNIGHT, dayNightSwitch.isNight());
-                editor.apply();
-
-                if (dayNightSwitch.isNight())
+                if (dayNightSwitch.isNight()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                else
+                    sDayNight = "night";
+                }
+                else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    sDayNight = "day";
+                }
+                SaveSettings();
 
                 alertDialog.dismiss();
             }
@@ -469,6 +477,27 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
+    }
+
+    private void SaveSettings() {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(FILE_SETTINGS, MODE_PRIVATE);
+            fos.write(sDayNight.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void LockScrollview (boolean bLock) {
@@ -510,7 +539,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void InitControls() {
-        //bottomNavigationView = findViewById(R.id.bottomNavigationView);
         scrollview = findViewById(R.id.nestedScrollView);
         meowBottomNavigationView = findViewById(R.id.bottom_navegation);
         fabExtended = findViewById(R.id.fab_Extended);

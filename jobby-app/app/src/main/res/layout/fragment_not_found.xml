@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 02/01/22, 18:50
+  ~ Last modified: 27/01/22, 20:20
   ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
@@ -66,7 +66,7 @@
             android:gravity="center"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
-            android:text="We searched for all services.\nWe didn't find any for your search."
+            android:text=""
             android:textColor="@color/texts"
             android:textSize="18dp"
             android:textStyle="bold"

@@ -1,11 +1,13 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 02/01/22, 18:50
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.Fragment;
+
+import static com.example.jobby_oficial.View.MainActivity.iNotFound;
 
 import android.os.Bundle;
 
@@ -20,6 +22,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.jobby_oficial.R;
+import com.example.jobby_oficial.View.MainActivity;
 
 public class NotFoundFragment extends Fragment {
 
@@ -57,9 +60,17 @@ public class NotFoundFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_not_found, container, false);
         InitControls(view);
+        if (iNotFound == 1)
+            tvContentPageFound.setText("We searched for all services.\nWe didn't find any for your search.");
+        else if (iNotFound == 2)
+            tvContentPageFound.setText("We searched for all favorites.\nWe didn't find any on your account.");
+        else if (iNotFound == 3)
+            tvContentPageFound.setText("We searched for all avaliation.\nWe didn't find any on your account.");
+        else
+            tvContentPageFound.setText("We searched for all schedule.\nWe didn't find any on your account.");
+
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgPageNotFound);
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(tvNoResultFound);
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(tvContentPageFound);

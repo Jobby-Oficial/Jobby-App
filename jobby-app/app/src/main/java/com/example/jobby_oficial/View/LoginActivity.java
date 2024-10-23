@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 31/12/21, 17:47
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -12,13 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private UsersViewModel usersViewModel;
     private static Context mContextLogin;
-    LottieAnimationView lavBack;
+    LottieAnimationView lavBack, lavTop, lavBottom;
     Button btnGoToRegister, btnSignin;
     TextInputLayout edUsername, edPassword;
     static TextView tvInvalidLogin;
@@ -52,11 +55,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mContextLogin = this;
 
         //Inicializa Controlos
         InitControls();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                lavBack.playAnimation();
+                lavTop.playAnimation();
+                lavBottom.playAnimation();
+            }
+        }, 1000);
 
         list_users = new ArrayList<>();
 
@@ -128,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
             }
         });
         view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
@@ -225,6 +237,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void InitControls() {
         lavBack = findViewById(R.id.lav_back_login);
+        lavTop = findViewById(R.id.lav_top_login);
+        lavBottom = findViewById(R.id.lav_bottom_login);
         btnGoToRegister = findViewById(R.id.btn_go_to_register);
         btnSignin = findViewById(R.id.btn_sign_in);
         edUsername = findViewById(R.id.username_login);

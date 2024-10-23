@@ -1,22 +1,20 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 31/12/21, 17:46
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.View;
 
-import static com.example.jobby_oficial.View.AuthenticationMenu.switchOnOff_DayNight;
+import static com.example.jobby_oficial.View.SplashScreen.sDayNight;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -34,7 +32,6 @@ import com.example.jobby_oficial.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -58,14 +55,13 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_three);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
 
-        //Get Intent CountryData
+        //Get Intent
         GetIntentData();
 
-        if (switchOnOff_DayNight)
+        if (sDayNight.equals("night"))
             gifPhone.setImageResource(R.drawable.animation_phone_run_dark);
         else
             gifPhone.setImageResource(R.drawable.animation_phone_run);
@@ -99,13 +95,6 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
                     Intent intent = new Intent(RegisterStepThreeActivity.this, RegisterStepFourActivity.class);
                     intent = IntentData(intent); //Send Intent CountryData
                     startActivity(intent);
-                    /*if (!isConnected(RegisterStepThreeActivity.this)) {
-                        showInternetDialog();
-                    } else {
-                        Intent intent = new Intent(RegisterStepThreeActivity.this, MainActivity.class);
-                        SendDataToAPI();
-                        startActivity(intent);
-                    }*/
                 }
             }
         });
@@ -150,67 +139,6 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
                 call.cancel();
             }
         });
-    }
-
-    private boolean isConnected(RegisterStepThreeActivity register) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) register.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
-        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
-
-        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    private void showInternetDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterStepThreeActivity.this);
-        builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_dialog));
-
-        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-            }
-        });
-        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        builder.setView(view);
-
-        alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.show();
-    }
-
-    private void showCustomDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterStepThreeActivity.this);
-        builder.setMessage("Please connect to the internet to proceed further")
-                .setCancelable(false)
-                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        //finish();
-                    }
-                }).show();
-    }
-
-    private void SendDataToAPI() {
-        sPhone = edPhone.getEditText().getText().toString();
-        System.out.println("Send API: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword + " + " + cGender + " + " + sDate + " + " + sPhone);
     }
 
     private Intent IntentData(Intent intent) {
