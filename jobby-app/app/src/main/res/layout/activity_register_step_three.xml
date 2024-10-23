@@ -109,7 +109,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_login"/>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tv_signup_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
             android:textSize="18sp"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_welcome_login" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_welcome_login" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -128,20 +128,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_singin_login">
 
+            <!--app:ccp_defaultNameCode="PT"-->
             <com.hbb20.CountryCodePicker
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_showFlag="true"
                 app:ccp_showNameCode="true"
                 app:ccp_showFullName="true"
-                android:background="@drawable/back_border_slider"/>
+                android:background="@drawable/black_border_picker_step3"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phone_number_register"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:hint="Phone Number"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
                 app:boxStrokeColor="@color/black"
@@ -154,70 +157,80 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:gravity="bottom"
+        android:padding="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_back_step3"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_effect"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
-                android:layout_marginTop="205dp">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_next_step3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_effect"
+                android:text="Sign Up"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_back_step3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/ripple_effect"
-                    android:text="Back"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"/>
+        </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_next_step3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/ripple_effect"
-                    android:text="Sign Up"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40dp"
+                android:layout_weight="2"
+                android:elevation="0dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Already have an account?"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="40dp"
-                    android:layout_weight="2"
-                    android:elevation="0dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:text="Already have an account?"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
-
-                <Button
-                    android:id="@+id/btn_go_to_login"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
-                    android:layout_weight="1"
-                    android:background="#00000000"
-                    android:backgroundTint="#00000000"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:text="Login"
-                    android:textColor="@color/splash_screen_background"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+            <Button
+                android:id="@+id/btn_go_to_login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:backgroundTint="#00000000"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:text="Login"
+                android:textColor="@color/splash_screen_background"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

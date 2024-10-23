@@ -203,15 +203,15 @@ public class RegisterStepOneActivity extends AppCompatActivity {
     }
 
     private void FormLayout(int position){
-        int iTop = 158;
+        int iTop = 153;
         if (position == 1)
-            iTop = 120;
+            iTop = 115;
         else if (position == 2)
-            iTop = 90;
+            iTop = 85;
         else if (position == 3)
-            iTop = 50;
+            iTop = 45;
         else if (position == 4)
-            iTop = 10;
+            iTop = 5;
         LinearLayout ll = (LinearLayout) findViewById(R.id.ll_form_step1_register);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)ll.getLayoutParams();
         lp.setMargins(0, iTop, 0, 0);

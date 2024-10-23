@@ -139,7 +139,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
                 boolean bValidation = true;
                 bValidation = Validation(bValidation);
                 if (bValidation == true) {
-                    SendDataAPI();
+                    SendDataToAPI();
                     alertDialog.dismiss();
                 }
 
@@ -222,7 +222,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
         return validation;
     }
 
-    private void SendDataAPI() {
+    private void SendDataToAPI() {
         String sNote = edNote.getEditText().getText().toString();
 
         int iDay = dpDate.getDayOfMonth();
