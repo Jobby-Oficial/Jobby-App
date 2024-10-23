@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import android.widget.Button;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.jobby_oficial.R;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Calendar;
 
 public class RegisterStepThreeActivity extends AppCompatActivity {
 
@@ -70,13 +73,16 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
                 boolean bValidation = true;
                 bValidation = Validation(bValidation);
                 if (bValidation == true) {
-                    if (!isConnected(RegisterStepThreeActivity.this)) {
+                    Intent intent = new Intent(RegisterStepThreeActivity.this, RegisterStepFourActivity.class);
+                    intent = IntentData(intent); //Send Intent Data
+                    startActivity(intent);
+                    /*if (!isConnected(RegisterStepThreeActivity.this)) {
                         showInternetDialog();
                     } else {
                         Intent intent = new Intent(RegisterStepThreeActivity.this, MainActivity.class);
                         SendDataToAPI();
                         startActivity(intent);
-                    }
+                    }*/
                 }
             }
         });
@@ -152,6 +158,24 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
         System.out.println("Send API: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword + " + " + cGender + " + " + sDate + " + " + sPhone);
     }
 
+    private Intent IntentData(Intent intent) {
+        sPhone = edPhone.getEditText().getText().toString();
+
+        //Put Extra
+        intent.putExtra("Name", sName);
+        intent.putExtra("Username", sUsername);
+        intent.putExtra("Email", sEmail);
+        intent.putExtra("Password", sPassword);
+        intent.putExtra("Gender", cGender);
+        intent.putExtra("Date", sDate);
+        intent.putExtra("Day", iDay);
+        intent.putExtra("Month", iMonth);
+        intent.putExtra("Year", iYear);
+        intent.putExtra("Phone", sPhone);
+
+        return intent;
+    }
+
     private void GetIntentData() {
         sName = getIntent().getStringExtra("Name");
         sUsername = getIntent().getStringExtra("Username");
@@ -162,8 +186,12 @@ public class RegisterStepThreeActivity extends AppCompatActivity {
         iDay = getIntent().getIntExtra("Day", iDay);
         iMonth = getIntent().getIntExtra("Month", iMonth);
         iYear = getIntent().getIntExtra("Year", iYear);
+        sPhone = getIntent().getStringExtra("Phone");
 
-        System.out.println("Step3: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword + " + " + cGender + " + " + sDate);
+        if (sPhone != null)
+            edPhone.getEditText().setText(sPhone);
+
+        System.out.println("Step3: " + sName + " + " + sUsername + " + " + sEmail + " + " + sPassword + " + " + cGender + " + " + sDate + " + " + sPhone);
         System.out.println("date int s3: " + iDay + iMonth + iYear);
     }
 
