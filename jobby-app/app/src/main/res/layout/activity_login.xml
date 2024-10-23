@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 24/12/21, 03:05
-  ~ Copyright (c) 2021.
+  ~ Last modified: 27/01/22, 20:20
+  ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
 
@@ -17,6 +17,7 @@
     android:transitionName="tn_login">
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_top_login"
         android:layout_width="match_parent"
         android:layout_height="231dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +28,7 @@
         app:lottie_speed="2"/>
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_bottom_login"
         android:layout_width="match_parent"
         android:layout_height="231dp"
         android:layout_marginTop="590dp"
@@ -71,7 +73,7 @@
                 android:fontFamily="@font/bungee"
                 android:text="Login"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textStyle="bold"
                 android:textSize="40dp"
                 android:layout_gravity="center"
@@ -85,7 +87,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/bungee"
             android:text="Hello there, Welcome Back"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="40sp"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -123,8 +125,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Username"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black">
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -139,8 +141,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black"
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts"
                 app:passwordToggleDrawable="@drawable/eye_password"
                 app:passwordToggleEnabled="true">
 
@@ -171,7 +173,7 @@
                     android:backgroundTint="#00000000"
                     android:elevation="0dp"
                     android:text="Forget Password?"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/texts" />
 
             </RelativeLayout>
 
@@ -211,7 +213,7 @@
                     android:gravity="center"
                     android:text="Don't have an account?"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/texts"
                     android:textSize="17dp" />
 
                 <Button

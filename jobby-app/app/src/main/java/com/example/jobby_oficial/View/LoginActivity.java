@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 31/12/21, 17:47
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -12,13 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -39,12 +42,12 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
-    LottieAnimationView lavBack;
+    private UsersViewModel usersViewModel;
+    private static Context mContextLogin;
+    LottieAnimationView lavBack, lavTop, lavBottom;
     Button btnGoToRegister, btnSignin;
     TextInputLayout edUsername, edPassword;
     static TextView tvInvalidLogin;
-    private UsersViewModel usersViewModel;
-    private static Context mContext;
     List<User> list_users;
     AlertDialog alertDialog;
 
@@ -52,10 +55,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mContextLogin = this;
+
+        //Inicializa Controlos
         InitControls();
 
-        mContext = this;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                lavBack.playAnimation();
+                lavTop.playAnimation();
+                lavBottom.playAnimation();
+            }
+        }, 1000);
+
         list_users = new ArrayList<>();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
@@ -126,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
             }
         });
         view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
@@ -160,10 +174,10 @@ public class LoginActivity extends AppCompatActivity {
                 }).show();
     }
 
-    public void initSession(boolean bLogin){
+    public void initSessionLogin(boolean bLogin){
         if (bLogin == true){
-            Intent intent = new Intent(mContext, MainActivity.class);
-            mContext.startActivity(intent);
+            Intent intent = new Intent(mContextLogin, MainActivity.class);
+            mContextLogin.startActivity(intent);
         }
         else {
             tvInvalidLogin.setVisibility(View.VISIBLE);
@@ -207,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
         /*else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[A-Z]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 upper case letter!");
-        }
+        }*/
         else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[a-z]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 lower case letter!");
@@ -215,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
         else if (!edPassword.getEditText().getText().toString().matches("^(?=.*[0-9]).+$")){
             validation = false;
             edPassword.setError("Password need at least 1 digit!");
-        }*/
+        }
         else edPassword.setErrorEnabled(false);
 
         return validation;
@@ -223,6 +237,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void InitControls() {
         lavBack = findViewById(R.id.lav_back_login);
+        lavTop = findViewById(R.id.lav_top_login);
+        lavBottom = findViewById(R.id.lav_bottom_login);
         btnGoToRegister = findViewById(R.id.btn_go_to_register);
         btnSignin = findViewById(R.id.btn_sign_in);
         edUsername = findViewById(R.id.username_login);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 20/01/22, 15:07
+  ~ Last modified: 27/01/22, 20:20
   ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
@@ -79,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/back_border_slider"
+            android:background="@drawable/black_border_slider"
             android:padding="2dp"
             app:iss_auto_cycle="true"
             app:iss_delay="0"
@@ -315,7 +315,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:text="Valuations:"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
 
@@ -328,7 +328,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="0,0 ☆"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
 

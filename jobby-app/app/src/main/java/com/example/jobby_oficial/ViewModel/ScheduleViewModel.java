@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 19/01/22, 03:02
+ * Last modified: 27/01/22, 20:33
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -17,9 +17,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
-import com.example.jobby_oficial.Network.FavoriteRetroInstance;
 import com.example.jobby_oficial.Network.ScheduleRetroInstance;
 import com.example.jobby_oficial.Repository.ScheduleRepository;
 import com.google.gson.JsonObject;

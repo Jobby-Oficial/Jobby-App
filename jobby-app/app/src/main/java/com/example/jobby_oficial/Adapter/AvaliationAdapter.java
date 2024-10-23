@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 21/01/22, 19:16
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -8,7 +8,6 @@
 package com.example.jobby_oficial.Adapter;
 
 import android.content.Context;
-import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +44,7 @@ public class AvaliationAdapter extends RecyclerView.Adapter<AvaliationAdapter.vi
 
     @Override
     public void onBindViewHolder(@NonNull AvaliationAdapter.viewholder holder, int position) {
+        //Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), android.R.anim.slide_in_left);
         Avaliation avaliation = list_avaliation.get(position);
         holder.tvRatingAvaliation.setText(String.valueOf(list_avaliation.get(position).getAvaliation()));
         for (Service iService : list_service) {
@@ -54,6 +54,7 @@ public class AvaliationAdapter extends RecyclerView.Adapter<AvaliationAdapter.vi
             if (iUser == iServ)
                 holder.tvServiceAvaliation.setText(list_service.get(list_service.indexOf(iService)).getName());
         }
+        //holder.itemView.startAnimation(animation);
     }
 
     public void getAllAvaliations(List<Avaliation> avaliationList){
