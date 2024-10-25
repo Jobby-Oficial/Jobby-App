@@ -136,14 +136,17 @@ public class MainActivity extends AppCompatActivity {
                     avaliationViewModel.makeApiCallAvaliations(joAvaliation);
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
-
-                    if (user != null)
-                        fabLogout.setVisibility(View.INVISIBLE);
-                    else
-                        fabLogout.setVisibility(View.GONE);
                 }
                 else
                     sessionManager.createLoginSession(null, null);
+
+                if (user != null)
+                    fabLogout.setImageResource(R.drawable.ic_logout);
+                else
+                    fabLogout.setImageResource(R.drawable.ic_menu);
+
+                //fabLogout.setVisibility(View.INVISIBLE);
+                //fabLogout.setVisibility(View.GONE);
 
                 //update recyclerview
                 //Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
@@ -279,9 +282,11 @@ public class MainActivity extends AppCompatActivity {
         fabLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id_User = null;
-                user = null;
-                sessionManager.logoutUserFromSession();
+                if (user != null) {
+                    id_User = null;
+                    user = null;
+                    sessionManager.logoutUserFromSession();
+                }
                 Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
                 startActivity(intent);
                 finish();
@@ -408,6 +413,11 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }*/
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
     private void showSessionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(false);
@@ -451,22 +461,18 @@ public class MainActivity extends AppCompatActivity {
     private void fabAnimation(){
         if (isOpen) {
             fabExtended.startAnimation(rotateBackward);
+            fabLogout.startAnimation(fabClose);
             fabProfile.startAnimation(fabClose);
+            fabLogout.setClickable(false);
             fabProfile.setClickable(false);
-            if (user != null) {
-                fabLogout.startAnimation(fabClose);
-                fabLogout.setClickable(false);
-            }
             isOpen = false;
         }
         else {
             fabExtended.startAnimation(rotateForward);
+            fabLogout.startAnimation(fabOpen);
             fabProfile.startAnimation(fabOpen);
+            fabLogout.setClickable(true);
             fabProfile.setClickable(true);
-            if (user != null) {
-                fabLogout.startAnimation(fabOpen);
-                fabLogout.setClickable(true);
-            }
             isOpen = true;
         }
     }
