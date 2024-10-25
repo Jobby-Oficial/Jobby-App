@@ -15,6 +15,7 @@ import static com.example.jobby_oficial.View.MainActivity.user;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -31,12 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.jobby_oficial.Model.Avaliation;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.Repository.ScheduleRepository;
+import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
@@ -46,6 +50,7 @@ import java.util.List;
 
 public class ServiceDetailActivity extends AppCompatActivity {
 
+    private ServicesGalleryViewModel servicesGalleryViewModel;
     AlertDialog alertDialog;
     LottieAnimationView lavBack, lavSchedule;
     ImageSlider imageSlider;
@@ -59,6 +64,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
     double dRating;
     boolean bCancel = false;
     List<Avaliation> list_avaliation;
+    List<ServicesGallery> list_gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +98,31 @@ public class ServiceDetailActivity extends AppCompatActivity {
         avaliationViewModel.makeApiCallAvaliations(joAvaliation);
 
         List<SlideModel> slideModels = new ArrayList<>();
-        slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
+        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
+        servicesGalleryViewModel.getAllServicesGallerys().observe(ServiceDetailActivity.this, new Observer<List<ServicesGallery>>() {
+            @Override
+            public void onChanged(List<ServicesGallery> galleryList) {
+                list_gallery = galleryList;
+                for (ServicesGallery iGallery : list_gallery) {
+                    int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
+
+                    if (service_id == iGal){
+                        String img = iGallery.getImage();
+                        String newIMG = img.replace("localhost", "10.0.2.2");
+                        System.out.println("Imagemmmmm: " + newIMG);
+                        slideModels.add(new SlideModel(newIMG, ScaleTypes.FIT));
+                    }
+                }
+                imageSlider.setImageList(slideModels);
+                System.out.println("Lista Services Gallery/Service: " + list_gallery);
+            }
+        });
+        servicesGalleryViewModel.makeApiCallServicesGallerys();
+
+        /*slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.jobby_v2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.jobby_v1, ScaleTypes.FIT));
-        imageSlider.setImageList(slideModels);
+        imageSlider.setImageList(slideModels);*/
 
         /*if (dRating == 0)
             bCancel = true;
@@ -304,7 +331,7 @@ public class ServiceDetailActivity extends AppCompatActivity {
 
         if(edNote.getEditText().getText().toString().trim().isEmpty()){
             validation = false;
-            edNote.setError("Enter Name, field can not be empty!");
+            edNote.setError("Enter Note, field can not be empty!");
         }
         else
             edNote.setErrorEnabled(false);

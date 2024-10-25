@@ -8,15 +8,18 @@
 package com.example.jobby_oficial.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.jobby_oficial.Database.SessionManager;
 import com.example.jobby_oficial.R;
@@ -26,6 +29,10 @@ import soup.neumorphism.NeumorphCardView;
 
 public class AuthenticationMenu extends AppCompatActivity {
 
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String DAYNIGHT = "day_night";
+    public static boolean switchOnOff_DayNight;
+    ImageView imgLogo;
     NeumorphCardView ncContinue;
     Button btnLogin, btnRegister;
     private UsersViewModel usersViewModel;
@@ -35,7 +42,19 @@ public class AuthenticationMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication_menu);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
+
+        LoadSettings();
+
+        if (switchOnOff_DayNight) {
+            imgLogo.setImageResource(R.drawable.jobby_v3);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            imgLogo.setImageResource(R.drawable.ic_jobby2_oficial);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
 
@@ -73,7 +92,18 @@ public class AuthenticationMenu extends AppCompatActivity {
         });
     }
 
+    private void LoadSettings() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        switchOnOff_DayNight = sharedPreferences.getBoolean(DAYNIGHT, false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
     private void InitControls() {
+        imgLogo = findViewById(R.id.img_logotipo);
         ncContinue = findViewById(R.id.nc_Continue);
         btnLogin = findViewById(R.id.btn_login_authentication);
         btnRegister = findViewById(R.id.btn_regster_authentication);

@@ -21,6 +21,7 @@ import com.example.jobby_oficial.Dao.CategoryDao;
 import com.example.jobby_oficial.Dao.FavoriteDao;
 import com.example.jobby_oficial.Dao.ScheduleDao;
 import com.example.jobby_oficial.Dao.ServiceDao;
+import com.example.jobby_oficial.Dao.ServicesGalleryDao;
 import com.example.jobby_oficial.Dao.UserDao;
 import com.example.jobby_oficial.Dao.UsernameDao;
 import com.example.jobby_oficial.Model.Avaliation;
@@ -28,10 +29,11 @@ import com.example.jobby_oficial.Model.Category;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.Model.Username;
 
-@Database(entities = {Category.class, User.class, Service.class, Favorite.class, Schedule.class, Username.class, Avaliation.class}, version = 1)
+@Database(entities = {Category.class, User.class, Service.class, Favorite.class, Schedule.class, Username.class, Avaliation.class, ServicesGallery.class}, version = 1)
 public abstract class SingletonRoomDatabase extends RoomDatabase {
 
     public abstract CategoryDao categoryDao();
@@ -41,6 +43,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
     public abstract ScheduleDao scheduleDao();
     public abstract UsernameDao usernameDao();
     public abstract AvaliationDao avaliationDao();
+    public abstract ServicesGalleryDao servicesGalleryDao();
 
     private static volatile SingletonRoomDatabase INSTANCE;
 
@@ -73,6 +76,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
         private ScheduleDao scheduleDao;
         private UsernameDao usernameDao;
         private AvaliationDao avaliationDao;
+        private ServicesGalleryDao servicesGalleryDao;
 
         private PopulateDbAsyncTask(SingletonRoomDatabase db){
             categoryDao = db.categoryDao();
@@ -82,29 +86,11 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
             scheduleDao = db.scheduleDao();
             usernameDao = db.usernameDao();
             avaliationDao = db.avaliationDao();
+            servicesGalleryDao = db.servicesGalleryDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            /*usersDao.insertUser(new User(
-                    "guilherme",
-                    "123",
-                    "img.jpg",
-                    "Guilherme Cruz",
-                    "guilhermecruz@gmail.com",
-                    "912345678",
-                    "Masculino",
-                    "28-01-2000"));
-
-            usersDao.insertUser(new User(
-                    "daniela",
-                    "123",
-                    "img.jpg",
-                    "Daniela Ribeiro",
-                    "danielaribeiro@gmail.com",
-                    "912345678",
-                    "Feminino",
-                    "08-12-2000"));*/
             categoryDao.deleteAll();
             usersDao.deleteAll();
             serviceDao.deleteAll();
@@ -112,6 +98,7 @@ public abstract class SingletonRoomDatabase extends RoomDatabase {
             scheduleDao.deleteAll();
             usernameDao.deleteAll();
             avaliationDao.deleteAll();
+            servicesGalleryDao.deleteAll();
             return null;
         }
     }

@@ -315,7 +315,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:text="Valuations:"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
 
@@ -328,7 +328,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="0,0 ☆"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
 

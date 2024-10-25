@@ -13,7 +13,7 @@
             <corners android:radius="20dp"/>
             <stroke
                 android:width="2dp"
-                android:color="@color/fab_icon" />
+                android:color="@color/black" />
         </shape>
     </item>
 </selector>

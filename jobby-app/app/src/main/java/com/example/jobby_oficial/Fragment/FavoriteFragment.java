@@ -16,25 +16,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.FavoriteAdapter;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.MainActivity;
 import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +47,17 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
     private String mParam1;
     private String mParam2;
 
+    AlphaInAnimationAdapter alphaInAnimationAdapter;
     private FavoriteViewModel favoriteViewModel;
     private ServiceViewModel serviceViewModel;
     private UsersViewModel usersViewModel;
+    private ServicesGalleryViewModel servicesGalleryViewModel;
     RecyclerView rvFavorite;
     FavoriteAdapter adapter;
     List<Favorite> list_favorite;
     List<Service> list_service;
     List<Username> list_username;
+    List<ServicesGallery> list_gallery;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -91,20 +92,6 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         list_service = new ArrayList<>();
         list_username = new ArrayList<>();
 
-        adapter = new FavoriteAdapter(getContext(), list_service, list_favorite,this);
-        //rvFavorite.setAdapter(adapter);
-
-        //Animations
-        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
-        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
-        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaInAnimationAdapter.setFirstOnly(false);
-        rvFavorite.setAdapter(alphaInAnimationAdapter);
-
-        /*SessionManager sessionManager = new SessionManager(getContext());
-        HashMap<String, String> userDetails = sessionManager.getUserDetailFromSession();
-        id_User = userDetails.get(sessionManager.KEY_ID);*/
-
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         favoriteViewModel.getAllFavorites().observe(getViewLifecycleOwner(), new Observer<List<Favorite>>() {
             @Override
@@ -122,9 +109,6 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
                 adapter.getAllFavorites(list_favorite);
             }
         });
-        /*JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("user_id", id_User);
-        favoriteViewModel.makeApiCallFavorites(jsonObject);*/
 
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         serviceViewModel.getAllServices().observe(getViewLifecycleOwner(), new Observer<List<Service>>() {
@@ -156,45 +140,36 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.OnFavo
         });
         usersViewModel.makeApiCallUsernames();
 
-        /*lb_Service = viewF.findViewById(R.id.heart_button_favorite);
-        lb_Service.setOnLikeListener(new OnLikeListener() {
+        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
+        servicesGalleryViewModel.getAllServicesGallerys().observe(getViewLifecycleOwner(), new Observer<List<ServicesGallery>>() {
             @Override
-            public void liked(LikeButton likeButton) {
-                Toast.makeText(getContext(), "liked", Toast.LENGTH_SHORT).show();
+            public void onChanged(List<ServicesGallery> galleryList) {
+                list_gallery = galleryList;
+                adapter.getAllServicesGallery(list_gallery);
+                System.out.println("Lista Services Gallery/Service: " + list_gallery);
             }
+        });
+        servicesGalleryViewModel.makeApiCallServicesGallerys();
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                Toast.makeText(getContext(), "unLiked", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        adapter = new FavoriteAdapter(getContext(), list_service, list_favorite, list_gallery,this);
+        //rvFavorite.setAdapter(adapter);
+
+        //Animations
+        alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvFavorite.setAdapter(alphaInAnimationAdapter);
 
         return view;
-
-        /*arrayList_favorite = new ArrayList<>();
-        FavoriteClass favorite1 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 1","Categoria 1");
-        FavoriteClass favorite2 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 2","Categoria 2");
-        FavoriteClass favorite3 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 3","Categoria 3");
-        FavoriteClass favorite4 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 4","Categoria 4");
-        FavoriteClass favorite5 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 5","Categoria 5");
-        FavoriteClass favorite6 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 6","Categoria 6");
-        FavoriteClass favorite7 = new FavoriteClass(R.drawable.ic_topic,"Nome do serviço 7","Categoria 7");
-        arrayList_favorite.add(favorite1);
-        arrayList_favorite.add(favorite2);
-        arrayList_favorite.add(favorite3);
-        arrayList_favorite.add(favorite4);
-        arrayList_favorite.add(favorite5);
-        arrayList_favorite.add(favorite6);
-        arrayList_favorite.add(favorite7);*/
     }
 
     @Override
     public void onFavoriteClick(int position) {
         list_favorite.get(position);
-        Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),"Favorite Position: " + position,Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), ServiceDetailActivity.class);
-
         int id = list_service.get(position).getId();
         String category = list_service.get(position).getCategory();
         String name = list_service.get(position).getName();

@@ -10,5 +10,5 @@
     <corners android:radius="100dp"/>
     <gradient android:angle="45"
         android:startColor="@color/white"
-        android:endColor="@color/light_background"/>
+        android:endColor="#ecf0f3"/>
 </shape>

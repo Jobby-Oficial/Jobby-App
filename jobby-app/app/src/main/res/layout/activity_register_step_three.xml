@@ -16,6 +16,7 @@
     android:background="@color/light_background">
 
     <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/lav_phone_run"
         android:layout_width="530dp"
         android:layout_height="match_parent"
         android:layout_marginStart="-60dp"
@@ -89,7 +90,7 @@
                 android:fontFamily="@font/bungee"
                 android:text="Register"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textStyle="bold"
                 android:textSize="40dp"
                 android:layout_gravity="center"
@@ -103,7 +104,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/bungee"
             android:text="Create Account"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="40sp"
             android:layout_marginTop="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,6 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                app:ccp_contentColor="@color/texts"
+                app:ccpDialog_textColor="@color/texts"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_showFlag="true"
                 app:ccp_showNameCode="true"
@@ -147,8 +150,8 @@
                 android:layout_marginTop="20dp"
                 android:hint="Phone Number"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black">
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -195,7 +198,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/ripple_effect"
-                android:text="Sign Up"
+                android:text="Next Step"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -215,7 +218,7 @@
                 android:gravity="center"
                 android:text="Already have an account?"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="17dp" />
 
             <Button

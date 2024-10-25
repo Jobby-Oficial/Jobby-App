@@ -7,10 +7,8 @@
 
 package com.example.jobby_oficial.Fragment;
 
-import static com.example.jobby_oficial.View.MainActivity.avaliationViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,13 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Toast;
 
 import com.example.jobby_oficial.Adapter.AvaliationAdapter;
 import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.R;
-import com.example.jobby_oficial.View.ServiceDetailActivity;
 import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
 import com.google.gson.JsonObject;
@@ -50,6 +46,7 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
     private String mParam1;
     private String mParam2;
 
+    AlphaInAnimationAdapter alphaInAnimationAdapter;
     private ServiceViewModel serviceViewModel;
     private AvaliationViewModel avaliationViewModel;
     AlertDialog alertDialog;
@@ -89,16 +86,6 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
         rvAvaliation.setHasFixedSize(true);
         list_service = new ArrayList<>();
         list_avaliation = new ArrayList<>();
-
-        adapter = new AvaliationAdapter(getContext(), list_avaliation, list_service, this);
-        //rvAvaliation.setAdapter(adapter);
-
-        //Animations
-        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
-        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
-        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
-        alphaInAnimationAdapter.setFirstOnly(false);
-        rvAvaliation.setAdapter(alphaInAnimationAdapter);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -143,13 +130,17 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
         });
         serviceViewModel.makeApiCallServices();
 
-        return view;
-    }
+        adapter = new AvaliationAdapter(getContext(), list_avaliation, list_service, this);
+        //rvAvaliation.setAdapter(adapter);
 
-    @Override
-    public void onAvaliationClick(int position) {
-        list_avaliation.get(position);
-        Toast.makeText(getContext(),"Avaliation Position: " + position,Toast.LENGTH_SHORT).show();
+        //Animations
+        alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvAvaliation.setAdapter(alphaInAnimationAdapter);
+
+        return view;
     }
 
     private void showAvaliationRemoveDialog(int position) {
@@ -177,5 +168,11 @@ public class AvaliationFragment extends Fragment implements AvaliationAdapter.On
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
+    }
+
+    @Override
+    public void onAvaliationClick(int position) {
+        list_avaliation.get(position);
+        //Toast.makeText(getContext(),"Avaliation Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

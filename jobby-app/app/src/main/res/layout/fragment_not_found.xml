@@ -51,7 +51,7 @@
             android:fontFamily="@font/muli_black"
             android:gravity="center"
             android:text="No Result Found"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="25dp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/lav_page_not_found"
@@ -67,7 +67,7 @@
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
             android:text="We searched for all services.\nWe didn't find any for your search."
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/tv_no_result_found" />

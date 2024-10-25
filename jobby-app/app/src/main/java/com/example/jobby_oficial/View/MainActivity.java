@@ -7,14 +7,21 @@
 
 package com.example.jobby_oficial.View;
 
+import static com.example.jobby_oficial.View.AuthenticationMenu.DAYNIGHT;
+import static com.example.jobby_oficial.View.AuthenticationMenu.SHARED_PREFS;
+import static com.example.jobby_oficial.View.AuthenticationMenu.switchOnOff_DayNight;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +43,7 @@ import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
@@ -45,11 +53,14 @@ import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
 import com.example.jobby_oficial.ViewModel.ScheduleViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
+import com.mahfa.dnswitch.DayNightSwitch;
+import com.mahfa.dnswitch.DayNightSwitchListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,11 +75,12 @@ public class MainActivity extends AppCompatActivity {
     public static FavoriteViewModel favoriteViewModel;
     public static ScheduleViewModel scheduleViewModel;
     public static AvaliationViewModel avaliationViewModel;
+    private ServicesGalleryViewModel servicesGalleryViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
     BottomNavigationView bottomNavigationView;
-    FloatingActionButton fabExtended, fabLogout, fabProfile;
+    FloatingActionButton fabExtended, fabLogout, fabProfile, fabSettings;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    boolean isCheck = false, isOpen = false;
+    boolean isCheck = false, isOpen = false, checkSwitch;
     int iNavBarId = 1;
     Fragment selectedFragment = new CategoryFragment();
     NestedScrollView scrollview;
@@ -81,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     List<Schedule> list_schedule;
     List<Avaliation> list_avaliation;
     List<Username> list_username;
+    List<ServicesGallery> list_gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         //Inicializa Controlos
         InitControls();
         AddMenuItems();
+        //LoadSettings();
 
         //Animations
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
@@ -97,25 +111,19 @@ public class MainActivity extends AppCompatActivity {
         rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
-        //SessionManager sessionManager = new SessionManager(this);
-
-        //user = userDetails.get(sessionManager.KEY_USERNAME);
-
         sessionManager = new SessionManager(MainActivity.this);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
+        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
 
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
                 list_user = users;
                 Log.d(TAG, "run: " + list_user.toString());
-
-                //String id, username;
-                //SessionManager sessionManager = new SessionManager(MainActivity.this);
 
                 if (list_user.size() != 0) {
                     //System.out.println("Username: " + list_users.get(0).getUsername());
@@ -136,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     avaliationViewModel.makeApiCallAvaliations(joAvaliation);
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
+                    servicesGalleryViewModel.makeApiCallServicesGallerys();
                 }
                 else
                     sessionManager.createLoginSession(null, null);
@@ -144,20 +153,6 @@ public class MainActivity extends AppCompatActivity {
                     fabLogout.setImageResource(R.drawable.ic_logout);
                 else
                     fabLogout.setImageResource(R.drawable.ic_menu);
-
-                //fabLogout.setVisibility(View.INVISIBLE);
-                //fabLogout.setVisibility(View.GONE);
-
-                //update recyclerview
-                //Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
-                /*Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Log.d(TAG, "run: " + users.toString());
-                    }
-                });
-                thread.start();*/
             }
         });
 
@@ -198,6 +193,14 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Username> usernameList) {
                 list_username = usernameList;
                 System.out.println("Lista Username/Main: " + list_username);
+            }
+        });
+
+        servicesGalleryViewModel.getAllServicesGallerys().observe(this, new Observer<List<ServicesGallery>>() {
+            @Override
+            public void onChanged(List<ServicesGallery> galleryList) {
+                list_gallery = galleryList;
+                System.out.println("Lista Services Gallery/Main: " + list_gallery);
             }
         });
 
@@ -305,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSettingsDialog();
+            }
+        });
+
         fabExtended.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -349,44 +359,6 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
-    /*public void testeUser(){
-        User user = new User(7,"guilhermecruz","teste1234","/assets/img/user-profile.svg","Guilherme Cruz","guilhermecruz@gmail.com","933310757","m","2000-01-28","Armenia","Ashtarak");
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("username", "guilhermecruz");
-        jsonObject.addProperty("password_hash", "teste1234");
-        jsonObject.addProperty("image", "/assets/img/user-profile.svg");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("name", "Guilherme Cruz");
-        jsonObject.addProperty("phone", "933310757");
-        jsonObject.addProperty("genre", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        usersViewModel.makeApiCallCreateUsers(user);
-    }*/
-
-    /*private void getAll() {
-        *//*Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<User> usersList = SingletonRoomDatabase.getInstance(getApplicationContext())
-                        .usersDao().getAllUsers();
-                Log.d(TAG, "run: " + usersList.toString());
-            }
-        });
-        thread.start();*//*
-    }*/
-
-    /*class InsertAsyncTask extends AsyncTask<User, Void, Void>{
-
-        @Override
-        protected Void doInBackground(User... users) {
-            SingletonRoomDatabase.getInstance(getApplicationContext())
-                    .usersDao()
-                    .insertUser(users[0]);
-            return null;
-        }
-    }*/
 
     /*public void showFavoriteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -443,6 +415,62 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void showSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, findViewById(R.id.settings_dialog));
+
+        //SwitchCompat switchCompat = view.findViewById(R.id.switch_day_night_settings);
+        DayNightSwitch dayNightSwitch = view.findViewById(R.id.switch_day_night_settings);
+
+        /*dayNightSwitch.setListener(new DayNightSwitchListener() {
+            @Override
+            public void onSwitch(boolean is_night) {
+                if (is_night)
+                    checkSwitch = true;
+                else
+                    checkSwitch = false;
+            }
+        });*/
+
+        if (switchOnOff_DayNight) {
+            dayNightSwitch.setIsNight(true, false);
+            //checkSwitch = false;
+        }
+        else {
+            dayNightSwitch.setIsNight(false, false);
+            //checkSwitch = true;
+        }
+
+        view.findViewById(R.id.btn_save_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(DAYNIGHT, dayNightSwitch.isNight());
+                editor.apply();
+
+                if (dayNightSwitch.isNight())
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                else
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
+
     public void LockScrollview (boolean bLock) {
         if (bLock)
             scrollview.setNestedScrollingEnabled(false);
@@ -463,16 +491,20 @@ public class MainActivity extends AppCompatActivity {
             fabExtended.startAnimation(rotateBackward);
             fabLogout.startAnimation(fabClose);
             fabProfile.startAnimation(fabClose);
+            fabSettings.startAnimation(fabClose);
             fabLogout.setClickable(false);
             fabProfile.setClickable(false);
+            fabSettings.setClickable(false);
             isOpen = false;
         }
         else {
             fabExtended.startAnimation(rotateForward);
             fabLogout.startAnimation(fabOpen);
             fabProfile.startAnimation(fabOpen);
+            fabSettings.startAnimation(fabOpen);
             fabLogout.setClickable(true);
             fabProfile.setClickable(true);
+            fabSettings.setClickable(true);
             isOpen = true;
         }
     }
@@ -484,6 +516,7 @@ public class MainActivity extends AppCompatActivity {
         fabExtended = findViewById(R.id.fab_Extended);
         fabLogout = findViewById(R.id.fab_Avaliation);
         fabProfile = findViewById(R.id.fab_Profile);
+        fabSettings = findViewById(R.id.fab_Settings);
         imgSparklesCategory = findViewById(R.id.lav_sparkles);
     }
 }

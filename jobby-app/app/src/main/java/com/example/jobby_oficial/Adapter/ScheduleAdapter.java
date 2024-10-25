@@ -9,28 +9,21 @@ package com.example.jobby_oficial.Adapter;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
+import com.example.jobby_oficial.View.MainActivity;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -71,19 +64,21 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
         SimpleDateFormat formatoDestino = new SimpleDateFormat("dd-MM-yyyy");
         String sDate = formatoDestino.format(data);
         Schedule schedule = list_schedule.get(position);
-        for (Service iService : list_service) {
-            int iUser = list_service.get(list_service.indexOf(iService)).getId();
-            int iServ = list_schedule.get(position).getService_id();
-            System.out.println(iUser + " | " + iServ);
-            if (iUser == iServ)
-                holder.tvServiceSchedule.setText("Service: " + list_service.get(list_service.indexOf(iService)).getName());
-        }
-        for (Username iUsername : list_username) {
-            int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
-            int iProf = list_schedule.get(position).getProfessional_id();
-            System.out.println(iUser + " | " + iProf);
-            if (iUser == iProf)
-                holder.tvProfessionalSchedule.setText("Profissional: " + list_username.get(list_username.indexOf(iUsername)).getUsername());
+        if (MainActivity.id_User != null) {
+            for (Service iService : list_service) {
+                int iUser = list_service.get(list_service.indexOf(iService)).getId();
+                int iServ = list_schedule.get(position).getService_id();
+                System.out.println(iUser + " | " + iServ);
+                if (iUser == iServ)
+                    holder.tvServiceSchedule.setText("Service: " + list_service.get(list_service.indexOf(iService)).getName());
+            }
+            for (Username iUsername : list_username) {
+                int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
+                int iProf = list_schedule.get(position).getProfessional_id();
+                System.out.println(iUser + " | " + iProf);
+                if (iUser == iProf)
+                    holder.tvProfessionalSchedule.setText("Profissional: " + list_username.get(list_username.indexOf(iUsername)).getUsername());
+            }
         }
         holder.tvDateSchedule.setText(sDate + " " + buffer.toString());
         holder.tvStatusSchedule.setText(String.valueOf(list_schedule.get(position).getJob_status_id()));

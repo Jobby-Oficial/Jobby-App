@@ -21,8 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.R;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -31,17 +33,18 @@ import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewholder>{
     AlertDialog alertDialog;
-    //View viewDialog;
     ViewGroup parentView;
     private Context context;
     List<Service> list_service;
     List<Favorite> list_favorite;
+    List<ServicesGallery> list_gallery;
     OnFavoriteListener onFavoriteListener;
 
-    public FavoriteAdapter(Context context, List<Service> list_service, List<Favorite> list_favorite, OnFavoriteListener onFavoriteListener) {
+    public FavoriteAdapter(Context context, List<Service> list_service, List<Favorite> list_favorite, List<ServicesGallery> list_gallery, OnFavoriteListener onFavoriteListener) {
         this.context = context;
         this.list_service = list_service;
         this.list_favorite = list_favorite;
+        this.list_gallery = list_gallery;
         this.onFavoriteListener = onFavoriteListener;
     }
 
@@ -58,10 +61,21 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
         Service service;
         if (list_service.isEmpty() == false) {
             service = list_service.get(position);
-            //holder.imgFavorite.setImageResource(list_favorite.get(position).getImageFavorite());
             holder.tvNameFavorite.setText("Service: " + list_service.get(position).getName());
             holder.tvCategoryFavorite.setText("Category: " + list_service.get(position).getCategory());
             holder.lb_Favorite.setLiked(true);
+
+            for (ServicesGallery iGallery : list_gallery) {
+                int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
+                int iSev = list_service.get(position).getId();
+                System.out.println("LPG: " + iGal + " | " + iSev);
+                if (iSev == iGal){
+                    String img = iGallery.getImage();
+                    String newIMG = img.replace("localhost", "10.0.2.2");
+                    System.out.println("Imagemmmmm: " + newIMG);
+                    Glide.with(context).load(newIMG).into(holder.imgFavorite);
+                }
+            }
         }
     }
 
@@ -72,6 +86,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
 
     public void getAllFavorites(List<Favorite> favoriteList){
         this.list_favorite = favoriteList;
+        notifyDataSetChanged();
+    }
+
+    public void getAllServicesGallery(List<ServicesGallery> galleryList){
+        this.list_gallery = galleryList;
         notifyDataSetChanged();
     }
 
@@ -104,11 +123,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
 
                 @Override
                 public void unLiked(LikeButton likeButton) {
+                    System.out.println("unLiked");
                     lb_Favorite.setLiked(true);
                     int iAdapterPosition = getAdapterPosition();
                     showFavoriteDialog(iAdapterPosition, lb_Favorite);
-                    System.out.println("unLiked");
-                    //lb_Favorite.setLiked(bFav);
                 }
             });
         }

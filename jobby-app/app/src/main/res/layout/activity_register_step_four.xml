@@ -82,7 +82,7 @@
                 android:fontFamily="@font/bungee"
                 android:text="Register"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textSize="40dp"
                 android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
             android:layout_marginTop="0dp"
             android:fontFamily="@font/bungee"
             android:text="Create Account"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="40sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_login" />
@@ -120,36 +120,42 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_singin_login">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/country_register"
+                android:id="@+id/til_country_register"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Country"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black"
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts"
                 app:endIconTint="@color/splash_screen_background">
 
                 <AutoCompleteTextView
+                    android:id="@+id/country_register"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:hint="Country"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/city_register"
+                android:id="@+id/til_city_register"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="City"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black"
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts"
                 app:endIconTint="@color/splash_screen_background">
 
                 <AutoCompleteTextView
+                    android:id="@+id/city_register"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:hint="City"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,8 +166,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Address"
                 android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black">
+                app:boxStrokeColor="@color/texts"
+                app:hintTextColor="@color/texts">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -215,7 +221,7 @@
                     android:gravity="center"
                     android:text="Already have an account?"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/texts"
                     android:textSize="17dp" />
 
                 <Button

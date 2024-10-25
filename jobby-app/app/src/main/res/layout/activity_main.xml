@@ -246,13 +246,28 @@
         <!--app:backgroundTint="@color/light_background"-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_settings"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="125dp"
+        android:layout_marginEnd="3dp"
+        android:visibility="invisible"
+        app:backgroundTint="@color/light_background"
+        app:maxImageSize="35dp"
+        app:tint="@color/fab_icon"
+        app:fabSize="normal"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
         android:src="@drawable/ic_account"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="125dp"
+        android:layout_marginBottom="185dp"
         android:layout_marginEnd="3dp"
         android:visibility="invisible"
         app:backgroundTint="@color/light_background"
@@ -267,7 +282,7 @@
         android:backgroundTint="@color/white"
         android:src="@drawable/ic_logout"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="185dp"
+        android:layout_marginBottom="245dp"
         android:layout_marginEnd="3dp"
         android:visibility="invisible"
         app:backgroundTint="@color/light_background"
