@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 23/01/22, 02:15
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -70,7 +70,6 @@ public class RegisterStepFourActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_four);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mContextRegister = this;
 
         //Inicializa Controlos
@@ -218,6 +217,7 @@ public class RegisterStepFourActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
             }
         });
         view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {

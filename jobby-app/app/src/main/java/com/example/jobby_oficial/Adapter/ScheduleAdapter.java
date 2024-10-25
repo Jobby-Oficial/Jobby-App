@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 19/01/22, 18:08
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jobby_oficial.Model.JobStatus;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.Username;
@@ -32,13 +33,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
     List<Schedule> list_schedule;
     List<Username> list_username;
     List<Service> list_service;
+    List<JobStatus> list_jobStatus;
     ScheduleAdapter.OnScheduleListener onScheduleListener;
 
-    public ScheduleAdapter(Context context, List<Schedule> list_schedule, List<Username> list_username, List<Service> list_service, ScheduleAdapter.OnScheduleListener onScheduleListener) {
+    public ScheduleAdapter(Context context, List<Schedule> list_schedule, List<Username> list_username, List<Service> list_service, List<JobStatus> list_jobStatus, ScheduleAdapter.OnScheduleListener onScheduleListener) {
         this.context = context;
         this.list_schedule = list_schedule;
         this.list_username = list_username;
         this.list_service = list_service;
+        this.list_jobStatus = list_jobStatus;
         this.onScheduleListener = onScheduleListener;
     }
 
@@ -65,24 +68,42 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
         String sDate = formatoDestino.format(data);
         Schedule schedule = list_schedule.get(position);
         if (MainActivity.id_User != null) {
-            for (Service iService : list_service) {
-                int iUser = list_service.get(list_service.indexOf(iService)).getId();
-                int iServ = list_schedule.get(position).getService_id();
-                System.out.println(iUser + " | " + iServ);
-                if (iUser == iServ)
-                    holder.tvServiceSchedule.setText("Service: " + list_service.get(list_service.indexOf(iService)).getName());
+            if (list_service != null) {
+                for (Service iService : list_service) {
+                    int iUser = list_service.get(list_service.indexOf(iService)).getId();
+                    int iServ = list_schedule.get(position).getService_id();
+                    System.out.println(iUser + " | " + iServ);
+                    if (iUser == iServ)
+                        holder.tvServiceSchedule.setText("Service: " + list_service.get(list_service.indexOf(iService)).getName());
+                }
             }
-            for (Username iUsername : list_username) {
-                int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
-                int iProf = list_schedule.get(position).getProfessional_id();
-                System.out.println(iUser + " | " + iProf);
-                if (iUser == iProf)
-                    holder.tvProfessionalSchedule.setText("Profissional: " + list_username.get(list_username.indexOf(iUsername)).getUsername());
+            if (list_username != null) {
+                for (Username iUsername : list_username) {
+                    int iUser = list_username.get(list_username.indexOf(iUsername)).getId();
+                    int iProf = list_schedule.get(position).getProfessional_id();
+                    System.out.println(iUser + " | " + iProf);
+                    if (iUser == iProf)
+                        holder.tvProfessionalSchedule.setText("Profissional: " + list_username.get(list_username.indexOf(iUsername)).getUsername());
+                }
             }
+            String sStatus = list_schedule.get(position).getSchedule_status();
+            if (sStatus != null){
+                if (sStatus.equals("0"))
+                    holder.tvStatusSchedule.setText("Status: Reprovado");
+                else {
+                    holder.tvStatusSchedule.setText("Status: Aprovado");
+                    if (list_jobStatus != null) {
+                        int iJobStatus = Integer.parseInt(list_schedule.get(position).getSchedule_status());
+                        String sJobStatus = list_jobStatus.get(iJobStatus).getName();
+                        holder.tvJobStatusSchedule.setText("Job Status: " + sJobStatus);
+                    }
+                }
+            }
+            else
+                holder.tvStatusSchedule.setText("Status: Esperando Aprovação");
         }
-        holder.tvDateSchedule.setText(sDate + " " + buffer.toString());
-        holder.tvStatusSchedule.setText(String.valueOf(list_schedule.get(position).getJob_status_id()));
-        holder.tvPriceSchedule.setText(String.valueOf(list_schedule.get(position).getPrice()) + "€");
+        holder.tvDateSchedule.setText("Date: " + sDate + " " + buffer);
+        holder.tvPriceSchedule.setText("Price: " + list_schedule.get(position).getPrice() + "€");
     }
 
     public void getAllSchedules(List<Schedule> scheduleList){
@@ -100,13 +121,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
         notifyDataSetChanged();
     }
 
+    public void getAllJobStatus(List<JobStatus> jobStatusList){
+        this.list_jobStatus = jobStatusList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return list_schedule.size();
     }
 
     class viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvServiceSchedule, tvProfessionalSchedule, tvDateSchedule, tvStatusSchedule, tvPriceSchedule;
+        TextView tvServiceSchedule, tvProfessionalSchedule, tvDateSchedule, tvStatusSchedule, tvJobStatusSchedule, tvPriceSchedule;
         ScheduleAdapter.OnScheduleListener onScheduleListener;
 
         public viewholder(@NonNull View itemView, ScheduleAdapter.OnScheduleListener onScheduleListener) {
@@ -115,6 +141,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewho
             tvProfessionalSchedule = itemView.findViewById(R.id.tv_professional_schedule);
             tvDateSchedule = itemView.findViewById(R.id.tv_date_schedule);
             tvStatusSchedule = itemView.findViewById(R.id.tv_status_schedule);
+            tvJobStatusSchedule = itemView.findViewById(R.id.tv_job_status_schedule);
             tvPriceSchedule = itemView.findViewById(R.id.tv_price_schedule);
             this.onScheduleListener = onScheduleListener;
 

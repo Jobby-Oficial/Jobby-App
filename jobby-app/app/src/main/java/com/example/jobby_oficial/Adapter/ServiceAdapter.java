@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 26/12/21, 02:06
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -12,6 +12,9 @@ import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.R;
 import com.example.jobby_oficial.View.AuthenticationMenu;
+import com.example.jobby_oficial.View.MainActivity;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -62,9 +66,6 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         Service service = list_service.get(position);
-        //int iGal = list_gallery.get(position).getService_id();
-        //ServicesGallery gallery = list_gallery.get(iGal);
-        //Glide.with(context).load(gallery.getImage()).into(holder.imgService);
         holder.tvNameService.setText("Service: " + list_service.get(position).getName());
         holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
 
@@ -133,12 +134,18 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
                 public void liked(LikeButton likeButton) {
                     System.out.println("liked");
                     if (id_User != null) {
-                        System.out.println("Teste liked: " + getAdapterPosition());
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("service_id", list_service.get(getAdapterPosition()).getId());
-                        jsonObject.addProperty("user_id", id_User);
-                        favoriteViewModel.makeApiCallCreateFavorites(jsonObject);
-                        notifyDataSetChanged();
+                        if (!isConnected(context)) {
+                            lb_Service.setLiked(false);
+                            showInternetDialog();
+                        } else {
+                            System.out.println("Teste liked: " + getAdapterPosition());
+                            JsonObject jsonObject = new JsonObject();
+                            jsonObject.addProperty("service_id", list_service.get(getAdapterPosition()).getId());
+                            jsonObject.addProperty("user_id", id_User);
+                            favoriteViewModel.makeApiCallCreateFavorites(jsonObject);
+                            notifyDataSetChanged();
+                        }
+
                     }
                     else {
                         lb_Service.setLiked(false);
@@ -149,19 +156,24 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
                 @Override
                 public void unLiked(LikeButton likeButton) {
                     System.out.println("unLiked");
-                    int iSev = list_service.get(getAdapterPosition()).getId();
-                    int iUser = Integer.parseInt(id_User);
-                    System.out.println("Teste unLiked: " + iSev + " | " + iUser);
-                    for (Favorite iFavorite : list_favorite) {
-                        if (iUser == list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id()){
-                            System.out.println(iUser + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id());
-                            System.out.println(iSev + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id());
-                            if (iSev == list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id()) {
+                    if (!isConnected(context)) {
+                        lb_Service.setLiked(true);
+                        showInternetDialog();
+                    } else {
+                        int iSev = list_service.get(getAdapterPosition()).getId();
+                        int iUser = Integer.parseInt(id_User);
+                        System.out.println("Teste unLiked: " + iSev + " | " + iUser);
+                        for (Favorite iFavorite : list_favorite) {
+                            if (iUser == list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id()) {
+                                System.out.println(iUser + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getUser_id());
                                 System.out.println(iSev + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id());
-                                int id = list_favorite.get(list_favorite.indexOf(iFavorite)).getId();
-                                System.out.println("Delete: " + id);
-                                favoriteViewModel.makeApiCallDeleteFavorites(id);
-                                notifyDataSetChanged();
+                                if (iSev == list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id()) {
+                                    System.out.println(iSev + " | " + list_favorite.get(list_favorite.indexOf(iFavorite)).getService_id());
+                                    int id = list_favorite.get(list_favorite.indexOf(iFavorite)).getId();
+                                    System.out.println("Delete: " + id);
+                                    favoriteViewModel.makeApiCallDeleteFavorites(id);
+                                    notifyDataSetChanged();
+                                }
                             }
                         }
                     }
@@ -177,6 +189,44 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
 
     public interface OnServiceListener{
         void onServiceClick(int position);
+    }
+
+    private boolean isConnected(Context connected) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) connected.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void showInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(parentView.getContext()).inflate(R.layout.dialog_internet, parentView.findViewById(R.id.internet_dialog));
+
+        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 
     private void showSessionDialog() {

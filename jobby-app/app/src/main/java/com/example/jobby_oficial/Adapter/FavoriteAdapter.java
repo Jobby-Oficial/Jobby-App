@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 14/01/22, 20:18
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -11,6 +11,10 @@ import static com.example.jobby_oficial.View.MainActivity.favoriteViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,15 +69,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
             holder.tvCategoryFavorite.setText("Category: " + list_service.get(position).getCategory());
             holder.lb_Favorite.setLiked(true);
 
-            for (ServicesGallery iGallery : list_gallery) {
-                int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
-                int iSev = list_service.get(position).getId();
-                System.out.println("LPG: " + iGal + " | " + iSev);
-                if (iSev == iGal){
-                    String img = iGallery.getImage();
-                    String newIMG = img.replace("localhost", "10.0.2.2");
-                    System.out.println("Imagemmmmm: " + newIMG);
-                    Glide.with(context).load(newIMG).into(holder.imgFavorite);
+            if (list_gallery != null) {
+                for (ServicesGallery iGallery : list_gallery) {
+                    int iGal = list_gallery.get(list_gallery.indexOf(iGallery)).getService_id();
+                    int iSev = list_service.get(position).getId();
+                    System.out.println("LPG: " + iGal + " | " + iSev);
+                    if (iSev == iGal) {
+                        String img = iGallery.getImage();
+                        String newIMG = img.replace("localhost", "10.0.2.2");
+                        System.out.println("Imagemmmmm: " + newIMG);
+                        Glide.with(context).load(newIMG).into(holder.imgFavorite);
+                    }
                 }
             }
         }
@@ -125,8 +131,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
                 public void unLiked(LikeButton likeButton) {
                     System.out.println("unLiked");
                     lb_Favorite.setLiked(true);
-                    int iAdapterPosition = getAdapterPosition();
-                    showFavoriteDialog(iAdapterPosition, lb_Favorite);
+                    if (!isConnected(context)) {
+                        showInternetDialog();
+                    } else {
+                        int iAdapterPosition = getAdapterPosition();
+                        showFavoriteDialog(iAdapterPosition, lb_Favorite);
+                    }
                 }
             });
         }
@@ -139,6 +149,44 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
 
     public interface OnFavoriteListener{
         void onFavoriteClick(int position);
+    }
+
+    private boolean isConnected(Context connected) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) connected.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void showInternetDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(parentView.getContext()).inflate(R.layout.dialog_internet, parentView.findViewById(R.id.internet_dialog));
+
+        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
     }
 
     public void showFavoriteDialog(int iAdapterPosition, LikeButton lb_Favorite) {

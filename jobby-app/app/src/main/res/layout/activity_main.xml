@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 26/12/21, 04:54
-  ~ Copyright (c) 2021.
+  ~ Last modified: 27/01/22, 20:20
+  ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
 
@@ -69,13 +69,14 @@
     </io.github.florent37.shapeofview.shapes.ArcView>-->
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_category"
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@color/trans"
         android:outlineAmbientShadowColor="@color/trans"
         android:outlineSpotShadowColor="@color/trans"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:expanded="true"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout

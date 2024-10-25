@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 31/12/21, 00:24
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -39,7 +39,6 @@ public class RegisterStepTwoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_two);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
 

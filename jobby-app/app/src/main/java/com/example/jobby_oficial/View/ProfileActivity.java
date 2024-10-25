@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 25/12/21, 17:06
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -37,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
