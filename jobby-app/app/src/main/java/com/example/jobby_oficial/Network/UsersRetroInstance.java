@@ -17,7 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UsersRetroInstance {
 
-    public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
+    //Endereço IPv4 - ipconfig no CMD
+    public static final String BASE_URL = "http://192.168.1.244/jobby-web/backend/web/v1/";
+    //public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
     public static final String API_KEY_USER = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
     //http://jobbyapp.epizy.com/admin/v1/users?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8
     //http://10.0.2.2:21080/v1/users/login?access-token=-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8

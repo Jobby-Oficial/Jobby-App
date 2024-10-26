@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FavoriteRetroInstance {
 
-    public static final String BASE_URL = "http://10.0.2.2:21080/v1/";
+    public static final String BASE_URL = "http://192.168.1.244/jobby-web/backend/web/v1/";
     public static final String API_KEY_FAVORITE = "-5wg3Yy8DwgLORe0hQn-ZHW4AO8-wuB8";
 
     public static Retrofit retrofit;

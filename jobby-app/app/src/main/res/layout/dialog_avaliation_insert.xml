@@ -79,7 +79,7 @@
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
                 android:elevation="8dp"
-                android:text="Avaliation"
+                android:text="Confirm"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:transitionName="tn_login"/>

@@ -66,7 +66,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
         if (list_service.isEmpty() == false) {
             service = list_service.get(position);
             holder.tvNameFavorite.setText("Service: " + list_service.get(position).getName());
-            holder.tvCategoryFavorite.setText("Category: " + list_service.get(position).getCategory());
+            //holder.tvCategoryFavorite.setText("Category: " + list_service.get(position).getCategory());
             holder.lb_Favorite.setLiked(true);
 
             if (list_gallery != null) {
@@ -115,7 +115,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.viewho
             super(itemView);
             imgFavorite = itemView.findViewById(R.id.image_favorite);
             tvNameFavorite = itemView.findViewById(R.id.tv_name_favorite);
-            tvCategoryFavorite = itemView.findViewById(R.id.tv_category_favorite);
+            //tvCategoryFavorite = itemView.findViewById(R.id.tv_category_favorite);
             lb_Favorite = itemView.findViewById(R.id.heart_button_favorite);
             this.onFavoriteListener = onFavoriteListener;
 

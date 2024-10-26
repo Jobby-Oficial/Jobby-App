@@ -13,7 +13,7 @@ git init
 ### Git Clone
 
 ```bash
-git clone https://github.com/GuilhermeCruzPT/FaturaPlus.git
+git clone https://github.com/Jobby-Oficial/Jobby-App.git
 ```
 
 ### Criar Branch

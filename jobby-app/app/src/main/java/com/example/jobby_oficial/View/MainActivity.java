@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,6 +74,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getId()) {
                     case 1:
+                        iNotFound = 0;
                         selectedFragment = new CategoryFragment();
                         //Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
                         break;
@@ -456,10 +460,12 @@ public class MainActivity extends AppCompatActivity {
                 if (dayNightSwitch.isNight()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     sDayNight = "night";
+                    //restartSelf();
                 }
                 else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     sDayNight = "day";
+                    //restartSelf();
                 }
                 SaveSettings();
 
@@ -477,6 +483,14 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
+    }
+
+    private void restartSelf() {
+        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 1000, // one second
+                PendingIntent.getActivity(this, 0, getIntent(), PendingIntent.FLAG_ONE_SHOT
+                        | PendingIntent.FLAG_CANCEL_CURRENT));
+        finish();
     }
 
     private void SaveSettings() {

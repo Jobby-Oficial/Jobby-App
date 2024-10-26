@@ -62,13 +62,13 @@ public class NotFoundFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_not_found, container, false);
         InitControls(view);
-        if (iNotFound == 1)
+        if (iNotFound == 1 || iNotFound == 0)
             tvContentPageFound.setText("We searched for all services.\nWe didn't find any for your search.");
         else if (iNotFound == 2)
             tvContentPageFound.setText("We searched for all favorites.\nWe didn't find any on your account.");
         else if (iNotFound == 3)
             tvContentPageFound.setText("We searched for all avaliation.\nWe didn't find any on your account.");
-        else
+        else if (iNotFound == 4)
             tvContentPageFound.setText("We searched for all schedule.\nWe didn't find any on your account.");
 
         YoYo.with(Techniques.FadeInUp).duration(3000).repeat(0).playOn(imgPageNotFound);

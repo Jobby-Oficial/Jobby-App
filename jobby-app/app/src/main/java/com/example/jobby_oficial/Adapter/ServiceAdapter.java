@@ -67,7 +67,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         Service service = list_service.get(position);
         holder.tvNameService.setText("Service: " + list_service.get(position).getName());
-        holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
+        //holder.tvCategoryService.setText("Category: " + list_service.get(position).getCategory());
 
         if (id_User != null) {
             for (Favorite iFavorite : list_favorite) {
@@ -123,7 +123,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.viewhold
             super(itemView);
             imgService = itemView.findViewById(R.id.image_service);
             tvNameService = itemView.findViewById(R.id.tv_name_service);
-            tvCategoryService = itemView.findViewById(R.id.tv_category_service);
+            //tvCategoryService = itemView.findViewById(R.id.tv_category_service);
             lb_Service = itemView.findViewById(R.id.heart_button_service);
             this.onServiceListener = onServiceListener;
 
