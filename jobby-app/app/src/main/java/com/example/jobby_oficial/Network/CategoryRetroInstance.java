@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 04/12/21, 12:35
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -12,7 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CategoryRetroInstance {
 
-    public  static String BASE_URL = "https://619787935953f10017d23dce.mockapi.io/api/v1/";
+    public  static String BASE_URL = "https://63e1568665b57fe6065727df.mockapi.io/jobby/api/categories/";
+    //public  static String BASE_URL = "https://619787935953f10017d23dce.mockapi.io/api/v1/";
 
     public static Retrofit retrofit;
 

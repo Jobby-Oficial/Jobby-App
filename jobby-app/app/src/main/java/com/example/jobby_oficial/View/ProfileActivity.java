@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 25/12/21, 17:06
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -31,12 +31,13 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvUsername, tvName, tvEmail, tvPhone, tvGenre, tvCountry, tvCity;
     private UsersViewModel usersViewModel;
     List<User> list_user;
+    String sName, sUsername, sEmail, sPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Inicializa Controlos
         InitControls();
 
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
@@ -67,16 +68,40 @@ public class ProfileActivity extends AppCompatActivity {
         lavBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
         lavEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Edit",Toast.LENGTH_SHORT).show();
+                Intent intent= new Intent(ProfileActivity.this, ProfileEditActivity.class);
+                intent = IntentData(intent); //Send Intent
+                startActivity(intent);
             }
         });
+    }
+
+    private Intent IntentData(Intent intent) {
+        //Variaveis Locais
+        sName = tvName.getText().toString();
+        sUsername = tvUsername.getText().toString();
+        sEmail = tvEmail.getText().toString();
+        sPhone = tvPhone.getText().toString();
+
+        //Put Extra
+        intent.putExtra("Name", sName);
+        intent.putExtra("Username", sUsername);
+        intent.putExtra("Email", sEmail);
+        intent.putExtra("Phone", sPhone);
+
+        return intent;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
     private void InitControls() {

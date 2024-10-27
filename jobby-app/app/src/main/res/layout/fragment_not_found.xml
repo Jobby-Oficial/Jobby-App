@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 02/01/22, 18:50
+  ~ Last modified: 27/01/22, 20:20
   ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
@@ -51,7 +51,7 @@
             android:fontFamily="@font/muli_black"
             android:gravity="center"
             android:text="No Result Found"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="25dp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/lav_page_not_found"
@@ -66,8 +66,8 @@
             android:gravity="center"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
-            android:text="We searched for all services.\nWe didn't find any for your search."
-            android:textColor="@color/black"
+            android:text=""
+            android:textColor="@color/texts"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@+id/tv_no_result_found" />

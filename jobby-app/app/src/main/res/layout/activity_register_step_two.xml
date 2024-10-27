@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Created by Guilherme Cruz
-  ~ Last modified: 24/12/21, 03:06
-  ~ Copyright (c) 2021.
+  ~ Last modified: 27/01/22, 20:20
+  ~ Copyright (c) 2022.
   ~ All rights reserved.
   -->
 
@@ -70,7 +70,7 @@
                 android:fontFamily="@font/bungee"
                 android:text="Register"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/texts"
                 android:textStyle="bold"
                 android:textSize="40dp"
                 android:layout_gravity="center"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/bungee"
             android:text="Create Account"
-            android:textColor="@color/black"
+            android:textColor="@color/texts"
             android:textSize="40sp"
             android:layout_marginTop="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Choose Gender"
-                    android:textColor="@color/black"
+                    android:textColor="@color/texts"
                     android:textSize="18dp"/>
 
                 <TextView
@@ -144,12 +144,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Other" />
+
             </RadioGroup>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/black"
+                android:background="@color/texts"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"/>
 
@@ -162,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Select Your Age"
-                    android:textColor="@color/black"
+                    android:textColor="@color/texts"
                     android:textSize="18dp"/>
 
                 <TextView
@@ -185,7 +186,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_back_step2"
@@ -227,7 +229,7 @@
                     android:gravity="center"
                     android:text="Already have an account?"
                     android:textAlignment="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/texts"
                     android:textSize="17dp" />
 
                 <Button

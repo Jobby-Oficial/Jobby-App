@@ -1,7 +1,7 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 24/12/21, 03:06
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:20
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,7 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class RegisterStepOneActivity extends AppCompatActivity {
 
-    LottieAnimationView lavBack;
+    LottieAnimationView lavBack, lavTop, lavBottom;
     Button btnGoToLogin, btnNext;
     TextInputLayout edName, edUsername, edEmail, edPassword;
     String sName, sUsername, sEmail, sPassword;
@@ -32,12 +33,20 @@ public class RegisterStepOneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_step_one);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
 
-        //Get Intent Data
+        //Get Intent CountryData
         GetIntentData();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                lavBack.playAnimation();
+                lavTop.playAnimation();
+                lavBottom.playAnimation();
+            }
+        }, 1000);
 
         /*Spannable wordtoSpan = new SpannableString("Already have an account? Login");
         wordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), 25, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -67,7 +76,7 @@ public class RegisterStepOneActivity extends AppCompatActivity {
                 bValidation = Validation(bValidation);
                 if (bValidation == true){
                     Intent intent= new Intent(RegisterStepOneActivity.this, RegisterStepTwoActivity.class);
-                    intent = IntentData(intent); //Send Intent Data
+                    intent = IntentData(intent); //Send Intent
                     startActivity(intent);
                 }
             }
@@ -203,15 +212,15 @@ public class RegisterStepOneActivity extends AppCompatActivity {
     }
 
     private void FormLayout(int position){
-        int iTop = 158;
+        int iTop = 153;
         if (position == 1)
-            iTop = 120;
+            iTop = 115;
         else if (position == 2)
-            iTop = 90;
+            iTop = 85;
         else if (position == 3)
-            iTop = 50;
+            iTop = 45;
         else if (position == 4)
-            iTop = 10;
+            iTop = 5;
         LinearLayout ll = (LinearLayout) findViewById(R.id.ll_form_step1_register);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)ll.getLayoutParams();
         lp.setMargins(0, iTop, 0, 0);
@@ -220,6 +229,8 @@ public class RegisterStepOneActivity extends AppCompatActivity {
 
     private void InitControls() {
         lavBack = findViewById(R.id.lav_back_register);
+        lavTop = findViewById(R.id.lav_top_register);
+        lavBottom = findViewById(R.id.lav_bottom_register);
         btnGoToLogin = findViewById(R.id.btn_go_to_login);
         btnNext = findViewById(R.id.btn_next_step1);
         edName = findViewById(R.id.full_name_register);

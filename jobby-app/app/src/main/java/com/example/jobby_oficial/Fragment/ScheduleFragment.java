@@ -1,12 +1,13 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 19/01/22, 19:44
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.Fragment;
 
+import static com.example.jobby_oficial.View.MainActivity.jobStatusViewModel;
 import static com.example.jobby_oficial.View.MainActivity.id_User;
 
 import android.os.Bundle;
@@ -20,9 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.example.jobby_oficial.Adapter.ScheduleAdapter;
+import com.example.jobby_oficial.Model.JobStatus;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
 import com.example.jobby_oficial.Model.Username;
@@ -36,6 +38,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnScheduleListener {
 
     private static final String ARG_PARAM1 = "param1";
@@ -44,6 +48,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
     private String mParam1;
     private String mParam2;
 
+    AlphaInAnimationAdapter alphaInAnimationAdapter;
     private ScheduleViewModel scheduleViewModel;
     private UsersViewModel usersViewModel;
     private ServiceViewModel serviceViewModel;
@@ -52,6 +57,7 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
     List<Schedule> list_schedule;
     List<Username> list_username;
     List<Service> list_service;
+    List<JobStatus> list_jobSstatus;
 
     public ScheduleFragment() {
         // Required empty public constructor
@@ -83,9 +89,6 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
         rvSchedule.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSchedule.setHasFixedSize(true);
         list_schedule = new ArrayList<>();
-
-        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, this);
-        rvSchedule.setAdapter(adapter);
 
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         scheduleViewModel.getAllSchedules().observe(getViewLifecycleOwner(), new Observer<List<Schedule>>() {
@@ -133,12 +136,34 @@ public class ScheduleFragment extends Fragment implements ScheduleAdapter.OnSche
         });
         usersViewModel.makeApiCallUsernames();
 
+
+        jobStatusViewModel.getAllJobStatus().observe(getViewLifecycleOwner(), new Observer<List<JobStatus>>() {
+            @Override
+            public void onChanged(List<JobStatus> jobStatusList) {
+                list_jobSstatus = jobStatusList;
+                adapter.getAllJobStatus(list_jobSstatus);
+                adapter.notifyDataSetChanged();
+                System.out.println("Lista Job Status: " + list_jobSstatus);
+            }
+        });
+        jobStatusViewModel.makeApiCalJobStatus();
+
+        adapter = new ScheduleAdapter(getContext(), list_schedule, list_username, list_service, list_jobSstatus, this);
+        //rvSchedule.setAdapter(adapter);
+
+        //Animations
+        alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaInAnimationAdapter.setDuration(1000);//[1 Sec]
+        alphaInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaInAnimationAdapter.setFirstOnly(false);
+        rvSchedule.setAdapter(alphaInAnimationAdapter);
+
         return view;
     }
 
     @Override
     public void onScheduleClick(int position) {
         list_schedule.get(position);
-        Toast.makeText(getContext(),"Schedule Position: " + position,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),"Schedule Position: " + position,Toast.LENGTH_SHORT).show();
     }
 }

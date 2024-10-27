@@ -1,21 +1,33 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 30/12/21, 02:24
- * Copyright (c) 2021.
+ * Last modified: 27/01/22, 20:45
+ * Copyright (c) 2022.
  * All rights reserved.
  */
 
 package com.example.jobby_oficial.View;
 
+import static com.example.jobby_oficial.View.SplashScreen.FILE_SETTINGS;
+import static com.example.jobby_oficial.View.SplashScreen.sDayNight;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +48,7 @@ import com.example.jobby_oficial.Model.Avaliation;
 import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 import com.example.jobby_oficial.Model.Service;
+import com.example.jobby_oficial.Model.ServicesGallery;
 import com.example.jobby_oficial.Model.User;
 import com.example.jobby_oficial.Model.Username;
 import com.example.jobby_oficial.R;
@@ -43,14 +56,25 @@ import com.example.jobby_oficial.Fragment.ServiceFragment;
 import com.example.jobby_oficial.Fragment.ScheduleFragment;
 import com.example.jobby_oficial.ViewModel.AvaliationViewModel;
 import com.example.jobby_oficial.ViewModel.FavoriteViewModel;
+import com.example.jobby_oficial.ViewModel.JobStatusViewModel;
 import com.example.jobby_oficial.ViewModel.ScheduleViewModel;
 import com.example.jobby_oficial.ViewModel.ServiceViewModel;
+import com.example.jobby_oficial.ViewModel.ServicesGalleryViewModel;
 import com.example.jobby_oficial.ViewModel.UsersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.like.LikeButton;
+import com.mahfa.dnswitch.DayNightSwitch;
+import com.mahfa.dnswitch.DayNightSwitchListener;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,21 +83,21 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     SessionManager sessionManager;
     public static String user, id_User;
+    public static int iNotFound = 0;
     private UsersViewModel usersViewModel;
     private ServiceViewModel serviceViewModel;
     public static FavoriteViewModel favoriteViewModel;
     public static ScheduleViewModel scheduleViewModel;
-    private AvaliationViewModel avaliationViewModel;
+    public static AvaliationViewModel avaliationViewModel;
+    private ServicesGalleryViewModel servicesGalleryViewModel;
+    public static JobStatusViewModel jobStatusViewModel;
     public MeowBottomNavigation meowBottomNavigationView;
-    BottomNavigationView bottomNavigationView;
-    FloatingActionButton fabExtended, fabLogout, fabProfile;
+    FloatingActionButton fabExtended, fabLogout, fabProfile, fabSettings;
     Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    boolean isCheck = false, isOpen = false;
-    int iNavBarId = 1;
+    boolean isOpen = false, bWarnning = false;
     Fragment selectedFragment = new CategoryFragment();
     NestedScrollView scrollview;
     LottieAnimationView imgSparklesCategory;
-    LikeButton lb_Service;
     AlertDialog alertDialog;
     List<User> list_user;
     List<Service> list_service;
@@ -81,15 +105,16 @@ public class MainActivity extends AppCompatActivity {
     List<Schedule> list_schedule;
     List<Avaliation> list_avaliation;
     List<Username> list_username;
+    List<ServicesGallery> list_gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //Inicializa Controlos
         InitControls();
         AddMenuItems();
+        Warnning();
 
         //Animations
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
@@ -97,16 +122,15 @@ public class MainActivity extends AppCompatActivity {
         rotateForward = AnimationUtils.loadAnimation(this, R.anim.rotate_forward);
         rotateBackward = AnimationUtils.loadAnimation(this, R.anim.rotate_backward);
 
-        //SessionManager sessionManager = new SessionManager(this);
-
-        //user = userDetails.get(sessionManager.KEY_USERNAME);
-
         sessionManager = new SessionManager(MainActivity.this);
         usersViewModel = new ViewModelProvider(this).get(UsersViewModel.class);
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
         scheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
         avaliationViewModel = new ViewModelProvider(this).get(AvaliationViewModel.class);
+        servicesGalleryViewModel = new ViewModelProvider(this).get(ServicesGalleryViewModel.class);
+        jobStatusViewModel = new ViewModelProvider(this).get(JobStatusViewModel.class);
+
 
         usersViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
@@ -114,11 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 list_user = users;
                 Log.d(TAG, "run: " + list_user.toString());
 
-                //String id, username;
-                //SessionManager sessionManager = new SessionManager(MainActivity.this);
-
                 if (list_user.size() != 0) {
-                    //System.out.println("Username: " + list_users.get(0).getUsername());
                     String id = String.valueOf(list_user.get(0).getId());
                     String username = list_user.get(0).getUsername();
                     sessionManager.createLoginSession(id, username);
@@ -136,25 +156,16 @@ public class MainActivity extends AppCompatActivity {
                     avaliationViewModel.makeApiCallAvaliations(joAvaliation);
                     serviceViewModel.makeApiCallServices();
                     usersViewModel.makeApiCallUsernames();
-
-                    if (user != null)
-                        fabLogout.setVisibility(View.INVISIBLE);
-                    else
-                        fabLogout.setVisibility(View.GONE);
+                    servicesGalleryViewModel.makeApiCallServicesGallerys();
+                    jobStatusViewModel.makeApiCalJobStatus();
                 }
                 else
                     sessionManager.createLoginSession(null, null);
 
-                //update recyclerview
-                //Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
-                /*Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Log.d(TAG, "run: " + users.toString());
-                    }
-                });
-                thread.start();*/
+                if (user != null)
+                    fabLogout.setImageResource(R.drawable.ic_logout);
+                else
+                    fabLogout.setImageResource(R.drawable.ic_menu);
             }
         });
 
@@ -198,6 +209,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        servicesGalleryViewModel.getAllServicesGallerys().observe(this, new Observer<List<ServicesGallery>>() {
+            @Override
+            public void onChanged(List<ServicesGallery> galleryList) {
+                list_gallery = galleryList;
+                System.out.println("Lista Services Gallery/Main: " + list_gallery);
+            }
+        });
+
         meowBottomNavigationView.setOnShowListener(new MeowBottomNavigation.ShowListener() {
             @Override
             public void onShowItem(MeowBottomNavigation.Model item) {
@@ -214,55 +233,53 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getId()) {
                     case 1:
-                        iNavBarId = 1;
+                        iNotFound = 0;
                         selectedFragment = new CategoryFragment();
                         //Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 2:
-                        iNavBarId = 2;
+                        iNotFound = 1;
                         selectedFragment = new ServiceFragment();
                         //Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 3:
-                        iNavBarId = 3;
+                        iNotFound = 2;
                         if (user != null)
                             selectedFragment = new FavoriteFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 4:
-                        iNavBarId = 4;
+                        iNotFound = 3;
                         if (user != null)
                             selectedFragment = new AvaliationFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                         break;
 
                     case 5:
-                        iNavBarId = 5;
+                        iNotFound = 4;
                         if (user != null)
                             selectedFragment = new ScheduleFragment();
                         else {
                             selectedFragment = new Page404Fragment();
                             LockScrollview(true);
-                            //showInternetDialog();
                         }
                         //Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
                         break;
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, selectedFragment).detach(selectedFragment).attach(selectedFragment).commit();
+                Warnning();
             }
         });
 
@@ -279,9 +296,11 @@ public class MainActivity extends AppCompatActivity {
         fabLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                id_User = null;
-                user = null;
-                sessionManager.logoutUserFromSession();
+                if (user != null) {
+                    id_User = null;
+                    user = null;
+                    sessionManager.logoutUserFromSession();
+                }
                 Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
                 startActivity(intent);
                 finish();
@@ -292,11 +311,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (user != null) {
-                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(intent);
+                    if (!isConnected(MainActivity.this)) {
+                        showInternetDialog();
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 else
                     showSessionDialog();
+            }
+        });
+
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSettingsDialog();
             }
         });
 
@@ -304,98 +334,51 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 fabAnimation();
-                //Toast.makeText(getApplicationContext(),"Adicionar",Toast.LENGTH_SHORT).show();
             }
         });
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, new CategoryFragment()).commit();
-
-
-        /*bottomNavigationView.setBackground(null);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-
-            switch (item.getItemId()) {
-                case R.id.category:
-                    selectedFragment = new CategoryFragment();
-                    Toast.makeText(getApplicationContext(),"Category",Toast.LENGTH_SHORT).show();
-                    break;
-
-                case R.id.service:
-                    selectedFragment = new ServiceFragment();
-                    Toast.makeText(getApplicationContext(),"Service",Toast.LENGTH_SHORT).show();
-
-                    break;
-
-                case R.id.favorite:
-                    selectedFragment = new FavoriteFragment();
-                    Toast.makeText(getApplicationContext(),"Favorite",Toast.LENGTH_SHORT).show();
-                    break;
-
-                case R.id.profile:
-                    selectedFragment = new ScheduleFragment();
-                    Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_SHORT).show();
-                    break;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,selectedFragment).commit();
-
-            return true;
-        });*/
     }
 
-    /*public void testeUser(){
-        User user = new User(7,"guilhermecruz","teste1234","/assets/img/user-profile.svg","Guilherme Cruz","guilhermecruz@gmail.com","933310757","m","2000-01-28","Armenia","Ashtarak");
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("username", "guilhermecruz");
-        jsonObject.addProperty("password_hash", "teste1234");
-        jsonObject.addProperty("image", "/assets/img/user-profile.svg");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("name", "Guilherme Cruz");
-        jsonObject.addProperty("phone", "933310757");
-        jsonObject.addProperty("genre", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        jsonObject.addProperty("email", "guilhermecruz@gmail.com");
-        usersViewModel.makeApiCallCreateUsers(user);
-    }*/
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
-    /*private void getAll() {
-        *//*Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<User> usersList = SingletonRoomDatabase.getInstance(getApplicationContext())
-                        .usersDao().getAllUsers();
-                Log.d(TAG, "run: " + usersList.toString());
-            }
-        });
-        thread.start();*//*
-    }*/
+    private boolean isConnected(MainActivity connected) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) connected.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConn = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
 
-    /*class InsertAsyncTask extends AsyncTask<User, Void, Void>{
-
-        @Override
-        protected Void doInBackground(User... users) {
-            SingletonRoomDatabase.getInstance(getApplicationContext())
-                    .usersDao()
-                    .insertUser(users[0]);
-            return null;
+        if ((wifiConn != null && wifiConn.isConnected()) || (mobileConn != null && mobileConn.isConnected())){
+            return true;
         }
-    }*/
+        else {
+            return false;
+        }
+    }
 
-    /*public void showFavoriteDialog() {
+    private void Warnning(){
+        if (!isConnected(MainActivity.this)) {
+            if (bWarnning == false)
+                showWarnningDialog();
+        } else
+            bWarnning = false;
+    }
+
+    private void showInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(false);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_favorite, findViewById(R.id.favorite_dialog));
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_internet, findViewById(R.id.internet_dialog));
 
-        view.findViewById(R.id.btn_remove_favorite).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btn_connect_internet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AuthenticationMenu.class);
-                startActivity(intent);
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
             }
         });
-        view.findViewById(R.id.tv_cancel_favorite).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.tv_cancel_internet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
@@ -406,7 +389,33 @@ public class MainActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.show();
-    }*/
+    }
+
+    private void showWarnningDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_warnning, findViewById(R.id.warnning_dialog));
+        bWarnning = true;
+
+        view.findViewById(R.id.btn_connect_warnning).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_warnning).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
 
     private void showSessionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -433,6 +442,78 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void showSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, findViewById(R.id.settings_dialog));
+
+        DayNightSwitch dayNightSwitch = view.findViewById(R.id.switch_day_night_settings);
+
+        if (sDayNight.equals("night"))
+            dayNightSwitch.setIsNight(true, false);
+        else
+            dayNightSwitch.setIsNight(false, false);
+
+        view.findViewById(R.id.btn_save_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dayNightSwitch.isNight()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    sDayNight = "night";
+                    //restartSelf();
+                }
+                else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    sDayNight = "day";
+                    //restartSelf();
+                }
+                SaveSettings();
+
+                alertDialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.tv_cancel_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        builder.setView(view);
+
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+    }
+
+    private void restartSelf() {
+        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 1000, // one second
+                PendingIntent.getActivity(this, 0, getIntent(), PendingIntent.FLAG_ONE_SHOT
+                        | PendingIntent.FLAG_CANCEL_CURRENT));
+        finish();
+    }
+
+    private void SaveSettings() {
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(FILE_SETTINGS, MODE_PRIVATE);
+            fos.write(sDayNight.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public void LockScrollview (boolean bLock) {
         if (bLock)
             scrollview.setNestedScrollingEnabled(false);
@@ -451,33 +532,33 @@ public class MainActivity extends AppCompatActivity {
     private void fabAnimation(){
         if (isOpen) {
             fabExtended.startAnimation(rotateBackward);
+            fabLogout.startAnimation(fabClose);
             fabProfile.startAnimation(fabClose);
+            fabSettings.startAnimation(fabClose);
+            fabLogout.setClickable(false);
             fabProfile.setClickable(false);
-            if (user != null) {
-                fabLogout.startAnimation(fabClose);
-                fabLogout.setClickable(false);
-            }
+            fabSettings.setClickable(false);
             isOpen = false;
         }
         else {
             fabExtended.startAnimation(rotateForward);
+            fabLogout.startAnimation(fabOpen);
             fabProfile.startAnimation(fabOpen);
+            fabSettings.startAnimation(fabOpen);
+            fabLogout.setClickable(true);
             fabProfile.setClickable(true);
-            if (user != null) {
-                fabLogout.startAnimation(fabOpen);
-                fabLogout.setClickable(true);
-            }
+            fabSettings.setClickable(true);
             isOpen = true;
         }
     }
 
     private void InitControls() {
-        //bottomNavigationView = findViewById(R.id.bottomNavigationView);
         scrollview = findViewById(R.id.nestedScrollView);
         meowBottomNavigationView = findViewById(R.id.bottom_navegation);
         fabExtended = findViewById(R.id.fab_Extended);
         fabLogout = findViewById(R.id.fab_Avaliation);
         fabProfile = findViewById(R.id.fab_Profile);
+        fabSettings = findViewById(R.id.fab_Settings);
         imgSparklesCategory = findViewById(R.id.lav_sparkles);
     }
 }

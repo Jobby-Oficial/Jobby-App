@@ -1,6 +1,6 @@
 /*
  * Created by Guilherme Cruz
- * Last modified: 19/01/22, 03:03
+ * Last modified: 27/01/22, 20:20
  * Copyright (c) 2022.
  * All rights reserved.
  */
@@ -14,7 +14,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.jobby_oficial.Model.Favorite;
 import com.example.jobby_oficial.Model.Schedule;
 
 import java.util.List;
